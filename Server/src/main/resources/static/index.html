@@ -20,7 +20,7 @@
             stompClient.connect({}, function(frame) {
                 setConnected(true);
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/room/blah', function(greeting){
+                stompClient.subscribe('/room/fuckyou', function(greeting){
                     showGreeting(JSON.parse(greeting.body).content);
                     console.log("recieved braodcasted data");
                 });
@@ -35,7 +35,7 @@
 
         function sendName() {
             var name = document.getElementById('name').value;
-            stompClient.send("/app/room/greet/blah", {}, JSON.stringify({ 'name': name }));
+            stompClient.send("/app/room/greet/fuckyou", {}, JSON.stringify({ 'name': name }));
         }
 
         function showGreeting(message) {
