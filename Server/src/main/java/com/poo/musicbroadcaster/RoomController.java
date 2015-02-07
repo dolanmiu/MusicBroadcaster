@@ -10,14 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RoomController {
 	
-	private List<String> rooms;
-	
-	@RequestMapping("/createRoom")
+	@RequestMapping("/room/create")
 	public void createRoom(@RequestParam(value="name", defaultValue="untitled") String name) {
-		
+		RoomManager.getRooms().add("blah");
 	}
 	
-	@RequestMapping("/{roomId}")
+	@RequestMapping("/room/get")
+	public List<String> getRooms() {
+		return RoomManager.getRooms();
+	}
+	
+	@RequestMapping("/room/{roomId}")
 	public String joinRoom(@PathVariable String roomId) {
 		return roomId;
 	}
