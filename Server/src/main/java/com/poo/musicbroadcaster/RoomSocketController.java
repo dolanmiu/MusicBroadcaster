@@ -3,14 +3,13 @@ package com.poo.musicbroadcaster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.poo.musicbroadcaster.model.Greeting;
 import com.poo.musicbroadcaster.model.HelloMessage;
 import com.poo.musicbroadcaster.model.PlaybackStatus;
-import com.poo.musicbroadcaster.model.RoomDetails;
+import com.poo.musicbroadcaster.model.Room;
 
 @Controller
 public class RoomSocketController {
@@ -18,15 +17,14 @@ public class RoomSocketController {
 	@Autowired 
 	private SimpMessagingTemplate simpMessagingTemplate;
 
-	@MessageMapping("/room/greet/{room}")
-    public Greeting greet(@DestinationVariable String room, HelloMessage message) {
+	@MessageMapping("/room/{room}/get")
+    public void get(@DestinationVariable String room, HelloMessage message) {
         /*if (RoomManager.getRooms().contains(roomId)) {
         	return true;
         } else {
         	return false;
         }*/
 		simpMessagingTemplate.convertAndSend("/room/" + room, new Greeting(" Hello (with simpMessagingTemplate), " + message.getName() + "!"));
-        return new Greeting("Hello, " + room + "!");
     }
 	
 	@MessageMapping("/room/{room}/play")
@@ -45,7 +43,7 @@ public class RoomSocketController {
 	}
 	
 	private void setRoomToPlaybackStatus(String room, PlaybackStatus playbackStatus) {
-		RoomDetails roomInstance = RoomManager.getRooms().get(room);
+		Room roomInstance = RoomService.getRooms().get(room);
 		roomInstance.setPlaybackStatus(PlaybackStatus.PLAYING);
 		simpMessagingTemplate.convertAndSend("/room/" + room, playbackStatus);
 	}
