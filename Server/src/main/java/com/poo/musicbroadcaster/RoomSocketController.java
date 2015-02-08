@@ -7,6 +7,11 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.poo.musicbroadcaster.model.Greeting;
+import com.poo.musicbroadcaster.model.HelloMessage;
+import com.poo.musicbroadcaster.model.PlaybackStatus;
+import com.poo.musicbroadcaster.model.RoomDetails;
+
 @Controller
 public class RoomSocketController {
 	
@@ -14,7 +19,7 @@ public class RoomSocketController {
 	private SimpMessagingTemplate simpMessagingTemplate;
 
 	@MessageMapping("/room/greet/{room}")
-    public Greeting greet(@DestinationVariable String room, HelloMessage message) throws Exception {
+    public Greeting greet(@DestinationVariable String room, HelloMessage message) {
         /*if (RoomManager.getRooms().contains(roomId)) {
         	return true;
         } else {
@@ -24,15 +29,24 @@ public class RoomSocketController {
         return new Greeting("Hello, " + room + "!");
     }
 	
-	@MessageMapping("/room/send/{roomId}")
-    @SendTo("/room/{roomId}")
-    public String sendData() throws Exception {
-        /*if (RoomManager.getRooms().contains(roomId)) {
-        	return true;
-        } else {
-        	return false;
-        }*/
-		return "hello";
-        //return new Greeting("Hello, " + message.getName() + "!");
-    }
+	@MessageMapping("/room/{room}/play")
+	public void play(@DestinationVariable String room) {
+		this.setRoomToPlaybackStatus(room, PlaybackStatus.PLAYING);
+	}
+	
+	@MessageMapping("/room/{room}/pause")
+	public void pause(@DestinationVariable String room) {
+		this.setRoomToPlaybackStatus(room, PlaybackStatus.PAUSED);
+	}
+	
+	@MessageMapping("/room/{room}/seek")
+	public void seek(@DestinationVariable String room) {
+		this.setRoomToPlaybackStatus(room, PlaybackStatus.PLAYING);
+	}
+	
+	private void setRoomToPlaybackStatus(String room, PlaybackStatus playbackStatus) {
+		RoomDetails roomInstance = RoomManager.getRooms().get(room);
+		roomInstance.setPlaybackStatus(PlaybackStatus.PLAYING);
+		simpMessagingTemplate.convertAndSend("/room/" + room, playbackStatus);
+	}
 }

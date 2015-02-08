@@ -1,12 +1,15 @@
 package com.poo.musicbroadcaster;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.poo.musicbroadcaster.model.RoomDetails;
 
 public class RoomManager {
-	private static List<String> rooms = new ArrayList<String>();
 	
-	public static List<String> getRooms() {
+	private static Map<String, RoomDetails> rooms = new HashMap<String, RoomDetails>();
+	
+	public static Map<String, RoomDetails> getRooms() {
 		return rooms;
 	}
 }

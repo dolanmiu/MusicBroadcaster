@@ -1,27 +1,24 @@
 package com.poo.musicbroadcaster;
 
-import java.util.List;
+import java.util.Map;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.poo.musicbroadcaster.model.RoomDetails;
 
 @RestController
 public class RoomController {
 	
 	@RequestMapping("/room/create")
 	public void createRoom(@RequestParam(value="name", defaultValue="untitled") String name) {
-		RoomManager.getRooms().add("blah");
+		RoomDetails room = new RoomDetails();
+		RoomManager.getRooms().put(name, room);
 	}
 	
 	@RequestMapping("/room/get")
-	public List<String> getRooms() {
+	public Map<String, RoomDetails> getRooms() {
 		return RoomManager.getRooms();
-	}
-	
-	@RequestMapping("/room/{roomId}")
-	public String joinRoom(@PathVariable String roomId) {
-		return roomId;
 	}
 }
