@@ -41,6 +41,7 @@ public class Room {
 		Date date = new Date();
 		this.lastPlayedSongTime = date.getTime();
 	    this.myTimer.schedule(new SongEndTimerTask(this.roomId), this.lastPlayedSongTime, media.getLength());
+	    //this.myTimer.
 	}
 	
 	public PlaybackStatus getPlaybackStatus() {

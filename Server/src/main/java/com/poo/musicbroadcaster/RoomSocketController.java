@@ -7,7 +7,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.poo.musicbroadcaster.model.Greeting;
-import com.poo.musicbroadcaster.model.HelloMessage;
 import com.poo.musicbroadcaster.model.PlaybackStatus;
 import com.poo.musicbroadcaster.model.Room;
 
@@ -18,13 +17,13 @@ public class RoomSocketController {
 	private SimpMessagingTemplate simpMessagingTemplate;
 
 	@MessageMapping("/room/{room}/get")
-    public void get(@DestinationVariable String room, HelloMessage message) {
+    public void get(@DestinationVariable String room, Greeting message) {
         /*if (RoomManager.getRooms().contains(roomId)) {
         	return true;
         } else {
         	return false;
         }*/
-		simpMessagingTemplate.convertAndSend("/room/" + room, new Greeting(" Hello (with simpMessagingTemplate), " + message.getName() + "!"));
+		simpMessagingTemplate.convertAndSend("/room/" + room, new Greeting(" Hello (with simpMessagingTemplate), " + message.getContent() + "!"));
     }
 	
 	@MessageMapping("/room/{room}/play")

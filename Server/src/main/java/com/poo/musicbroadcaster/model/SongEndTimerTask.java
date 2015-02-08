@@ -19,7 +19,7 @@ public class SongEndTimerTask extends TimerTask {
 	@Override
 	public void run() {
     	System.out.println("Song ended");
-    	simpMessagingTemplate.convertAndSend("/room/" + this.roomId, null);
+    	//simpMessagingTemplate.convertAndSend("/room/" + this.roomId, null);
 	}
 
 }
