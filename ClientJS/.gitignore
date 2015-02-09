@@ -1,0 +1,13 @@
+logs/*
+!.gitkeep
+node_modules/
+bower_components/
+tmp
+.DS_Store
+.idea
+
+nodule_modules
+assets
+bower_components
+e2e-tests
+.idea

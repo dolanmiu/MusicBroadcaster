@@ -1,0 +1,20 @@
+<div class="container">Hello World!
+    <!--<script src="https://apis.google.com/js/client.js"></script>-->
+
+    <div id="player" ></div>
+
+
+    <form name="form" ng-controller="roomController as roomCtrl">
+        <div class="form-group">
+            <label for="search1">Search YouTube</label>
+            <input type="search" class="form-control" id="searchInput" placeholder="search" ng-model="searchValue">
+        </div>
+
+
+
+    </form>
+    <button class="btn btn-default" ng-click="setApiKey()">Set API key</button>
+    <button class="btn btn-default" ng-click="submitSearch()"> Search</button>
+</div>
+
+<script src="client/shared/player/player.js"></script>
