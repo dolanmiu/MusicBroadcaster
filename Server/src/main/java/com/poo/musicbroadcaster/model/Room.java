@@ -12,7 +12,7 @@ public class Room {
 	private Queue<Media> songQueue;
 	private Media currentMedia;
 	private PlaybackStatus playbackStatus;
-	private SongTimer songTimer;
+	private ISongTimer songTimer;
 	private String roomId;
 	
 	private SimpMessagingTemplate simpMessagingTemplate;

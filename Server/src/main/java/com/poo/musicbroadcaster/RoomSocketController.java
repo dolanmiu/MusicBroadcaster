@@ -11,6 +11,7 @@ import com.poo.musicbroadcaster.model.Media;
 import com.poo.musicbroadcaster.model.PlaybackStatus;
 import com.poo.musicbroadcaster.model.Room;
 import com.poo.musicbroadcaster.model.client.HelloMessage;
+import com.poo.musicbroadcaster.model.client.MediaMessage;
 import com.poo.musicbroadcaster.model.client.RoomMessage;
 import com.poo.musicbroadcaster.model.client.SeekMessage;
 
@@ -49,13 +50,13 @@ public class RoomSocketController {
 	@MessageMapping("/room/{room}/add")
 	public void addMedia(@DestinationVariable String room, MediaMessage message) {
 		Room roomInstance = RoomService.getRoom(room);
-		roomInstance.addMedia(new Media(message.name, message.length));
+		roomInstance.addMedia(new Media(message.getId(), message.getLength()));
 	}
 	
-	@MessageMapping("/room/{room}/remove/{media}")
-	public void removeMedia(@DestinationVariable String room, @DestinationVariable String media, SeekMessage message) {
+	@MessageMapping("/room/{room}/remove")
+	public void removeMedia(@DestinationVariable String room, MediaMessage message) {
 		Room roomInstance = RoomService.getRoom(room);
-		roomInstance.
+		roomInstance.removeMedia(message.getId());
 	}
 	
 	private void setRoomToPlaybackStatus(String room, PlaybackStatus playbackStatus) {
