@@ -64,8 +64,16 @@ public class Room {
 		this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, new RoomMessage("media-added: please retreive new song queue"));
 	}
 	
-	public void removeMedia(Media media) {
-		this.songQueue.remove(media);
-		this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, new RoomMessage("media-removed: please retreive new song queue"));
+	public void removeMedia(String media) {
+		Media currentMedia = null;
+		for (Media mediaInstance : this.songQueue) {
+			if (mediaInstance.getId().equals(media)) {
+				currentMedia = mediaInstance;
+			}
+		}
+		if (currentMedia != null) {
+			this.songQueue.remove(currentMedia);
+			this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, new RoomMessage("media-removed: please retreive new song queue"));
+		}
 	}
 }
