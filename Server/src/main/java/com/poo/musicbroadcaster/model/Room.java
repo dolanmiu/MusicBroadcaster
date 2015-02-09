@@ -9,7 +9,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import com.poo.musicbroadcaster.model.client.MessageHeader;
 import com.poo.musicbroadcaster.model.client.RoomMessage;
 
-public class Room {
+public class Room implements IRoom {
 
 	private Queue<Media> songQueue;
 	private Media currentMedia;
@@ -28,14 +28,6 @@ public class Room {
 		this.songQueue = new LinkedList<Media>();
 	}
 	
-	public Queue<Media> getSongQueue() {
-		return this.songQueue;
-	}
-	
-	public Media getCurrentMedia() {
-		return this.currentMedia;
-	}
-	
 	private void sendMessage(MessageHeader heading, String message) {
 		this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, new RoomMessage(heading + ":" + message));
 	}
@@ -52,10 +44,17 @@ public class Room {
 		});
 	}
 	
+	@Override
+	public void sendSongQueue() {
+		this.sendMessage(MessageHeader.QUEUE, this.songQueue.toString());
+	}
+	
+	@Override
 	public PlaybackStatus getPlaybackStatus() {
 		return this.playbackStatus;
 	}
 	
+	@Override
 	public void setSeek(long time) {
 		boolean result = this.songTimer.seek(time);
 		if (result) {
@@ -65,6 +64,7 @@ public class Room {
 		}
 	}
 	
+	@Override
 	public void play() throws InterruptedException, ExecutionException {
 		boolean result = this.songTimer.play();
 		if (result) {
@@ -75,6 +75,7 @@ public class Room {
 		}
 	}
 	
+	@Override
 	public void pause() {
 		boolean result = this.songTimer.pause();
 		if (result) {
@@ -85,6 +86,7 @@ public class Room {
 		}
 	}
 	
+	@Override
 	public void addMedia(Media media) {
 		this.songQueue.add(media);
 		if (this.currentMedia == null) {
@@ -93,6 +95,7 @@ public class Room {
 		this.sendMessage(MessageHeader.MEDIA, "Added");
 	}
 	
+	@Override
 	public void removeMedia(String media) {
 		Media currentMedia = null;
 		for (Media mediaInstance : this.songQueue) {
