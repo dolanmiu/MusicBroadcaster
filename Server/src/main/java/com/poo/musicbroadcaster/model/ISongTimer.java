@@ -5,9 +5,9 @@ import java.util.concurrent.ExecutionException;
 public interface ISongTimer {
 	public void setMedia(Media media, Runnable task);
 
-	public void play() throws InterruptedException, ExecutionException;
+	public boolean play() throws InterruptedException, ExecutionException;
 
-	public void pause();
+	public boolean pause();
 
-	public void seek(long time);
+	public boolean seek(long time);
 }

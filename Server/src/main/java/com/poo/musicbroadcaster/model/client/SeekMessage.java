@@ -1,9 +1,9 @@
 package com.poo.musicbroadcaster.model.client;
 
 public class SeekMessage {
-	private int milliseconds;
+	private long milliseconds;
 	
-	public int getMilliseconds() {
+	public long getMilliseconds() {
 		return this.milliseconds;
 	}
 }

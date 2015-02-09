@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
+import com.poo.musicbroadcaster.model.client.MessageHeader;
 import com.poo.musicbroadcaster.model.client.RoomMessage;
 
 public class Room {
@@ -20,10 +21,10 @@ public class Room {
 	public Room(String roomId, ISongTimer songTimer, SimpMessageSendingOperations simpMessagingTemplate) {
 		this.roomId = roomId;
 		this.simpMessagingTemplate = simpMessagingTemplate;
-		
+		this.songTimer = songTimer;
+
 		this.playbackStatus = PlaybackStatus.STOPPED;
 		this.songQueue = new LinkedList<Media>();
-		this.songTimer = songTimer;
 	}
 	
 	public Queue<Media> getSongQueue() {
@@ -34,12 +35,16 @@ public class Room {
 		return this.currentMedia;
 	}
 	
+	private void sendMessage(MessageHeader heading, String message) {
+		this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, new RoomMessage(heading + ":" + message));
+	}
+	
 	private void setNextSong() {
 		this.currentMedia = this.songQueue.poll();
 		
 		this.songTimer.setMedia(this.currentMedia, () -> {
 			this.currentMedia = this.songQueue.poll();
-			this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, this.currentMedia);
+			this.sendMessage(MessageHeader.MEDIA, "next");
 			if (this.currentMedia != null) {
 				this.setNextSong();
 			}
@@ -50,9 +55,13 @@ public class Room {
 		return this.playbackStatus;
 	}
 	
-	public void setTime(long time) {
-		this.songTimer.seek(time);
-		this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, new RoomMessage("seek:" + time));
+	public void setSeek(long time) {
+		boolean result = this.songTimer.seek(time);
+		if (result) {
+			this.sendMessage(MessageHeader.SEEK, Long.toString(time));
+		} else {
+			this.sendMessage(MessageHeader.ERROR, "Time is invalid");
+		}
 	}
 	
 	public void setPlaybackStatus(PlaybackStatus playbackStatus) {
@@ -65,7 +74,7 @@ public class Room {
 		if (this.currentMedia == null) {
 			this.setNextSong();
 		}
-		this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, new RoomMessage("media-added: please retreive new song queue"));
+		this.sendMessage(MessageHeader.MEDIA, "Added");
 	}
 	
 	public void removeMedia(String media) {
@@ -77,7 +86,7 @@ public class Room {
 		}
 		if (currentMedia != null) {
 			this.songQueue.remove(currentMedia);
-			this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, new RoomMessage("media-removed: please retreive new song queue"));
+			this.sendMessage(MessageHeader.MEDIA, "Removed");
 		}
 	}
 }

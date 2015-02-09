@@ -44,7 +44,7 @@ public class RoomSocketController {
 	@MessageMapping("/room/{room}/seek")
 	public void seek(@DestinationVariable String room, SeekMessage message) {
 		Room roomInstance = RoomService.getRoom(room);
-		roomInstance.setTime(message.getMilliseconds());
+		roomInstance.setSeek(message.getMilliseconds());
 	}
 	
 	@MessageMapping("/room/{room}/add")

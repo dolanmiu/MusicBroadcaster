@@ -1,6 +1,5 @@
 package com.poo.musicbroadcaster.model;
 
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -29,37 +28,51 @@ public class SongTimer implements ISongTimer {
 	}
 
 	@Override
-	public void play() throws InterruptedException, ExecutionException {
-		Objects.requireNonNull(this.task);
-		Objects.requireNonNull(this.media);
+	public boolean play() throws InterruptedException, ExecutionException {
+		if (this.media == null) {
+			return false;
+		}
 
+		if (this.scheduledFuture != null) {
+			this.scheduledFuture.cancel(false);
+		}
+		
 		this.lastPlayTime = System.currentTimeMillis();
 		System.out.println("Playing with this much remaining: " + this.remainingTime);
 		this.scheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
+		return true;
 	}
 
 	@Override
-	public void pause() {
-		Objects.requireNonNull(this.task);
-		Objects.requireNonNull(this.media);
+	public boolean pause() {
+		if (this.scheduledFuture  == null || this.media == null) {
+			return false;
+		}
 		
 		this.scheduledFuture.cancel(false);
 		long pauseTime = System.currentTimeMillis();
 		long timeElapsed = pauseTime - this.lastPlayTime;
 		this.remainingTime = this.media.getLength() - timeElapsed;
-		System.out.println("Paused with this much remaining: " + this.remainingTime);
+		return true;
 	}
 
 	@Override
-	public void seek(long time) {
-		Objects.requireNonNull(this.task);
-		Objects.requireNonNull(this.media);
+	public boolean seek(long time) {
+		if (this.media == null) {
+			return false;
+		}
 		
+		long tempTime = this.media.getLength() - time;
+		if (tempTime < 0 || time < 0) {
+			return false;
+		}
+		
+		this.remainingTime = tempTime;
 		if (this.scheduledFuture != null) {
 			this.scheduledFuture.cancel(false);
 		}
-		this.remainingTime = this.media.getLength() - time;
 		this.scheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
 		System.out.println("Seeked with this much remaining: " + this.remainingTime);
+		return true;
 	}
 }
