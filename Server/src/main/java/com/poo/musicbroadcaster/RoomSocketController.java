@@ -1,6 +1,8 @@
 package com.poo.musicbroadcaster;
 
 
+import java.util.concurrent.ExecutionException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -8,7 +10,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.poo.musicbroadcaster.model.Media;
-import com.poo.musicbroadcaster.model.PlaybackStatus;
 import com.poo.musicbroadcaster.model.Room;
 import com.poo.musicbroadcaster.model.client.HelloMessage;
 import com.poo.musicbroadcaster.model.client.MediaMessage;
@@ -32,37 +33,40 @@ public class RoomSocketController {
     }
 	
 	@MessageMapping("/room/{room}/play")
-	public void play(@DestinationVariable String room) {
-		this.setRoomToPlaybackStatus(room, PlaybackStatus.PLAYING);
+	public void play(@DestinationVariable String room) throws InterruptedException, ExecutionException {
+		Room roomInstance = RoomService.getRoom(room);
+		if (roomInstance != null) {
+			roomInstance.play();
+		}
 	}
 	
 	@MessageMapping("/room/{room}/pause")
 	public void pause(@DestinationVariable String room) {
-		this.setRoomToPlaybackStatus(room, PlaybackStatus.PAUSED);
+		Room roomInstance = RoomService.getRoom(room);
+		if (roomInstance != null) {
+			roomInstance.pause();
+		}
 	}
 	
 	@MessageMapping("/room/{room}/seek")
 	public void seek(@DestinationVariable String room, SeekMessage message) {
 		Room roomInstance = RoomService.getRoom(room);
+		if (roomInstance != null) {
 		roomInstance.setSeek(message.getMilliseconds());
+		}
 	}
 	
 	@MessageMapping("/room/{room}/add")
 	public void addMedia(@DestinationVariable String room, MediaMessage message) {
 		Room roomInstance = RoomService.getRoom(room);
+		if (roomInstance != null) {
 		roomInstance.addMedia(new Media(message.getId(), message.getLength()));
+		}
 	}
 	
 	@MessageMapping("/room/{room}/remove")
 	public void removeMedia(@DestinationVariable String room, MediaMessage message) {
 		Room roomInstance = RoomService.getRoom(room);
 		roomInstance.removeMedia(message.getId());
-	}
-	
-	private void setRoomToPlaybackStatus(String room, PlaybackStatus playbackStatus) {
-		Room roomInstance = RoomService.getRoom(room);
-		if (roomInstance != null) {
-			roomInstance.setPlaybackStatus(playbackStatus);
-		}
 	}
 }

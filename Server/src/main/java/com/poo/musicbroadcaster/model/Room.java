@@ -2,6 +2,7 @@ package com.poo.musicbroadcaster.model;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
@@ -64,9 +65,24 @@ public class Room {
 		}
 	}
 	
-	public void setPlaybackStatus(PlaybackStatus playbackStatus) {
-		this.playbackStatus = playbackStatus;
-		this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, new RoomMessage(playbackStatus.toString()));
+	public void play() throws InterruptedException, ExecutionException {
+		boolean result = this.songTimer.play();
+		if (result) {
+			this.playbackStatus = PlaybackStatus.PLAYING;
+			this.sendMessage(MessageHeader.PLAY, this.currentMedia.toString());
+		} else {
+			this.sendMessage(MessageHeader.ERROR, "Song cannot be played, maybe there isnt a song in queue");
+		}
+	}
+	
+	public void pause() {
+		boolean result = this.songTimer.pause();
+		if (result) {
+			this.playbackStatus = PlaybackStatus.PAUSED;
+			this.sendMessage(MessageHeader.PAUSE, this.currentMedia.toString());
+		} else {
+			this.sendMessage(MessageHeader.ERROR, "Song cannot be paused, maybe there isnt a song in queue");
+		}
 	}
 	
 	public void addMedia(Media media) {
