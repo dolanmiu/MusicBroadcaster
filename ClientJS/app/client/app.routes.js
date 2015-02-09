@@ -11,8 +11,9 @@ angular.module('app')
         )
             .state('room',{
                 url:'/room',
-                templateUrl: 'client/shared/room/partial.room.html'
-
+                templateUrl: 'client/shared/room/partial.room.html',
+                controller: 'searchController',
+                controllerAs: 'searchCtrl'
             });
         $urlRouterProvider.otherwise('home');
     });
