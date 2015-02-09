@@ -1,6 +1,6 @@
 package com.poo.musicbroadcaster.model;
 
-import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,33 +11,43 @@ public class SongTimer {
 	ScheduledExecutorService scheduledExecutorService;
 	ScheduledFuture<?> scheduledFuture;
 	
-	private Date lastPlayTime;
+	private long lastPlayTime;
 	private Media media;
 	private long remainingTime;
+	
+	private Runnable task;
 
 	public SongTimer() {
 		this.scheduledExecutorService = Executors.newScheduledThreadPool(5);
 	}
 	
-	public void setMedia(Media media) {
+	public void setMedia(Media media, Runnable task) {
 		this.media = media;
+		this.task = task;
 		this.remainingTime = media.getLength();
 	}
 
 	public void play() throws InterruptedException, ExecutionException {
-		this.lastPlayTime = new Date();
-
-		this.scheduledFuture = this.scheduledExecutorService.schedule(() -> {
-			System.out.println("Executed!");
-		}, this.remainingTime, TimeUnit.MILLISECONDS);
+		Objects.requireNonNull(this.task);
+		Objects.requireNonNull(this.media);
+		
+		this.lastPlayTime = System.currentTimeMillis();
+		System.out.println("Playing with this much remaining: " + this.remainingTime);
+		this.scheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
 	}
 
-
 	public void pause() {
-		long pauseTime = new Date().getTime();
-		long timeElapsed = pauseTime - this.lastPlayTime.getTime();
-		this.remainingTime = media.getLength() - timeElapsed;
-		
 		this.scheduledFuture.cancel(false);
+		long pauseTime = System.currentTimeMillis();
+		long timeElapsed = pauseTime - this.lastPlayTime;
+		this.remainingTime = media.getLength() - timeElapsed;
+		System.out.println("Paused with this much remaining: " + this.remainingTime);
+	}
+	
+	public void seek(long time) {
+		this.scheduledFuture.cancel(false);
+		this.remainingTime = media.getLength() - time;
+		this.scheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
+		System.out.println("Seeked with this much remaining: " + this.remainingTime);
 	}
 }

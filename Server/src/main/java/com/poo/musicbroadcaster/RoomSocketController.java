@@ -6,9 +6,11 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import com.poo.musicbroadcaster.model.Greeting;
 import com.poo.musicbroadcaster.model.PlaybackStatus;
 import com.poo.musicbroadcaster.model.Room;
+import com.poo.musicbroadcaster.model.client.HelloMessage;
+import com.poo.musicbroadcaster.model.client.RoomMessage;
+import com.poo.musicbroadcaster.model.client.SeekMessage;
 
 @Controller
 public class RoomSocketController {
@@ -17,13 +19,13 @@ public class RoomSocketController {
 	private SimpMessagingTemplate simpMessagingTemplate;
 
 	@MessageMapping("/room/{room}/get")
-    public void get(@DestinationVariable String room, Greeting message) {
+    public void get(@DestinationVariable String room, HelloMessage message) {
         /*if (RoomManager.getRooms().contains(roomId)) {
         	return true;
         } else {
         	return false;
         }*/
-		simpMessagingTemplate.convertAndSend("/room/" + room, new Greeting(" Hello (with simpMessagingTemplate), " + message.getContent() + "!"));
+		simpMessagingTemplate.convertAndSend("/room/" + room, new RoomMessage(" Hello (with simpMessagingTemplate), " + message.getName() + "!"));
     }
 	
 	@MessageMapping("/room/{room}/play")
@@ -37,13 +39,21 @@ public class RoomSocketController {
 	}
 	
 	@MessageMapping("/room/{room}/seek")
-	public void seek(@DestinationVariable String room) {
-		this.setRoomToPlaybackStatus(room, PlaybackStatus.PLAYING);
+	public void seek(@DestinationVariable String room, SeekMessage message) {
+		Room roomInstance = RoomService.getRoom(room);
+		roomInstance.setTime(message.getMilliseconds());
+	}
+	
+	@MessageMapping("/room/{room}/add/{media}")
+	public void addSong(@DestinationVariable String room, @DestinationVariable String media, SeekMessage message) {
+		Room roomInstance = RoomService.getRoom(room);
+		roomInstance.
 	}
 	
 	private void setRoomToPlaybackStatus(String room, PlaybackStatus playbackStatus) {
-		Room roomInstance = RoomService.getRooms().get(room);
-		roomInstance.setPlaybackStatus(PlaybackStatus.PLAYING);
-		simpMessagingTemplate.convertAndSend("/room/" + room, playbackStatus);
+		Room roomInstance = RoomService.getRoom(room);
+		if (roomInstance != null) {
+			roomInstance.setPlaybackStatus(playbackStatus);
+		}
 	}
 }

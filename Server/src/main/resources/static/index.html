@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Hello WebSocket</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
     <script type="text/javascript">
         var stompClient = null;
+        var room = "fuckyou";
 
         function setConnected(connected) {
             document.getElementById('connect').disabled = connected;
@@ -17,10 +19,10 @@
         function connect() {
             var socket = new SockJS('/hello');
             stompClient = Stomp.over(socket);
-            stompClient.connect({}, function(frame) {
+            stompClient.connect({}, function (frame) {
                 setConnected(true);
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/room/fuckyou', function(greeting){
+                stompClient.subscribe('/room/fuckyou', function (greeting) {
                     showGreeting(JSON.parse(greeting.body).content);
                     console.log("recieved braodcasted data");
                 });
@@ -35,7 +37,9 @@
 
         function sendName() {
             var name = document.getElementById('name').value;
-            stompClient.send("/app/room/greet/fuckyou", {}, JSON.stringify({ 'name': name }));
+            stompClient.send("/app/room/fuckyou/get", {}, JSON.stringify({
+                'name': name
+            }));
         }
 
         function showGreeting(message) {
@@ -45,21 +49,42 @@
             p.appendChild(document.createTextNode(message));
             response.appendChild(p);
         }
+
+        function play() {
+            stompClient.send("/app/room/" + room + "/play", {});
+        }
+
+        function pause() {
+            stompClient.send("/app/room/" + room + "/pause", {});
+        }
     </script>
 </head>
+
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div>
+    <noscript>
+        <h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable
+    Javascript and reload this page!</h2>
+    </noscript>
     <div>
-        <button id="connect" onclick="connect();">Connect</button>
-        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+        <div>
+            <button id="connect" onclick="connect();">Connect</button>
+            <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+        </div>
+        <div>
+            <button id="play" onclick="play();">Play</button>
+            <button id="pause" onclick="pause();">Pause</button>
+        </div>
+        <div>
+            <input type="text" id="seekValue" />
+            <button id="seek" onclick="seek();">Seek</button>
+        </div>
+        <div id="conversationDiv">
+            <label>What is your name?</label>
+            <input type="text" id="name" />
+            <button id="sendName" onclick="sendName();">Send</button>
+            <p id="response"></p>
+        </div>
     </div>
-    <div id="conversationDiv">
-        <label>What is your name?</label><input type="text" id="name" />
-        <button id="sendName" onclick="sendName();">Send</button>
-        <p id="response"></p>
-    </div>
-</div>
 </body>
+
 </html>
