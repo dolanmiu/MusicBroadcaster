@@ -40,17 +40,25 @@ public class SongTimer implements ISongTimer {
 
 	@Override
 	public void pause() {
+		Objects.requireNonNull(this.task);
+		Objects.requireNonNull(this.media);
+		
 		this.scheduledFuture.cancel(false);
 		long pauseTime = System.currentTimeMillis();
 		long timeElapsed = pauseTime - this.lastPlayTime;
-		this.remainingTime = media.getLength() - timeElapsed;
+		this.remainingTime = this.media.getLength() - timeElapsed;
 		System.out.println("Paused with this much remaining: " + this.remainingTime);
 	}
 
 	@Override
 	public void seek(long time) {
-		this.scheduledFuture.cancel(false);
-		this.remainingTime = media.getLength() - time;
+		Objects.requireNonNull(this.task);
+		Objects.requireNonNull(this.media);
+		
+		if (this.scheduledFuture != null) {
+			this.scheduledFuture.cancel(false);
+		}
+		this.remainingTime = this.media.getLength() - time;
 		this.scheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
 		System.out.println("Seeked with this much remaining: " + this.remainingTime);
 	}

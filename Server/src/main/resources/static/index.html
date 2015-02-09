@@ -37,7 +37,7 @@
 
         function sendName() {
             var name = document.getElementById('name').value;
-            stompClient.send("/app/room/fuckyou/get", {}, JSON.stringify({
+            stompClient.send("/app/room/" + room + "/get", {}, JSON.stringify({
                 'name': name
             }));
         }
@@ -57,6 +57,22 @@
         function pause() {
             stompClient.send("/app/room/" + room + "/pause", {});
         }
+
+        function seek() {
+            var seek = document.getElementById('seekValue').value;
+            stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
+                'milliseconds': seek
+            }));
+        }
+
+        function addMedia() {
+            var id = document.getElementById('mediaId').value;
+            var length = document.getElementById('mediaLength').value;
+            stompClient.send("/app/room/" + room + "/add", {}, JSON.stringify({
+                'id': id,
+                'length': length
+            }));
+        }
     </script>
 </head>
 
@@ -71,11 +87,16 @@
             <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
         </div>
         <div>
+            <input type="text" id="mediaId" placeholder="Media Id" />
+            <input type="text" id="mediaLength" placeholder="Media length" />
+            <button id="addMedia" onclick="addMedia();">Add Media</button>
+        </div>
+        <div>
             <button id="play" onclick="play();">Play</button>
             <button id="pause" onclick="pause();">Pause</button>
         </div>
         <div>
-            <input type="text" id="seekValue" />
+            <input type="text" id="seekValue" placeholder="Seek in milliseconds" />
             <button id="seek" onclick="seek();">Seek</button>
         </div>
         <div id="conversationDiv">

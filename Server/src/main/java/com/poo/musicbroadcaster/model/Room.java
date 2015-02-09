@@ -3,7 +3,7 @@ package com.poo.musicbroadcaster.model;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
 import com.poo.musicbroadcaster.model.client.RoomMessage;
 
@@ -15,15 +15,15 @@ public class Room {
 	private ISongTimer songTimer;
 	private String roomId;
 	
-	private SimpMessagingTemplate simpMessagingTemplate;
+	private SimpMessageSendingOperations simpMessagingTemplate;
 	
-	public Room(String roomId, SimpMessagingTemplate simpMessagingTemplate) {
+	public Room(String roomId, ISongTimer songTimer, SimpMessageSendingOperations simpMessagingTemplate) {
 		this.roomId = roomId;
 		this.simpMessagingTemplate = simpMessagingTemplate;
 		
 		this.playbackStatus = PlaybackStatus.STOPPED;
 		this.songQueue = new LinkedList<Media>();
-		this.songTimer = new SongTimer();
+		this.songTimer = songTimer;
 	}
 	
 	public Queue<Media> getSongQueue() {
@@ -34,13 +34,14 @@ public class Room {
 		return this.currentMedia;
 	}
 	
-	public void setCurrentMedia(Media media) {
-		this.currentMedia = media;
-		this.songTimer.setMedia(media, () -> {
+	private void setNextSong() {
+		this.currentMedia = this.songQueue.poll();
+		
+		this.songTimer.setMedia(this.currentMedia, () -> {
 			this.currentMedia = this.songQueue.poll();
 			this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, this.currentMedia);
 			if (this.currentMedia != null) {
-				this.setCurrentMedia(this.currentMedia);
+				this.setNextSong();
 			}
 		});
 	}
@@ -61,6 +62,9 @@ public class Room {
 	
 	public void addMedia(Media media) {
 		this.songQueue.add(media);
+		if (this.currentMedia == null) {
+			this.setNextSong();
+		}
 		this.simpMessagingTemplate.convertAndSend("/room/" + this.roomId, new RoomMessage("media-added: please retreive new song queue"));
 	}
 	
