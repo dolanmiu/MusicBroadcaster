@@ -1,7 +1,23 @@
-Music Broadcast Server
+Music Broadcaster Server
 =======================
 
 This is the server component of the music broadcaster
+
+# To Build and Run
+Open a terminal and navigate to the Server folder, then run this command:
+```
+gradlew build
+```
+
+Then navigate to:
+```
+MusicBroadcaster\Server\build\libs
+```
+
+and then this command:
+```
+java -jar gs-music-broadcaster-0.1.0.jar
+```
 
 # REST Calls
 
