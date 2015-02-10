@@ -6,6 +6,7 @@
 angular.module('app').controller('searchController', function ($scope, googleApiService, $window) {
     'use strict';
     var self = this,
+        searchResults = {},
         player;
 
     $scope.channel = {};
@@ -19,34 +20,29 @@ angular.module('app').controller('searchController', function ($scope, googleApi
         });
     };
 
-    //$scope.watch('$viewContentLoaded',function(){
-    //    googleApiService.handleClientLoad().then(function(data){
-    //        console.log(data);
-    //    });
-    //});
 
     $scope.setApiKey = function () {
         googleApiService.handleClientLoad();
     };
 
     $scope.submitSearch = function () {
-        var search = $scope.searchValue,
-            restRequest = gapi.client.request({
-                'path': '/youtube/v3/search',
-                'params': {
-                    'part': 'snippet',
-                    'q': search,
-                    'order': 'relevance',
-                    'type': 'video'
+        var search = $scope.searchValue;
+        gapi.client.request({
+            'path': '/youtube/v3/search',
+            'params': {
+                'part': 'snippet',
+                'q': search,
+                'order': 'relevance',
+                'type': 'video'
 
-                }
-            });
-
-        restRequest.then(function (response) {
-            console.log(response.result);
-            self.searchResults = response.result;
+            }
+        }).then(function (response) {
+            $scope.searchResults = response.result;
+            console.log($scope.searchResults);
+            $scope.$apply();
         }, function (reason) {
             console.log('Error: ' + reason.result.error.message);
+            $scope.$apply();
         });
 
     };
@@ -60,6 +56,9 @@ angular.module('app').controller('searchController', function ($scope, googleApi
         console.log(self.searchResults);
     };
 
+    $scope.$on("$destroy", function() {
+        player = undefined;
+    });
 
     $scope.loadYTVideo = function (videoId) {
         if (player === undefined) {

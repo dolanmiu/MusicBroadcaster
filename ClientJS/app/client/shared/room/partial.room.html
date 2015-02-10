@@ -1,20 +1,19 @@
 <div id="frame" class="container" >Hello World!
-    <!--<script src="https://apis.google.com/js/client.js"></script>-->
     <div id="player"></div>
     <!--<youtube width="640" height="390" video-id="searchCtrl.videoId"></youtube>-->
 
-    <form id="hello">
+    <form id="hello" ng-submit="submitSearch()">
         <div class="form-group">
             <label>Search YouTube</label>
             <input type="search" class="form-control" id="searchInput" placeholder="search" ng-model="searchValue">
         </div>
-        <button class="btn btn-default" ng-click="setApiKey()">Set API key</button>
-        <button class="btn btn-default" ng-click="submitSearch()"> Search</button>
+        <button type="button" class="btn btn-default" ng-click="setApiKey()">Set API key</button>
+        <button class="btn btn-default" type="submit"> Search</button>
         <button class="btn btn-default" ng-click="checkResults()">Check results</button>
     </form>
 
-    <table class="table">
-        <tr ng-repeat="item in searchCtrl.searchResults.items">
+    <table class="table" >
+        <tr ng-repeat="item in searchResults.items">
             <td><img ng-src="{{item.snippet.thumbnails.medium.url}}"></td>
             <td><a  ng-click="loadYTVideo(item.id.videoId)">{{item.snippet.title}}</a></td>
         </tr>
