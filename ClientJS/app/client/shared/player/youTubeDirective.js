@@ -27,8 +27,6 @@ angular.module('youTubeApp').directive('youtube', function ($window) {
             var player;
 
             $window.onYouTubeIframeAPIReady = function () {
-                console.log("iframe ready");
-                console.log(scope.height + " " + scope.width + " " + scope.videoId);
                 player = new YT.Player('player', {
                     height: scope.height,
                     width: scope.width,
