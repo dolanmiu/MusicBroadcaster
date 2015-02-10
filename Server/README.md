@@ -72,13 +72,13 @@ stompClient.send("/app/room/my-very-nice-room/remove", {}, JSON.stringify({
 # How to use
 1. Create a room with a REST call
 2. Connect to the websocket called "channels"
-E.g.
-```
-var socket = new SockJS('/SOCKET_NAME');
-stompClient = Stomp.over(socket);
-```
+⋅⋅⋅E.g.
+⋅⋅⋅```
+⋅⋅⋅var socket = new SockJS('/SOCKET_NAME');
+⋅⋅⋅stompClient = Stomp.over(socket);
+⋅⋅⋅```
 3. Subscribe to a channel
-E.g.
-```
-/room/my-very-nice-room
-```
+⋅⋅⋅E.g.
+⋅⋅⋅```
+⋅⋅⋅/room/my-very-nice-room
+⋅⋅⋅```
