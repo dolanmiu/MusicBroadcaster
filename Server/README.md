@@ -41,7 +41,7 @@ localhost:8080/room/my-very-nice-room/queue
 
 # Websocket calls
 ### Add a video
-Use this link along with a JSON object specifying the video
+Send this link along with a JSON object specifying the video
 ```
 app/room/[ROOM NAME HERE]/add
 ```
@@ -55,7 +55,7 @@ stompClient.send("/app/room/my-very-nice-room/add", {}, JSON.stringify({
 ```
 
 ### Remove a video
-Use this link along with a JSON object specifying the video
+Send this link along with a JSON object specifying the video
 ```
 app/room/[ROOM NAME HERE]/remove
 ```
@@ -66,6 +66,17 @@ stompClient.send("/app/room/my-very-nice-room/remove", {}, JSON.stringify({
     'id': id,
     'length': length
 }));
+```
+
+## Play
+Send this link
+```
+app/room/[ROOM NAME HERE]/play
+```
+
+For example:
+```
+stompClient.send("/app/room/my-very-nice-room/play", {});
 ```
 
 
