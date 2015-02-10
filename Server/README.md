@@ -97,9 +97,9 @@ app/room/[ROOM NAME HERE]/seek
 
 For example:
 ```
-    stompClient.send("/app/room/my-very-nice-room/pause", {}, JSON.stringify({
-        'milliseconds': seek
-    }));
+stompClient.send("/app/room/my-very-nice-room/pause", {}, JSON.stringify({
+    'milliseconds': seek
+}));
 ```
 
 # How to use
