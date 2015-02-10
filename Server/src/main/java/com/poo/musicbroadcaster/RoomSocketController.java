@@ -9,7 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.poo.musicbroadcaster.model.Media;
-import com.poo.musicbroadcaster.model.Room;
+import com.poo.musicbroadcaster.model.IRoom;
 import com.poo.musicbroadcaster.model.client.HelloMessage;
 import com.poo.musicbroadcaster.model.client.MediaMessage;
 import com.poo.musicbroadcaster.model.client.RoomMessage;
@@ -28,7 +28,7 @@ public class RoomSocketController {
 
 	@MessageMapping("/room/{room}/play")
 	public void play(@DestinationVariable String room) throws InterruptedException, ExecutionException {
-		Room roomInstance = RoomService.getRoom(room);
+		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.play();
 		}
@@ -36,7 +36,7 @@ public class RoomSocketController {
 
 	@MessageMapping("/room/{room}/pause")
 	public void pause(@DestinationVariable String room) {
-		Room roomInstance = RoomService.getRoom(room);
+		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.pause();
 		}
@@ -44,7 +44,7 @@ public class RoomSocketController {
 
 	@MessageMapping("/room/{room}/seek")
 	public void seek(@DestinationVariable String room, SeekMessage message) {
-		Room roomInstance = RoomService.getRoom(room);
+		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.setSeek(message.getMilliseconds());
 		}
@@ -52,7 +52,7 @@ public class RoomSocketController {
 
 	@MessageMapping("/room/{room}/add")
 	public void addMedia(@DestinationVariable String room, MediaMessage message) {
-		Room roomInstance = RoomService.getRoom(room);
+		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.addMedia(new Media(message.getId(), message.getLength()));
 		}
@@ -60,7 +60,7 @@ public class RoomSocketController {
 
 	@MessageMapping("/room/{room}/remove")
 	public void removeMedia(@DestinationVariable String room, MediaMessage message) {
-		Room roomInstance = RoomService.getRoom(room);
+		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.removeMedia(message.getId());
 		}
@@ -68,7 +68,7 @@ public class RoomSocketController {
 
 	@MessageMapping("/room/{room}/queue")
 	public void getQueue(@DestinationVariable String room) {
-		Room roomInstance = RoomService.getRoom(room);
+		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.sendSongQueue();
 		}

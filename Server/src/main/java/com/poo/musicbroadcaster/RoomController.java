@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.poo.musicbroadcaster.model.IRoom;
 import com.poo.musicbroadcaster.model.Room;
 import com.poo.musicbroadcaster.model.SongTimer;
 
@@ -19,18 +20,18 @@ public class RoomController {
 	
 	@RequestMapping("/room/create")
 	public String createRoom(@RequestParam(value="name", defaultValue="untitled") String name) {
-		Map<String, Room> rooms = RoomService.getRooms();
+		Map<String, IRoom> rooms = RoomService.getRooms();
 		if (!rooms.containsKey(name)) {
-			Room room = new Room(name,  new SongTimer(), simpMessagingTemplate);
+			IRoom room = new Room(name,  new SongTimer(), simpMessagingTemplate);
 			RoomService.getRooms().put(name, room);
 			return "Created room: " + name;
 		} else {
-			return "Error : Room already exists";
+			return "Error : IRoom already exists";
 		}
 	}
 	
 	@RequestMapping("/room/get")
-	public Map<String, Room> getRooms() {
+	public Map<String, IRoom> getRooms() {
 		return RoomService.getRooms();
 	}
 }
