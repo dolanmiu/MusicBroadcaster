@@ -13,16 +13,16 @@ angular.module('app').service('googleApiService', function ($http, $rootScope, $
         });
     };
 
-    this.loadApiClientInterfaces = function(){
-        gapi.client.load('youtube','v3',function(){
+    this.loadApiClientInterfaces = function () {
+        gapi.client.load('youtube', 'v3', function () {
             request = gapi.client.youtube.search.list({
-                part:'snippet',
+                part: 'snippet',
                 channelId: 'UCqhNRDQE_fqBDBwsvmT8cTg',
                 order: 'date',
                 type: 'video'
             });
 
-            request.execute(function(response){
+            request.execute(function (response) {
                 deferred.resolve(data);
             });
         });
