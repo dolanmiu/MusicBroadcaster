@@ -3,9 +3,10 @@
  */
 /*globals angular, document, done, YT */
 angular.module('app')
-    .controller('playerController', function ($scope, playerService, $window) {
+    .controller('playerController', function ($scope, $window) {
         'use strict';
-        var player;
+        var player,
+            videoId;
 
         $scope.createPlayer = function () {
             var tag = document.createElement('script'),
@@ -18,7 +19,7 @@ angular.module('app')
                 player = new YT.Player('player', {
                     height: '390',
                     width: '640',
-                    videoId: videoId,
+                    videoId: '51nAi3eDYN8',
                     events: {
                         'onReady': function (event) {
                             event.target.playVideo();
@@ -35,7 +36,8 @@ angular.module('app')
 
         };
 
-        $scope.loadNewVideo = function () {
-            player.loadVideoById($scope.videoId, 5, "large");
+
+        $scope.loadNewVideo = function (videoId) {
+            player.loadVideoById(videoId, 5, "large");
         };
     });

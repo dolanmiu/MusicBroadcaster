@@ -1,20 +1,24 @@
-<div class="container">Hello World!
+<div id="frame" class="container" >Hello World!
     <!--<script src="https://apis.google.com/js/client.js"></script>-->
+    <div id="player"></div>
+    <!--<youtube width="640" height="390" video-id="searchCtrl.videoId"></youtube>-->
 
-    <div id="player" ></div>
-
-
-    <form name="form" ng-controller="roomController as roomCtrl">
+    <form id="hello">
         <div class="form-group">
-            <label for="search1">Search YouTube</label>
+            <label>Search YouTube</label>
             <input type="search" class="form-control" id="searchInput" placeholder="search" ng-model="searchValue">
         </div>
-
-
-
+        <button class="btn btn-default" ng-click="setApiKey()">Set API key</button>
+        <button class="btn btn-default" ng-click="submitSearch()"> Search</button>
+        <button class="btn btn-default" ng-click="checkResults()">Check results</button>
     </form>
-    <button class="btn btn-default" ng-click="setApiKey()">Set API key</button>
-    <button class="btn btn-default" ng-click="submitSearch()"> Search</button>
+
+    <table class="table">
+        <tr ng-repeat="item in searchCtrl.searchResults.items">
+            <td><img ng-src="{{item.snippet.thumbnails.medium.url}}"></td>
+            <td><a  ng-click="loadYTVideo(item.id.videoId)">{{item.snippet.title}}</a></td>
+        </tr>
+    </table>
+
 </div>
 
-<script src="client/shared/player/player.js"></script>
