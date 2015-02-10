@@ -123,7 +123,7 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/room/fuckyou', function (greeting) {
+        stompClient.subscribe('/room/my-very-nice-room', function (greeting) {
             showGreeting(JSON.parse(greeting.body).content);
             console.log("recieved braodcasted data");
         });
