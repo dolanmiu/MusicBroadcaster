@@ -103,18 +103,35 @@ stompClient.send("/app/room/my-very-nice-room/pause", {}, JSON.stringify({
 ```
 
 # How to use
+## Fresh user
 1. Create a room with a REST call
 2. Connect to the websocket called "channels"
-
-   E.g.
-   ```
-   var socket = new SockJS('/SOCKET_NAME');
-   stompClient = Stomp.over(socket);
-   ```
-
 3. Subscribe to a channel
 
-   E.g.
-   ```
-   /room/my-very-nice-room
-   ```
+### For example
+Do a rest call to 
+```
+localhost:8080/room/create?name=my-very-nice-room
+```
+
+Then:
+
+```
+function connect() {
+    var socket = new SockJS('/hello');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/room/fuckyou', function (greeting) {
+            showGreeting(JSON.parse(greeting.body).content);
+            console.log("recieved braodcasted data");
+        });
+    });
+}
+```
+
+## Room already exists
+1. Connect to the websocket called "channels"
+2. Subscribe to a channel
+   
