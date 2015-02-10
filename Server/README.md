@@ -68,7 +68,7 @@ stompClient.send("/app/room/my-very-nice-room/remove", {}, JSON.stringify({
 }));
 ```
 
-## Play
+### Play
 Send this link
 ```
 app/room/[ROOM NAME HERE]/play
@@ -78,7 +78,29 @@ For example:
 ```
 stompClient.send("/app/room/my-very-nice-room/play", {});
 ```
+### Pause
+Send this link
+```
+app/room/[ROOM NAME HERE]/pause
+```
 
+For example:
+```
+stompClient.send("/app/room/my-very-nice-room/pause", {});
+```
+
+### Seek
+Send this link along with a JSON object specifying the seek time
+```
+app/room/[ROOM NAME HERE]/seek
+```
+
+For example:
+```
+    stompClient.send("/app/room/my-very-nice-room/pause", {}, JSON.stringify({
+        'milliseconds': seek
+    }));
+```
 
 # How to use
 1. Create a room with a REST call
