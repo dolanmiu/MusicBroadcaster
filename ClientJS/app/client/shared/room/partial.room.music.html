@@ -1,0 +1,26 @@
+<div id="frame" class="container">Hello World!
+    <div id="player"></div>
+    <!--<youtube width="640" height="390" video-id="searchCtrl.videoId"></youtube>-->
+
+    <form id="hello" ng-submit="submitSearch()">
+        <div class="form-group">
+            <label>Search YouTube</label>
+            <input type="search" class="form-control" id="searchInput" placeholder="search" ng-model="searchValue">
+        </div>
+        <button type="button" class="btn btn-default" ng-click="setApiKey()">Set API key</button>
+        <button class="btn btn-default" type="submit"> Search</button>
+        <button class="btn btn-default" ng-click="checkResults()">Check results</button>
+        <button class="btn" ng-click="play()">Play</button>
+        <button class="btn" ng-click="pause()">Pause</button>
+    </form>
+
+    <table class="table">
+        <tr ng-repeat="item in searchResults.items">
+            <td><img ng-src="{{item.snippet.thumbnails.medium.url}}"></td>
+            <td><a ng-click="loadYTVideo(item.id.videoId)">{{item.snippet.title}}</a></td>
+        </tr>
+    </table>
+
+</div>
+
+<z></z>

@@ -1,23 +1,27 @@
-<div id="frame" class="container" >Hello World!
-    <div id="player"></div>
-    <!--<youtube width="640" height="390" video-id="searchCtrl.videoId"></youtube>-->
+<div class="container">
+    <h1 class="page-header">
+        Welcome to Music Broadcaster
+        <small>please proceed.</small>
+    </h1>
 
-    <form id="hello" ng-submit="submitSearch()">
-        <div class="form-group">
-            <label>Search YouTube</label>
-            <input type="search" class="form-control" id="searchInput" placeholder="search" ng-model="searchValue">
-        </div>
-        <button type="button" class="btn btn-default" ng-click="setApiKey()">Set API key</button>
-        <button class="btn btn-default" type="submit"> Search</button>
-        <button class="btn btn-default" ng-click="checkResults()">Check results</button>
+    <form class="container">
+        <div class="col-lg-6">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a ui-sref="#">Create room</a></li>
+                        <li><a ui-sref="room.music">Join room</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </div><!-- /btn-group -->
+                <input type="text" class="form-control" aria-label="...">
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
     </form>
 
-    <table class="table" >
-        <tr ng-repeat="item in searchResults.items">
-            <td><img ng-src="{{item.snippet.thumbnails.medium.url}}"></td>
-            <td><a  ng-click="loadYTVideo(item.id.videoId)">{{item.snippet.title}}</a></td>
-        </tr>
-    </table>
+    <div ui-view></div>
 
 </div>
-

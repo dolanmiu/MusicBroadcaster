@@ -1,12 +1,11 @@
 /**
  * Created by Kelv on 09/02/2015.
  */
-/*globals angular, console, document */
+/*globals angular, console, document, done */
 
 angular.module('app').controller('searchController', function ($scope, googleApiService, $window) {
     'use strict';
     var self = this,
-        searchResults = {},
         player;
 
     $scope.channel = {};
@@ -19,7 +18,6 @@ angular.module('app').controller('searchController', function ($scope, googleApi
             console.log('Failed: ' + error);
         });
     };
-
 
     $scope.setApiKey = function () {
         googleApiService.handleClientLoad();
@@ -56,7 +54,7 @@ angular.module('app').controller('searchController', function ($scope, googleApi
         console.log(self.searchResults);
     };
 
-    $scope.$on("$destroy", function() {
+    $scope.$on("$destroy", function () {
         player = undefined;
     });
 
@@ -70,8 +68,11 @@ angular.module('app').controller('searchController', function ($scope, googleApi
 
             $window.onYouTubeIframeAPIReady = function () {
                 player = new YT.Player('player', {
-                    height: '390',
+                    height: '   390',
                     width: '640',
+                    playerVars: {
+                        controls: '1'
+                    },
                     videoId: videoId,
                     events: {
                         'onReady': function (event) {
@@ -91,6 +92,13 @@ angular.module('app').controller('searchController', function ($scope, googleApi
         }
     };
 
+    $scope.play = function(){
+        player.playVideo();
+    };
+
+    $scope.pause = function(){
+        player.pauseVideo();
+    }
 
     $scope.loadNewVideo = function (videoId) {
         player.loadVideoById(videoId, 5, "large");

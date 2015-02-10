@@ -15,6 +15,12 @@ angular.module('app')
                 templateUrl: 'client/shared/room/partial.room.html',
                 controller: 'searchController',
                 controllerAs: 'searchCtrl'
+            })
+            .state('room.music', {
+                url: '/room-music',
+                templateUrl: 'client/shared/room/partial.room.music.html',
+                controller: 'searchController',
+                controllerAs: 'searchCtrl'
             });
         $urlRouterProvider.otherwise('home');
     });
