@@ -20,6 +20,12 @@ public class RoomSocketController {
 
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
+	
+	@MessageMapping("/room/{room}/state")
+	public void getState(@DestinationVariable String room) {
+		IRoom roomInstance = RoomService.getRoom(room);
+		//roomInstance.sendState();
+	}
 
 	@MessageMapping("/room/{room}/get")
 	public void get(@DestinationVariable String room, HelloMessage message) {
@@ -28,6 +34,7 @@ public class RoomSocketController {
 
 	@MessageMapping("/room/{room}/play")
 	public void play(@DestinationVariable String room) throws InterruptedException, ExecutionException {
+		System.out.println("RECEIVED PLAY WEBSOCKET COMMAND");
 		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.play();
@@ -36,6 +43,7 @@ public class RoomSocketController {
 
 	@MessageMapping("/room/{room}/pause")
 	public void pause(@DestinationVariable String room) {
+		System.out.println("RECEIVED PAUSE WEBSOCKET COMMAND");
 		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.pause();
