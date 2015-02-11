@@ -113,16 +113,17 @@ angular.module('app').controller('searchController', function ($scope, googleApi
             });
     };
 
-    $scope.play = function () {
-        player.playVideo();
-    };
+    //$scope.play = function () {
+    //    player.playVideo();
+    //};
 
-    $scope.pause = function () {
-        player.pauseVideo();
-    }
+    //$scope.pause = function () {
+    //    player.pauseVideo();
+    //}
 
     $scope.loadNewVideo = function (videoId) {
         $scope.videoRequest(videoId);
+        $scope.addMedia(videoId);
         player.loadVideoById(videoId, 5, "large");
     };
 
@@ -133,63 +134,68 @@ angular.module('app').controller('searchController', function ($scope, googleApi
     var room = "fuckyou";
 
     $scope.createRoom = function () {
-        var name = 'http://localhost:8080/create?name='+ $scope.roomName;
+        var name = 'http://localhost:8080/room/create?name=' + $scope.roomName;
 
-        $http.get(name).then(function(response){
+        $http.get(name).then(function (response) {
             console.log(response);
         });
-    }
+    };
 
-    function setConnected(connected) {
-        document.getElementById('connect').disabled = connected;
-        document.getElementById('disconnect').disabled = !connected;
-        document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
-        document.getElementById('response').innerHTML = '';
-    }
+    //function setConnected(connected) {
+    //    document.getElementById('connect').disabled = connected;
+    //    document.getElementById('disconnect').disabled = !connected;
+    //    document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+    //    document.getElementById('response').innerHTML = '';
+    //}
 
-    function connect() {
-        var socket = new SockJS('/channels');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            setConnected(true);
+    $scope.connect = function (roomName) {
+        var socket = new SockJS('http://localhost:8080/channels');
+        $scope.stompClient = Stomp.over(socket);
+        $scope.stompClient.connect({}, function (frame) {
+            //setConnected(true);
+            //console.log($scope.roomName);
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/room/fuckyou', function (greeting) {
-                showGreeting(JSON.parse(greeting.body).content);
-                console.log("recieved braodcasted data");
+            $scope.stompClient.subscribe('ws://localhost:8080/room/' + $scope.roomName, function (greeting) {
+                // showGreeting(JSON.parse(greeting.body).content);
+                console.log("received broadcasted data");
             });
         });
-    }
+    };
 
-    function disconnect() {
-        stompClient.disconnect();
-        setConnected(false);
-        console.log("Disconnected");
-    }
+    $scope.checkStomp = function () {
+        console.log($scope.stompClient);
+    };
 
-    function sendName() {
-        var name = document.getElementById('name').value;
-        stompClient.send("/app/room/" + room + "/get", {}, JSON.stringify({
-            'name': name
-        }));
-    }
+    //function disconnect() {
+    //    stompClient.disconnect();
+    //    setConnected(false);
+    //    console.log("Disconnected");
+    //}
+    //
+    //function sendName() {
+    //    var name = document.getElementById('name').value;
+    //    stompClient.send("/app/room/" + room + "/get", {}, JSON.stringify({
+    //        'name': name
+    //    }));
+    //}
+    //
+    //function showGreeting(message) {
+    //    var response = document.getElementById('response');
+    //    var p = document.createElement('p');
+    //    p.style.wordWrap = 'break-word';
+    //    p.appendChild(document.createTextNode(message));
+    //    response.appendChild(p);
+    //}
 
-    function showGreeting(message) {
-        var response = document.getElementById('response');
-        var p = document.createElement('p');
-        p.style.wordWrap = 'break-word';
-        p.appendChild(document.createTextNode(message));
-        response.appendChild(p);
-    }
-
-    function play() {
-        stompClient.send("/app/room/" + room + "/play", {});
+    $scope.play = function () {
+        $scope.stompClient.send("http://localhost:8080/app/room/" + $scope.roomName + "/play", {});
         player.playVideo();
-    }
+    };
 
-    function pause() {
-        stompClient.send("/app/room/" + room + "/pause", {});
+    $scope.pause = function () {
+        $scope.stompClient.send("http://localhost:8080/app/room/" + $scope.roomName + "/pause", {});
         player.pauseVideo();
-    }
+    };
 
     function seek() {
         var seek = document.getElementById('seekValue').value;
@@ -198,13 +204,16 @@ angular.module('app').controller('searchController', function ($scope, googleApi
         }));
     }
 
-    function addMedia() {
-        var id = document.getElementById('mediaId').value;
-        var length = document.getElementById('mediaLength').value;
-        stompClient.send("/app/room/" + room + "/add", {}, JSON.stringify({
+    $scope.addMedia = function (videoId) {
+        var id = videoId;
+        var length = $scope.currentVideoLength;
+        console.log("hi");
+        $scope.stompClient.send("http://localhost:8080/app/room/" + room + "/add", {}, JSON.stringify({
             'id': id,
             'length': length
-        }));
-    }
+        })).then(function () {
+            console.log('added');
+        });
+    };
 
 });
