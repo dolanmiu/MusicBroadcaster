@@ -6,6 +6,7 @@
 angular.module('app').controller('searchController', function ($scope, googleApiService, $window) {
     'use strict';
     var self = this,
+        currentVideoLength,
         player;
 
     $scope.channel = {};
@@ -71,7 +72,8 @@ angular.module('app').controller('searchController', function ($scope, googleApi
                     height: '   390',
                     width: '640',
                     playerVars: {
-                        controls: '1'
+                        controls: '1',
+                        rel: '0'
                     },
                     videoId: videoId,
                     events: {
@@ -88,19 +90,39 @@ angular.module('app').controller('searchController', function ($scope, googleApi
                 });
             };
         } else {
-            player.loadVideoById(videoId, 5, "large");
+            //player.loadVideoById(videoId, 5, "large");
+            $scope.loadNewVideo(videoId);
         }
     };
 
-    $scope.play = function(){
+    $scope.videoRequest = function (videoId) {
+
+        gapi.client.request({
+            'path': '/youtube/v3/videos',
+            'params': {
+                'part': ['contentDetails', 'id'],
+                'id': videoId
+            }
+        })
+            .then(function (response) {
+                console.log(response.result);
+                $scope.currentVideoLength = response.result.items[0].length;
+            }, function (reason) {
+                console.log('Error: ' + reason.result.error.message);
+                $scope.$apply();
+            });
+    };
+
+    $scope.play = function () {
         player.playVideo();
     };
 
-    $scope.pause = function(){
+    $scope.pause = function () {
         player.pauseVideo();
     }
 
     $scope.loadNewVideo = function (videoId) {
+        $scope.videoRequest(videoId);
         player.loadVideoById(videoId, 5, "large");
     };
 
