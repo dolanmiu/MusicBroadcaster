@@ -66,6 +66,10 @@ public class Room implements IRoom {
 	
 	@Override
 	public void play() throws InterruptedException, ExecutionException {
+		if (this.currentMedia == null) {
+			this.sendMessage(MessageHeader.ERROR, "Song cannot be played, there isnt a song in queue");
+			return;
+		}
 		boolean result = this.songTimer.play();
 		if (result) {
 			this.playbackStatus = PlaybackStatus.PLAYING;
@@ -77,12 +81,18 @@ public class Room implements IRoom {
 	
 	@Override
 	public void pause() {
+		if (this.playbackStatus != PlaybackStatus.PLAYING) {
+			this.sendMessage(MessageHeader.ERROR, "Song cannot be paused as its not currently playing to begin with!");
+			return;
+		}
+		if (this.currentMedia == null) {
+			this.sendMessage(MessageHeader.ERROR, "Song cannot be paused, there isnt a song in queue");
+			return;
+		}
 		boolean result = this.songTimer.pause();
 		if (result) {
 			this.playbackStatus = PlaybackStatus.PAUSED;
 			this.sendMessage(MessageHeader.PAUSE, this.currentMedia.toString());
-		} else {
-			this.sendMessage(MessageHeader.ERROR, "Song cannot be paused, maybe there isnt a song in queue");
 		}
 	}
 	

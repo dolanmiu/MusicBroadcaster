@@ -60,6 +60,7 @@ public class RoomSocketController {
 
 	@MessageMapping("/room/{room}/add")
 	public void addMedia(@DestinationVariable String room, MediaMessage message) {
+		System.out.println("RECEIVED ADD MEDIA WEBSOCKET COMMAND: " + message.getId() + ", WITH LENGTH: " + message.getLength());
 		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.addMedia(new Media(message.getId(), message.getLength()));
