@@ -100,13 +100,16 @@ angular.module('app').controller('searchController', function ($scope, googleApi
         gapi.client.request({
             'path': '/youtube/v3/videos',
             'params': {
-                'part': ['contentDetails', 'id'],
+                'part': 'contentDetails',
                 'id': videoId
             }
         })
             .then(function (response) {
                 console.log(response.result);
-                $scope.currentVideoLength = response.result.items[0].length;
+                $scope.currentVideoLength = response.result.items[0].contentDetails.duration;
+                console.log("video req shows video length to be" + $scope.currentVideoLength);
+                $scope.addMedia(videoId);
+                $scope.apply;
             }, function (reason) {
                 console.log('Error: ' + reason.result.error.message);
                 $scope.$apply();
@@ -123,7 +126,7 @@ angular.module('app').controller('searchController', function ($scope, googleApi
 
     $scope.loadNewVideo = function (videoId) {
         $scope.videoRequest(videoId);
-        $scope.addMedia(videoId);
+        //$scope.addMedia(videoId);
         player.loadVideoById(videoId, 5, "large");
     };
 
@@ -155,7 +158,7 @@ angular.module('app').controller('searchController', function ($scope, googleApi
             //setConnected(true);
             //console.log($scope.roomName);
             console.log('Connected: ' + frame);
-            $scope.stompClient.subscribe('ws://localhost:8080/room/' + $scope.roomName, function (greeting) {
+            $scope.stompClient.subscribe('/room/' + $scope.roomName, function (greeting) {
                 // showGreeting(JSON.parse(greeting.body).content);
                 console.log("received broadcasted data");
             });
@@ -188,12 +191,12 @@ angular.module('app').controller('searchController', function ($scope, googleApi
     //}
 
     $scope.play = function () {
-        $scope.stompClient.send("http://localhost:8080/app/room/" + $scope.roomName + "/play", {});
+        $scope.stompClient.send("/app/room/" + $scope.roomName + "/play", {});
         player.playVideo();
     };
 
     $scope.pause = function () {
-        $scope.stompClient.send("http://localhost:8080/app/room/" + $scope.roomName + "/pause", {});
+        $scope.stompClient.send("/app/room/" + $scope.roomName + "/pause", {});
         player.pauseVideo();
     };
 
@@ -206,14 +209,33 @@ angular.module('app').controller('searchController', function ($scope, googleApi
 
     $scope.addMedia = function (videoId) {
         var id = videoId;
-        var length = $scope.currentVideoLength;
-        console.log("hi");
-        $scope.stompClient.send("http://localhost:8080/app/room/" + room + "/add", {}, JSON.stringify({
+        var length = $scope.durationToMilliseconds($scope.currentVideoLength);
+        //console.log(length);
+        ////var length = $scope.currentVideoLength * 1000;
+        //console.log(length);
+        $scope.stompClient.send("/app/room/" + room + "/add", {}, JSON.stringify({
             'id': id,
             'length': length
-        })).then(function () {
-            console.log('added');
-        });
+        }));
     };
 
+    $scope.durationToMilliseconds = function (duration) {
+        var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+        var hours = 0, minutes = 0, seconds = 0, totalMilliSeconds;
+
+        if (reptms.test(duration)) {
+            var matches = reptms.exec(duration);
+            if (matches[1]) {
+                hours = Number(matches[1]);
+            }
+            if (matches[2]) {
+                minutes = Number(matches[2]);
+            }
+            if (matches[3]) {
+                seconds = Number(matches[3]);
+            }
+            totalMilliSeconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
+        }
+        return totalMilliSeconds;
+    };
 });
