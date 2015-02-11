@@ -3,7 +3,7 @@
  */
 /*globals angular, console, document, done */
 
-angular.module('app').controller('searchController', function ($scope, googleApiService, $window) {
+angular.module('app').controller('searchController', function ($scope, googleApiService, $window, $http) {
     'use strict';
     var self = this,
         currentVideoLength,
@@ -26,6 +26,7 @@ angular.module('app').controller('searchController', function ($scope, googleApi
 
     $scope.submitSearch = function () {
         var search = $scope.searchValue;
+
         gapi.client.request({
             'path': '/youtube/v3/search',
             'params': {
@@ -33,7 +34,6 @@ angular.module('app').controller('searchController', function ($scope, googleApi
                 'q': search,
                 'order': 'relevance',
                 'type': 'video'
-
             }
         }).then(function (response) {
             $scope.searchResults = response.result;
@@ -69,7 +69,7 @@ angular.module('app').controller('searchController', function ($scope, googleApi
 
             $window.onYouTubeIframeAPIReady = function () {
                 player = new YT.Player('player', {
-                    height: '   390',
+                    height: '390',
                     width: '640',
                     playerVars: {
                         controls: '1',
@@ -126,5 +126,85 @@ angular.module('app').controller('searchController', function ($scope, googleApi
         player.loadVideoById(videoId, 5, "large");
     };
 
+    // DOLAN'S CODE
+    // ================================================================================================
+
+    var stompClient = null;
+    var room = "fuckyou";
+
+    $scope.createRoom = function () {
+        var name = 'http://localhost:8080/create?name='+ $scope.roomName;
+
+        $http.get(name).then(function(response){
+            console.log(response);
+        });
+    }
+
+    function setConnected(connected) {
+        document.getElementById('connect').disabled = connected;
+        document.getElementById('disconnect').disabled = !connected;
+        document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+        document.getElementById('response').innerHTML = '';
+    }
+
+    function connect() {
+        var socket = new SockJS('/channels');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            setConnected(true);
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/room/fuckyou', function (greeting) {
+                showGreeting(JSON.parse(greeting.body).content);
+                console.log("recieved braodcasted data");
+            });
+        });
+    }
+
+    function disconnect() {
+        stompClient.disconnect();
+        setConnected(false);
+        console.log("Disconnected");
+    }
+
+    function sendName() {
+        var name = document.getElementById('name').value;
+        stompClient.send("/app/room/" + room + "/get", {}, JSON.stringify({
+            'name': name
+        }));
+    }
+
+    function showGreeting(message) {
+        var response = document.getElementById('response');
+        var p = document.createElement('p');
+        p.style.wordWrap = 'break-word';
+        p.appendChild(document.createTextNode(message));
+        response.appendChild(p);
+    }
+
+    function play() {
+        stompClient.send("/app/room/" + room + "/play", {});
+        player.playVideo();
+    }
+
+    function pause() {
+        stompClient.send("/app/room/" + room + "/pause", {});
+        player.pauseVideo();
+    }
+
+    function seek() {
+        var seek = document.getElementById('seekValue').value;
+        stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
+            'milliseconds': seek
+        }));
+    }
+
+    function addMedia() {
+        var id = document.getElementById('mediaId').value;
+        var length = document.getElementById('mediaLength').value;
+        stompClient.send("/app/room/" + room + "/add", {}, JSON.stringify({
+            'id': id,
+            'length': length
+        }));
+    }
 
 });

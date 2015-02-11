@@ -8,18 +8,22 @@
         <div class="col-lg-6">
             <div class="input-group">
                 <div class="input-group-btn">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action <span class="caret"></span></button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                            aria-expanded="false">Action <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a ui-sref="#">Create room</a></li>
+                        <li><a ng-click="createRoom()">Create room</a></li>
                         <li><a ui-sref="room.music">Join room</a></li>
                         <li><a href="#">Something else here</a></li>
                         <li class="divider"></li>
                         <li><a href="#">Separated link</a></li>
                     </ul>
-                </div><!-- /btn-group -->
-                <input type="text" class="form-control" aria-label="...">
-            </div><!-- /input-group -->
-        </div><!-- /.col-lg-6 -->
+                </div>
+                <!-- /btn-group -->
+                <input type="text" class="form-control" aria-label="..." ng-model="roomName">
+            </div>
+            <!-- /input-group -->
+        </div>
+        <!-- /.col-lg-6 -->
     </form>
 
     <div ui-view></div>
