@@ -97,6 +97,8 @@ angular.module('app').controller('searchController', function ($scope, googleApi
 
     $scope.videoRequest = function (videoId) {
 
+        var deferred = $q.defer();
+
         gapi.client.request({
             'path': '/youtube/v3/videos',
             'params': {
@@ -110,10 +112,15 @@ angular.module('app').controller('searchController', function ($scope, googleApi
                 console.log("video req shows video length to be" + $scope.currentVideoLength);
                 //$scope.addMedia(videoId);
                 $scope.apply;
+                deferred.resolve('Promise resolved');
+
+
             }, function (reason) {
                 console.log('Error: ' + reason.result.error.message);
                 $scope.$apply();
+                deferred.reject('Promise rejected');
             });
+        return deferred.promise();
     };
 
     $scope.loadNewVideo = function (videoId) {
@@ -200,13 +207,17 @@ angular.module('app').controller('searchController', function ($scope, googleApi
     }
 
     $scope.addMedia = function (videoId) {
-        var deferred = $q.defer();
-
-
-        $scope.videoRequest(videoId);
         var id = videoId;
         console.log(videoId + " " + $scope.currentVideoLength);
-        var length = $scope.durationToMilliseconds($scope.currentVideoLength);
+        var length;
+
+        $scope.videoRequest(videoId)
+            .then(function () {
+                length = $scope.durationToMilliseconds($scope.currentVideoLength);
+            }, function (reason) {
+                console.log(reason);
+            });
+
 
         //console.log(length);
         ////var length = $scope.currentVideoLength * 1000;
