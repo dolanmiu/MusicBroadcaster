@@ -8,6 +8,7 @@ var filesize = require('gulp-filesize');
 var watch = require('gulp-watch');
 var ngAnnotate = require('gulp-ng-annotate');
 var mainBowerFiles = require('main-bower-files');
+var htmlreplace = require('gulp-html-replace');
 
 var srcDir = 'app';
 var buildDir = 'build'
@@ -19,8 +20,10 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
-gulp.task('bower', function() {
-    return gulp.src(mainBowerFiles(/* options */), { base: '/bower_components' })
+gulp.task('bower', function () {
+    return gulp.src(mainBowerFiles( /* options */ ), {
+            base: '/bower_components'
+        })
         .pipe(concat('lib.js'))
         .pipe(gulp.dest(buildDir))
         .pipe(filesize())
@@ -39,3 +42,15 @@ gulp.task('js', function () {
         .pipe(filesize())
         .on('error', gutil.log)
 });
+
+gulp.task('index', function () {
+    return gulp.src(srcDir + '/index.html')
+        .pipe(htmlreplace({
+            app: ['app.min.js'],
+            lib: 'lib.js'
+        }))
+        .pipe(gulp.dest(buildDir))
+
+});
+
+gulp.task('build', ['bower', 'js', 'index']);
