@@ -3,7 +3,7 @@
  */
 /*globals angular, console, document, done */
 
-angular.module('app').controller('searchController', function ($scope, googleApiService, $window, $http) {
+angular.module('app').controller('searchController', function ($scope, googleApiService, $window, $http, $q) {
     'use strict';
     var self = this,
         currentVideoLength,
@@ -106,23 +106,15 @@ angular.module('app').controller('searchController', function ($scope, googleApi
         })
             .then(function (response) {
                 console.log(response.result);
-                $scope.currentVideoLength = response.result.items[0].contentDetails.duration;
+                currentVideoLength = response.result.items[0].contentDetails.duration;
                 console.log("video req shows video length to be" + $scope.currentVideoLength);
-                $scope.addMedia(videoId);
+                //$scope.addMedia(videoId);
                 $scope.apply;
             }, function (reason) {
                 console.log('Error: ' + reason.result.error.message);
                 $scope.$apply();
             });
     };
-
-    //$scope.play = function () {
-    //    player.playVideo();
-    //};
-
-    //$scope.pause = function () {
-    //    player.pauseVideo();
-    //}
 
     $scope.loadNewVideo = function (videoId) {
         $scope.videoRequest(videoId);
@@ -208,8 +200,14 @@ angular.module('app').controller('searchController', function ($scope, googleApi
     }
 
     $scope.addMedia = function (videoId) {
+        var deferred = $q.defer();
+
+
+        $scope.videoRequest(videoId);
         var id = videoId;
+        console.log(videoId + " " + $scope.currentVideoLength);
         var length = $scope.durationToMilliseconds($scope.currentVideoLength);
+
         //console.log(length);
         ////var length = $scope.currentVideoLength * 1000;
         //console.log(length);
@@ -220,8 +218,11 @@ angular.module('app').controller('searchController', function ($scope, googleApi
     };
 
     $scope.durationToMilliseconds = function (duration) {
-        var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
-        var hours = 0, minutes = 0, seconds = 0, totalMilliSeconds;
+        var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/,
+            hours = 0,
+            minutes = 0,
+            seconds = 0,
+            totalMilliSeconds;
 
         if (reptms.test(duration)) {
             var matches = reptms.exec(duration);
@@ -236,6 +237,7 @@ angular.module('app').controller('searchController', function ($scope, googleApi
             }
             totalMilliSeconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
         }
+        console.log(totalMilliSeconds);
         return totalMilliSeconds;
     };
 });

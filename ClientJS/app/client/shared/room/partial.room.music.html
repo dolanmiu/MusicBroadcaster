@@ -18,7 +18,8 @@
     <table class="table">
         <tr ng-repeat="item in searchResults.items">
             <td><img ng-src="{{item.snippet.thumbnails.medium.url}}"></td>
-            <td><a ng-click="loadYTVideo(item.id.videoId)">{{item.snippet.title}}</a></td>
+            <!--<td><a ng-click="loadYTVideo(item.id.videoId)">{{item.snippet.title}}</a></td>-->
+            <td><a ng-click="addMedia(item.id.videoId)">{{item.snippet.title}}</a></td>
         </tr>
     </table>
 
