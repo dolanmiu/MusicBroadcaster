@@ -11,3 +11,5 @@ assets
 bower_components
 e2e-tests
 .idea
+
+build

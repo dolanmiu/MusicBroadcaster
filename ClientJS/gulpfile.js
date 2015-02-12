@@ -7,6 +7,7 @@ var rename = require('gulp-rename');
 var filesize = require('gulp-filesize');
 var watch = require('gulp-watch');
 var ngAnnotate = require('gulp-ng-annotate');
+var mainBowerFiles = require('main-bower-files');
 
 var srcDir = 'app';
 var buildDir = 'build'
@@ -18,13 +19,9 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
-gulp.task('vendor', function () {
-    return gulp.src(srcDir + '/bower_components/*.js')
-        .pipe(concat('vendor.js'))
-        .pipe(gulp.dest(buildDir))
-        .pipe(filesize())
-        .pipe(uglify())
-        .pipe(rename('vendor.min.js'))
+gulp.task('bower', function() {
+    return gulp.src(mainBowerFiles(/* options */), { base: '/bower_components' })
+        .pipe(concat('lib.js'))
         .pipe(gulp.dest(buildDir))
         .pipe(filesize())
         .on('error', gutil.log)
