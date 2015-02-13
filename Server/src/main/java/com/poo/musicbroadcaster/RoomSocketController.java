@@ -10,10 +10,10 @@ import org.springframework.stereotype.Controller;
 
 import com.poo.musicbroadcaster.model.Media;
 import com.poo.musicbroadcaster.model.IRoom;
-import com.poo.musicbroadcaster.model.client.HelloMessage;
-import com.poo.musicbroadcaster.model.client.MediaMessage;
-import com.poo.musicbroadcaster.model.client.RoomMessage;
-import com.poo.musicbroadcaster.model.client.SeekMessage;
+import com.poo.musicbroadcaster.model.client.inbound.HelloMessage;
+import com.poo.musicbroadcaster.model.client.inbound.MediaMessage;
+import com.poo.musicbroadcaster.model.client.inbound.RoomMessage;
+import com.poo.musicbroadcaster.model.client.inbound.SeekMessage;
 
 @Controller
 public class RoomSocketController {

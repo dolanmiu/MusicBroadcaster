@@ -6,8 +6,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
-import com.poo.musicbroadcaster.model.client.MessageHeader;
-import com.poo.musicbroadcaster.model.client.RoomMessage;
+import com.poo.musicbroadcaster.model.client.inbound.MessageHeader;
+import com.poo.musicbroadcaster.model.client.inbound.RoomMessage;
 
 public class Room implements IRoom {
 
