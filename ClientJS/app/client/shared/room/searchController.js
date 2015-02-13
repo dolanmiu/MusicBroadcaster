@@ -77,15 +77,15 @@ angular.module('app').controller('searchController', function ($scope, googleApi
                     },
                     videoId: videoId,
                     events: {
-                        'onReady': function (event) {
-                            event.target.playVideo();
-                        },
-                        'onStateChange': function (event) {
-                            if (event.data === YT.PlayerState.PLAYING && !done) {
-                                setTimeout(stopVideo, 6000);
-                                done = true;
-                            }
+                        'onReady': function () {
+                            $scope.play();
                         }
+                        //'onStateChange': function (event) {
+                        //    if (event.data === YT.PlayerState.PLAYING && !done) {
+                        //        setTimeout(stopVideo, 6000);
+                        //        done = true;
+                        //    }
+                        //}
                     }
                 });
             };
@@ -159,18 +159,29 @@ angular.module('app').controller('searchController', function ($scope, googleApi
             console.log('Connected: ' + frame);
             $scope.stompClient.subscribe('/room/' + $scope.roomName, function (greeting) {
                 // showGreeting(JSON.parse(greeting.body).content);
-                console.log('greeting.body is: ' + greeting.body);
+                //console.log('greeting.body is: ' + greeting.body);
                 console.log('greeting.body.media is: ' + JSON.parse((greeting.body)).media);
                 greeting = JSON.parse(greeting.body);
 
                 if (greeting.playback === 'PLAY') {
                     console.log("Playback: play has been received");
-                    $scope.loadYTVideo(videoId);
+                    //$scope.loadYTVideo(videoId);
                     $scope.play();
                 }
 
                 if (greeting.media === 'ADDED') {
                     console.log('Media has been added');
+                    $http.get('http://localhost:8080/room/' + $scope.roomName + '/playlist')
+                        .then(function (queue) {
+                            console.log(queue.data[0]);
+
+                            $scope.loadYTVideo(queue.data[0].id);
+                        });
+                }
+
+                if (greeting.playback === 'PAUSE') {
+                    console.log('Media has been paused');
+                    $scope.pause();
                 }
 
                 console.log("received broadcasted data");

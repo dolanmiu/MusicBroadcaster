@@ -7,7 +7,6 @@ tmp
 .idea
 
 nodule_modules
-assets
 bower_components
 e2e-tests
 .idea
