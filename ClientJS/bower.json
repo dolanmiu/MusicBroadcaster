@@ -20,9 +20,10 @@
     "fitvids": "~1.1.0",
     "modernizr": "~2.8.3",
     "waypoints": "~3.1.1",
-    "animate.css": "~3.2.0"
+    "animate.css": "~3.2.0",
+    "ui-router-extras": "~0.0.13",
+    "sockjs-client": "~0.3.4",
+    "stomp-websocket": "~2.3.4"
   },
-  "devDependencies": {
-    "ui-router-extras": "~0.0.13"
-  }
+  "devDependencies": {}
 }
