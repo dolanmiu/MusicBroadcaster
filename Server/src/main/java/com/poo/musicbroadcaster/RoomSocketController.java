@@ -64,7 +64,7 @@ public class RoomSocketController {
 		System.out.println("RECEIVED ADD MEDIA WEBSOCKET COMMAND: " + message.getId() + ", WITH LENGTH: " + message.getLength());
 		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
-			System.out.println("Gotten room, now adding");
+			System.out.println("Gotten room, now adding media");
 			roomInstance.addMedia(new Media(message.getId(), message.getLength()));
 		}
 	}
