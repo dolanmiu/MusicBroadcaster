@@ -38,8 +38,8 @@ public class RoomController {
 		return RoomService.getRooms();
 	}
 	
-	@RequestMapping("/room/{room}")
-	public Queue<Media> getPlaylist(@PathVariable String room, @RequestParam(value="playlist") String playlist) {
+	@RequestMapping("/room/{room}/playlist")
+	public Queue<Media> getPlaylist(@PathVariable String room) {
 		IRoom roomInstance = RoomService.getRoom(room);
 		return roomInstance.getPlaylist();
 	}

@@ -52,6 +52,7 @@ public class RoomSocketController {
 
 	@MessageMapping("/room/{room}/seek")
 	public void seek(@DestinationVariable String room, SeekMessage message) {
+		System.out.println("RECEIVED SEEK WEBSOCKET COMMAND");
 		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.setSeek(message.getMilliseconds());
@@ -70,6 +71,7 @@ public class RoomSocketController {
 
 	@MessageMapping("/room/{room}/remove")
 	public void removeMedia(@DestinationVariable String room, MediaMessage message) {
+		System.out.println("RECEIVED REMOVE MEDIA WEBSOCKET COMMAND");
 		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.removeMedia(message.getId());
