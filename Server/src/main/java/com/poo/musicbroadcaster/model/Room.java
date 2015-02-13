@@ -101,6 +101,7 @@ public class Room implements IRoom {
 		this.songQueue.add(media);
 		if (this.currentMedia == null) {
 			this.setNextSong();
+			this.sendMessage(MessageHeader.PLAY, this.currentMedia.toString());
 		}
 		this.sendMessage(MessageHeader.MEDIA, "Added");
 	}
