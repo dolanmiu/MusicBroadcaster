@@ -1,17 +1,15 @@
 var gulp = require('gulp');
-var gutil = require('gulp-util');
-var clean = require('gulp-clean');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var filesize = require('gulp-filesize');
-var watch = require('gulp-watch');
-var ngAnnotate = require('gulp-ng-annotate');
+// Include plugins
+var plugins = require("gulp-load-plugins")({
+    pattern: ['gulp-*', 'gulp.*', 'main-bower-files'],
+    replaceString: /\bgulp[\-.]/,
+    camelize: true
+});
 var mainBowerFiles = require('main-bower-files');
-var htmlreplace = require('gulp-html-replace');
+
 
 var srcDir = 'app';
-var buildDir = 'build'
+var buildDir = 'build/'
 
 gulp.task('clean', function () {
     return gulp.src('build', {
@@ -20,32 +18,52 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
-gulp.task('bower', function () {
+gulp.task('bowerjs', function () {
     return gulp.src(mainBowerFiles( /* options */ ), {
             base: '/bower_components'
         })
-        .pipe(concat('lib.js'))
+        .pipe(plugins.filter('*.js'))
+        .pipe(plugins.concat('lib.js'))
         .pipe(gulp.dest(buildDir))
-        .pipe(filesize())
-        .on('error', gutil.log)
+        .pipe(plugins.filesize())
+        .on('error', plugins.util.log);
+});
+
+gulp.task('bowercss', function () {
+    var cssFiles = ['src/css/*'];
+    gulp.src(plugins.mainBowerFiles())
+        .pipe(plugins.order(['normalize.css', '*']))
+        .pipe(plugins.filter('*.css'))
+        .pipe(plugins.concat('main.css'))
+        .pipe(gulp.dest(buildDir + 'css'))
+        .on('error', plugins.util.log);
+});
+
+gulp.task('css', function () {
+    var cssFiles = ['src/css/*'];
+    gulp.src(plugins.mainBowerFiles().concat(cssFiles))
+        .pipe(plugins.filter('*.css'))
+        .pipe(plugins.concat('main.css'))
+        .pipe(plugins.uglify())
+        .pipe(gulp.dest(dest + 'css'));
 });
 
 gulp.task('js', function () {
     return gulp.src(srcDir + '/client/**/*.js')
-        .pipe(concat('app.js'))
-        .pipe(ngAnnotate())
+        .pipe(plugins.concat('app.js'))
+        .pipe(plugins.ngAnnotate())
         .pipe(gulp.dest(buildDir))
-        .pipe(filesize())
-        .pipe(uglify())
-        .pipe(rename('app.min.js'))
+        .pipe(plugins.filesize())
+        .pipe(plugins.uglify())
+        .pipe(plugins.rename('app.min.js'))
         .pipe(gulp.dest(buildDir))
-        .pipe(filesize())
-        .on('error', gutil.log)
+        .pipe(plugins.filesize())
+        .on('error', plugins.util.log)
 });
 
 gulp.task('index', function () {
     return gulp.src(srcDir + '/index.html')
-        .pipe(htmlreplace({
+        .pipe(plugins.htmlReplace({
             app: ['app.min.js'],
             lib: 'lib.js'
         }))
@@ -53,4 +71,4 @@ gulp.task('index', function () {
 
 });
 
-gulp.task('build', ['bower', 'js', 'index']);
+gulp.task('build', ['bowerjs', 'js', 'index']);
