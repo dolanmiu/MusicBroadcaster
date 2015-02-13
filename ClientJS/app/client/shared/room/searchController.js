@@ -124,7 +124,7 @@ angular.module('app').controller('searchController', function ($scope, googleApi
     };
 
     $scope.loadNewVideo = function (videoId) {
-        $scope.videoRequest(videoId);
+        //$scope.videoRequest(videoId);
         //$scope.addMedia(videoId);
         player.loadVideoById(videoId, 5, "large");
     };
@@ -158,8 +158,21 @@ angular.module('app').controller('searchController', function ($scope, googleApi
             //console.log($scope.roomName);
             console.log('Connected: ' + frame);
             $scope.stompClient.subscribe('/room/' + $scope.roomName, function (greeting) {
-              // showGreeting(JSON.parse(greeting.body).content);
-                console.log(greeting);
+                // showGreeting(JSON.parse(greeting.body).content);
+                console.log('greeting.body is: ' + greeting.body);
+                console.log('greeting.body.media is: ' + JSON.parse((greeting.body)).media);
+                greeting = JSON.parse(greeting.body);
+
+                if (greeting.playback === 'PLAY') {
+                    console.log("Playback: play has been received");
+                    $scope.loadYTVideo(videoId);
+                    $scope.play();
+                }
+
+                if (greeting.media === 'ADDED') {
+                    console.log('Media has been added');
+                }
+
                 console.log("received broadcasted data");
             });
         });
@@ -217,7 +230,7 @@ angular.module('app').controller('searchController', function ($scope, googleApi
 
                 length = $scope.durationToMilliseconds(currentVideoLength);
                 console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
-                $scope.stompClient.send("/app/room/" + room + "/add", {}, JSON.stringify({
+                $scope.stompClient.send("/app/room/" + $scope.roomName + "/add", {}, JSON.stringify({
                     'id': id,
                     'length': length
                 }));
