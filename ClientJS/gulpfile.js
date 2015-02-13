@@ -5,11 +5,10 @@ var plugins = require("gulp-load-plugins")({
     replaceString: /\bgulp[\-.]/,
     camelize: true
 });
-var mainBowerFiles = require('main-bower-files');
+var wiredep = require('wiredep').stream;
 
-
-var srcDir = 'app';
-var buildDir = 'build/'
+var srcDir = 'app/';
+var buildDir = 'build/';
 
 gulp.task('clean', function () {
     return gulp.src('build', {
@@ -19,33 +18,22 @@ gulp.task('clean', function () {
 });
 
 gulp.task('bowerjs', function () {
-    return gulp.src(mainBowerFiles( /* options */ ), {
-            base: '/bower_components'
-        })
+    return gulp.src(plugins.mainBowerFiles())
         .pipe(plugins.filter('*.js'))
         .pipe(plugins.concat('lib.js'))
+        .pipe(plugins.uglify())
         .pipe(gulp.dest(buildDir))
         .pipe(plugins.filesize())
         .on('error', plugins.util.log);
 });
 
 gulp.task('bowercss', function () {
-    var cssFiles = ['src/css/*'];
     gulp.src(plugins.mainBowerFiles())
         .pipe(plugins.order(['normalize.css', '*']))
         .pipe(plugins.filter('*.css'))
         .pipe(plugins.concat('main.css'))
         .pipe(gulp.dest(buildDir + 'css'))
         .on('error', plugins.util.log);
-});
-
-gulp.task('css', function () {
-    var cssFiles = ['src/css/*'];
-    gulp.src(plugins.mainBowerFiles().concat(cssFiles))
-        .pipe(plugins.filter('*.css'))
-        .pipe(plugins.concat('main.css'))
-        .pipe(plugins.uglify())
-        .pipe(gulp.dest(dest + 'css'));
 });
 
 gulp.task('js', function () {
@@ -58,7 +46,7 @@ gulp.task('js', function () {
         .pipe(plugins.rename('app.min.js'))
         .pipe(gulp.dest(buildDir))
         .pipe(plugins.filesize())
-        .on('error', plugins.util.log)
+        .on('error', plugins.util.log);
 });
 
 gulp.task('index', function () {
@@ -67,8 +55,28 @@ gulp.task('index', function () {
             app: ['app.min.js'],
             lib: 'lib.js'
         }))
-        .pipe(gulp.dest(buildDir))
-
+        .pipe(gulp.dest(buildDir));
 });
 
-gulp.task('build', ['bowerjs', 'js', 'index']);
+gulp.task('build', ['bowerjs', 'bowercss', 'js', 'index']);
+
+gulp.task('srcbowerjs', function () {
+    /*var target = gulp.src(srcDir + 'index.html');
+    var sources = gulp.src(plugins.mainBowerFiles(), { base: 'path/to/bower_components' });
+    
+    return target.pipe(plugins.inject(sources))
+        .pipe(gulp.dest(srcDir))
+        .on('error', plugins.util.log);*/
+
+    return gulp.src(srcDir + 'index.html')
+        .pipe(wiredep())
+        .pipe(gulp.dest(srcDir))
+        .on('error', plugins.util.log);
+});
+
+gulp.task('srcbowercss', function () {
+    return gulp.src(srcDir + 'index.html')
+        .pipe(wiredep())
+        .pipe(gulp.dest(srcDir))
+        .on('error', plugins.util.log);
+});

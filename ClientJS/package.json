@@ -13,6 +13,7 @@
     "gulp-filesize": "0.0.6",
     "gulp-filter": "^2.0.1",
     "gulp-html-replace": "^1.4.4",
+    "gulp-inject": "^1.1.1",
     "gulp-load-plugins": "^0.8.0",
     "gulp-ng-annotate": "^0.5.2",
     "gulp-order": "^1.1.1",
@@ -25,7 +26,8 @@
     "karma-junit-reporter": "^0.2.2",
     "main-bower-files": "^2.5.0",
     "protractor": "^1.1.1",
-    "shelljs": "^0.2.6"
+    "shelljs": "^0.2.6",
+    "wiredep": "^2.2.2"
   },
   "scripts": {
     "postinstall": "bower install",
