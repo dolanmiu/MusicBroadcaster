@@ -37,9 +37,11 @@ public class Room implements IRoom {
 		
 		this.songTimer.setMedia(this.currentMedia, () -> {
 			this.currentMedia = this.songQueue.poll();
-			this.sendMessage(MessageHeader.MEDIA, "next");
+			this.sendMessage(MessageHeader.MEDIA, "Next");
 			if (this.currentMedia != null) {
 				this.setNextSong();
+			} else {
+				this.sendMessage(MessageHeader.MEDIA, "Finished");
 			}
 		});
 	}
