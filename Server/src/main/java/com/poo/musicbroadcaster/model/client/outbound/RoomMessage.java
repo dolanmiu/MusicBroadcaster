@@ -1,4 +1,4 @@
-package com.poo.musicbroadcaster.model.client.inbound;
+package com.poo.musicbroadcaster.model.client.outbound;
 
 public class RoomMessage {
     

@@ -1,14 +1,17 @@
 package com.poo.musicbroadcaster;
 
 import java.util.Map;
+import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poo.musicbroadcaster.model.IRoom;
+import com.poo.musicbroadcaster.model.Media;
 import com.poo.musicbroadcaster.model.Room;
 import com.poo.musicbroadcaster.model.SongTimer;
 
@@ -33,5 +36,11 @@ public class RoomController {
 	@RequestMapping("/room/get")
 	public Map<String, IRoom> getRooms() {
 		return RoomService.getRooms();
+	}
+	
+	@RequestMapping("/room/{room}")
+	public Queue<Media> getPlaylist(@PathVariable String room, @RequestParam(value="playlist") String playlist) {
+		IRoom roomInstance = RoomService.getRoom(room);
+		return roomInstance.getPlaylist();
 	}
 }

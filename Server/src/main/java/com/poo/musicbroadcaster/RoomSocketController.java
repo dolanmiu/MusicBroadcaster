@@ -8,12 +8,12 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import com.poo.musicbroadcaster.model.Media;
 import com.poo.musicbroadcaster.model.IRoom;
+import com.poo.musicbroadcaster.model.Media;
 import com.poo.musicbroadcaster.model.client.inbound.HelloMessage;
 import com.poo.musicbroadcaster.model.client.inbound.MediaMessage;
-import com.poo.musicbroadcaster.model.client.inbound.RoomMessage;
 import com.poo.musicbroadcaster.model.client.inbound.SeekMessage;
+import com.poo.musicbroadcaster.model.client.outbound.RoomMessage;
 
 @Controller
 public class RoomSocketController {
@@ -76,11 +76,11 @@ public class RoomSocketController {
 		}
 	}
 
-	@MessageMapping("/room/{room}/queue")
+	/*@MessageMapping("/room/{room}/queue")
 	public void getQueue(@DestinationVariable String room) {
 		IRoom roomInstance = RoomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.sendSongQueue();
 		}
-	}
+	}*/
 }
