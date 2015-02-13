@@ -120,7 +120,7 @@ angular.module('app').controller('searchController', function ($scope, googleApi
                 $scope.$apply();
                 deferred.reject('Promise rejected');
             });
-        return deferred.promise();
+        return deferred.promise;
     };
 
     $scope.loadNewVideo = function (videoId) {
@@ -208,12 +208,18 @@ angular.module('app').controller('searchController', function ($scope, googleApi
 
     $scope.addMedia = function (videoId) {
         var id = videoId;
-        console.log(videoId + " " + $scope.currentVideoLength);
+        //console.log(videoId + " " + $scope.currentVideoLength);
         var length;
 
         $scope.videoRequest(videoId)
             .then(function () {
-                length = $scope.durationToMilliseconds($scope.currentVideoLength);
+
+                length = $scope.durationToMilliseconds(currentVideoLength);
+                console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
+                $scope.stompClient.send("/app/room/" + room + "/add", {}, JSON.stringify({
+                    'id': id,
+                    'length': length
+                }));
             }, function (reason) {
                 console.log(reason);
             });
@@ -222,10 +228,7 @@ angular.module('app').controller('searchController', function ($scope, googleApi
         //console.log(length);
         ////var length = $scope.currentVideoLength * 1000;
         //console.log(length);
-        $scope.stompClient.send("/app/room/" + room + "/add", {}, JSON.stringify({
-            'id': id,
-            'length': length
-        }));
+
     };
 
     $scope.durationToMilliseconds = function (duration) {
