@@ -3,10 +3,9 @@
  */
 /*globals angular, console, document, done */
 
-angular.module('app').controller('searchController', function (playerService, $scope, googleApiService, $window, $http, $q) {
+angular.module('app').controller('searchController', function (playerService, $scope, googleApiService, $http, $q) {
     'use strict';
-    var self = this,
-        currentVideoLength,
+    var currentVideoLength,
         player;
 
     $scope.channel = {};
@@ -50,17 +49,7 @@ angular.module('app').controller('searchController', function (playerService, $s
         $scope.videoId = videoId;
     };
 
-
-    $scope.checkResults = function () {
-        console.log(self.searchResults);
-    };
-
-    $scope.$on("$destroy", function () {
-        player = undefined;
-    });
-
     $scope.videoRequest = function (videoId) {
-
         var deferred = $q.defer();
 
         gapi.client.request({
@@ -96,8 +85,8 @@ angular.module('app').controller('searchController', function (playerService, $s
 // DOLAN'S CODE
 // ================================================================================================
 
-    var stompClient = null;
-    var room = "fuckyou";
+    var stompClient = null,
+        room = "fuckyou";
 
     $scope.createRoom = function () {
         var name = 'http://localhost:8080/room/create?name=' + $scope.roomName;
@@ -136,12 +125,12 @@ angular.module('app').controller('searchController', function (playerService, $s
                 if (greeting.media === 'ADDED') {
                     var deferred = $q.defer();
                     console.log('Media has been added');
-                    $http.get('http://localhost:8080/room/' + $scope.roomName + '/playlist')
+                    $http.get('http://localhost:8080/room/' + $scope.roomName + '/current')
                         .then(function (queue) {
                             console.log('Queue data from GET is: ' + queue.data[0]);
                             if (player === undefined) {
                                 playerService.loadPlayer(player).then(function () {
-                                   // $scope.addMedia(queue.data[0].id);
+                                    // $scope.addMedia(queue.data[0].id);
                                     player.cueVideoById(queue.data[0].id);
                                 });
                                 //queue.data[0].id
