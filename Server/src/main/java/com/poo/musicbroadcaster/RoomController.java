@@ -43,4 +43,10 @@ public class RoomController {
 		IRoom roomInstance = RoomService.getRoom(room);
 		return roomInstance.getPlaylist();
 	}
+	
+	@RequestMapping("/room/{room}/current")
+	public Media getCurrentMedia(@PathVariable String room) {
+		IRoom roomInstance = RoomService.getRoom(room);
+		return roomInstance.getCurrentMedia();
+	}
 }

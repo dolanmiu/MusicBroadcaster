@@ -128,4 +128,9 @@ public class Room implements IRoom {
 	public Queue<Media> getPlaylist() {
 		return this.songQueue;
 	}
+
+	@Override
+	public Media getCurrentMedia() {
+		return this.currentMedia;
+	}
 }

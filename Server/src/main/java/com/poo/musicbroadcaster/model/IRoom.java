@@ -17,5 +17,7 @@ public interface IRoom {
 	void removeMedia(String media);
 
 	Queue<Media> getPlaylist();
+	
+	Media getCurrentMedia();
 
 }
