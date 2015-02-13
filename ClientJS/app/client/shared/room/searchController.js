@@ -158,7 +158,8 @@ angular.module('app').controller('searchController', function ($scope, googleApi
             //console.log($scope.roomName);
             console.log('Connected: ' + frame);
             $scope.stompClient.subscribe('/room/' + $scope.roomName, function (greeting) {
-                // showGreeting(JSON.parse(greeting.body).content);
+              // showGreeting(JSON.parse(greeting.body).content);
+                console.log(greeting);
                 console.log("received broadcasted data");
             });
         });
