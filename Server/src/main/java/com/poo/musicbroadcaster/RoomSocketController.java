@@ -66,6 +66,8 @@ public class RoomSocketController {
 		if (roomInstance != null) {
 			System.out.println("Gotten room, now adding media");
 			roomInstance.addMedia(new Media(message.getId(), message.getLength()));
+		} else {
+			System.out.println("Could not get room");
 		}
 	}
 
