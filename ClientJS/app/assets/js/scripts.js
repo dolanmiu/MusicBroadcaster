@@ -24,7 +24,7 @@ $(document).ready(function() {
 	});*/
 
 	/***************** Flickity ******************/
-    $('#featuresSlider').hide();
+    /*$('#featuresSlider').hide();
 	$('#featuresSlider').flickity({
 		cellAlign: 'left',
 		contain: true,

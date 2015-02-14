@@ -30,13 +30,13 @@
 
 <body ng-app="app">
     <ul class="nav nav-pills">
-        <li role="presentation" class="active"><a ui-sref="home">Home</a>
+        <li role="presentation" class="active"><a ui-sref="root.home">Home</a>
         </li>
-        <li role="presentation"><a ui-sref="room">room</a>
+        <li role="presentation"><a ui-sref="root.room">room</a>
         </li>
     </ul>
 
-    <div ui-view></div>
+    <div ui-view="root"></div>
 
     <!-- build:lib -->
     <!-- In production use:

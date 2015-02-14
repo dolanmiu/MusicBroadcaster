@@ -99,3 +99,6 @@ gulp.task('srcbowercss', function () {
         .pipe(gulp.dest(srcDir))
         .on('error', plugins.util.log);
 });
+
+gulp.task('build', ['bowerjs', 'bowercss', 'appjs', 'css', 'js', 'index']);
+gulp.task('src', ['srcbowerjs', 'srcbowercss']);
