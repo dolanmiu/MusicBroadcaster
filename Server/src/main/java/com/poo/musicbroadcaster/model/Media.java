@@ -16,4 +16,9 @@ public class Media {
 	public String getId() {
 		return this.id;
 	}
+	
+	@Override
+	public String toString() {
+		return this.id;
+	}
 }

@@ -41,16 +41,24 @@ public class Room implements IRoom {
 
 	private void setNextSong() {
 		this.currentMedia = this.songQueue.poll();
-
-		this.songTimer.setMedia(this.currentMedia, () -> {
-			this.currentMedia = this.songQueue.poll();
+		
+		if (this.currentMedia == null) {
+			this.sendMessage(new PlaylistMessage(PlaylistMessageType.FINISHED));
+			System.out.println("PLAYLIST HAS FINISHED");
+		} else {
 			this.sendMessage(new PlaylistMessage(PlaylistMessageType.NEXT));
-			if (this.currentMedia != null) {
+			System.out.println("SONG HAS FINISHED, NEXT SONG ABOUT TO BE PLAYED: " + this.currentMedia);
+
+			this.songTimer.setMedia(this.currentMedia, () -> {
 				this.setNextSong();
-			} else {
-				this.sendMessage(new PlaylistMessage(PlaylistMessageType.FINISHED));
+			});
+			
+			try {
+				this.play();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		});
+		}
 	}
 
 	@Override
@@ -77,6 +85,7 @@ public class Room implements IRoom {
 		boolean result = this.songTimer.play();
 		if (result) {
 			this.playbackStatus = PlaybackStatus.PLAYING;
+			System.out.println("CURRENTLY PLAYING TRACK: " + this.currentMedia);
 			this.sendMessage(new PlaybackMessage(PlaybackMessageType.PLAY));
 		} else {
 			this.sendMessage(new ErrorMessage("Song cannot be played, there isnt a song in queue"));
@@ -103,11 +112,17 @@ public class Room implements IRoom {
 	@Override
 	public void addMedia(Media media) {
 		this.songQueue.add(media);
+		this.sendMessage(new MediaMessage(MediaMessageType.ADDED));
 		if (this.currentMedia == null) {
 			this.setNextSong();
-			this.sendMessage(new PlaybackMessage(PlaybackMessageType.PLAY));
+			try {
+				this.play();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
 		}
-		this.sendMessage(new MediaMessage(MediaMessageType.ADDED));
 	}
 
 	@Override
