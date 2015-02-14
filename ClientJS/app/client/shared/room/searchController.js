@@ -21,6 +21,7 @@ angular.module('app').controller('searchController', function (playerService, $s
 
     $scope.setApiKey = function () {
         googleApiService.handleClientLoad();
+        console.log('API key set');
     };
 
     $scope.submitSearch = function () {
@@ -90,7 +91,7 @@ angular.module('app').controller('searchController', function (playerService, $s
 
     $scope.createRoom = function () {
         var name = 'http://localhost:8080/room/create?name=' + $scope.roomName;
-
+        console('createRoom() is running');
         $http.get(name).then(function (response) {
             console.log(response);
         });
@@ -194,7 +195,7 @@ angular.module('app').controller('searchController', function (playerService, $s
     };
 
     function seek() {
-        var seek = document.getElementById('seekValue').value;
+        var seek = document.getElementById('see kValue').value;
         stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
             'milliseconds': seek
         }));
