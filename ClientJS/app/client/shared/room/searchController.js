@@ -91,7 +91,7 @@ angular.module('app').controller('searchController', function (playerService, $s
 
     $scope.createRoom = function () {
         var name = 'http://localhost:8080/room/create?name=' + $scope.roomName;
-        console('createRoom() is running');
+        console.log('createRoom() is running' + name);
         $http.get(name).then(function (response) {
             console.log(response);
         });
@@ -104,7 +104,7 @@ angular.module('app').controller('searchController', function (playerService, $s
 //    document.getElementById('response').innerHTML = '';
 //}
 
-    $scope.connect = function (roomName) {
+    $scope.connect = function () {
         var socket = new SockJS('http://localhost:8080/channels');
         $scope.stompClient = Stomp.over(socket);
         $scope.stompClient.connect({}, function (frame) {
@@ -247,5 +247,4 @@ angular.module('app').controller('searchController', function (playerService, $s
         console.log(totalMilliSeconds);
         return totalMilliSeconds;
     };
-})
-;
+});
