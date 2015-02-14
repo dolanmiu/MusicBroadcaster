@@ -15,7 +15,7 @@ angular.module('app')
                         templateUrl: 'client/components/root/partial.root.html'
                     },
                     'header@root': {
-                        templateUrl: 'client/components/home/partial.home.header.html'
+                        templateUrl: 'client/components/home/partial.header.html'
                     },
                     'footer@root': {}
                 }
