@@ -10,8 +10,8 @@ angular.module('app').service('playerService', function ($q, $window) {
         tag.src = "https://www.youtube.com/iframe_api";
         targetTag.parentNode.insertBefore(tag, targetTag);
 
-        $window.onYouTubeIframeAPIReady = function (player) {
-            player = new YT.Player('player', {
+        $window.onYouTubeIframeAPIReady = function () {
+            var player = new YT.Player('player', {
                 height: '390',
                 width: '640',
                 playerVars: {
@@ -23,7 +23,7 @@ angular.module('app').service('playerService', function ($q, $window) {
                 // videoId: videoId,
                 events: {
                     'onReady': function () {
-                        deferred.resolve();
+                        deferred.resolve(player);
                     },
                     'onStateChange': onPlayerStateChange
                 }

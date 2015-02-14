@@ -3,7 +3,7 @@
  */
 /*globals angular, console, document, done */
 
-angular.module('app').controller('searchController', function (playerService, $scope, googleApiService, $http, $q) {
+angular.module('app').controller('searchController', function (playerService, $scope, googleApiService, $http, $q, webSocketService) {
     'use strict';
     var currentVideoLength,
         player;
@@ -113,13 +113,22 @@ angular.module('app').controller('searchController', function (playerService, $s
             $scope.stompClient.subscribe('/room/' + $scope.roomName, function (greeting) {
                 // showGreeting(JSON.parse(greeting.body).content);
                 //console.log('greeting.body is: ' + greeting.body);
-                console.log('greeting.body.media is: ' + JSON.parse((greeting.body)).media);
-                greeting = JSON.parse(greeting.body);
 
+                greeting = JSON.parse(greeting.body);
+                console.log('greeting.body.media is: ' + greeting);
                 if (greeting.playback === 'PLAY') {
                     console.log("Playback: play has been received");
                     //$scope.loadYTVideo(videoId);
                     player.playVideo();
+                }
+
+                if (greeting.playlist === 'NEXT') {
+                    $http.get('http://localhost:8080/room/' + $scope.roomName + '/current')
+                        .then(function (playlist) {
+                            console.log(playlist);
+                            player.cueVideoById(playlist.data.id);
+                        });
+
                 }
 
                 if (greeting.media === 'ADDED') {
@@ -127,11 +136,12 @@ angular.module('app').controller('searchController', function (playerService, $s
                     console.log('Media has been added');
                     $http.get('http://localhost:8080/room/' + $scope.roomName + '/current')
                         .then(function (queue) {
-                            console.log('Queue data from GET is: ' + queue.data[0]);
+                            console.log('Queue data from GET is: ' + JSON.stringify(queue));
                             if (player === undefined) {
-                                playerService.loadPlayer(player).then(function () {
+                                playerService.loadPlayer().then(function (newPlayer) {
                                     // $scope.addMedia(queue.data[0].id);
-                                    player.cueVideoById(queue.data[0].id);
+                                    player = newPlayer;
+                                    player.cueVideoById(queue.data.id);
                                 });
                                 //queue.data[0].id
                             }
