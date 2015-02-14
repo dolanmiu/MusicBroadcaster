@@ -14,6 +14,9 @@ import com.poo.musicbroadcaster.model.IRoom;
 import com.poo.musicbroadcaster.model.Media;
 import com.poo.musicbroadcaster.model.Room;
 import com.poo.musicbroadcaster.model.SongTimer;
+import com.poo.musicbroadcaster.model.client.outbound.ErrorMessage;
+import com.poo.musicbroadcaster.model.client.outbound.OutBoundMessage;
+import com.poo.musicbroadcaster.model.client.outbound.RoomMessage;
 
 @RestController
 public class RoomController {
@@ -22,14 +25,14 @@ public class RoomController {
 	private SimpMessagingTemplate simpMessagingTemplate;
 	
 	@RequestMapping("/room/create")
-	public String createRoom(@RequestParam(value="name", defaultValue="untitled") String name) {
+	public OutBoundMessage createRoom(@RequestParam(value="name", defaultValue="untitled") String name) {
 		Map<String, IRoom> rooms = RoomService.getRooms();
 		if (!rooms.containsKey(name)) {
 			IRoom room = new Room(name,  new SongTimer(), simpMessagingTemplate);
 			RoomService.getRooms().put(name, room);
-			return "Created room: " + name;
+			return new RoomMessage("Created room");
 		} else {
-			return "Error : IRoom already exists";
+			return new ErrorMessage("IRoom already exists");
 		}
 	}
 	

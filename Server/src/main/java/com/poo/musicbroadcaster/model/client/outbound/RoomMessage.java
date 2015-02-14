@@ -1,6 +1,6 @@
 package com.poo.musicbroadcaster.model.client.outbound;
 
-public class RoomMessage {
+public class RoomMessage extends OutBoundMessage{
     
     private String content;
 
