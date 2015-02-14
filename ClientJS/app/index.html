@@ -8,23 +8,27 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 
+    <!-- build:css -->
     <link rel="stylesheet" href="assets/css/jquery.fancybox.css">
     <link rel="stylesheet" href="assets/css/app.css">
     <link rel="stylesheet" href="assets/css/styles.css">
-    <!--<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
-    <!--<script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>-->
+    <!-- endbuild -->
+
+    <!-- build:libcss -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/flickity/css/flickity.css" />
     <link rel="stylesheet" href="bower_components/animate.css/animate.css" />
     <!-- endbower -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <!-- endbuild -->
+
 </head>
 
 <body ng-app="app">
-
     <ul class="nav nav-pills">
         <li role="presentation" class="active"><a ui-sref="home">Home</a>
         </li>
@@ -32,24 +36,14 @@
         </li>
     </ul>
 
-    <div class="container-fluid">
-        <div class="jumbotron">
-            <h1>Music Broadcaster
-            <small><i></i> uses YouTube!</small>
-        </h1>
-        </div>
-
-    </div>
-
     <div ui-view></div>
 
     <!-- build:lib -->
     <!-- In production use:
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
     -->
-
     <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
+
     <!-- bower:js -->
     <script src="bower_components/modernizr/modernizr.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -74,10 +68,9 @@
     <script src="bower_components/ui-router-extras/release/ct-ui-router-extras.js"></script>
     <script src="bower_components/sockjs-client/dist/sockjs.js"></script>
     <script src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
+    <script src="bower_components/requirejs/require.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
-
-
 
     <!-- build:app -->
     <script src="client/app.module.js"></script>
@@ -93,11 +86,15 @@
     <script src="client/components/version/version-directive.js"></script>
     <script src="client/components/version/interpolate-filter.js"></script>
     <script src="client/shared/room/googleApiService.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js -->
+    <script src="assets/js/scripts.js"></script>
+    <!-- endbuild -->
 
     <script src="https://apis.google.com/js/client.js?onload=onClientLoad"></script>
     <!--<script src="https://apis.google.com/js/client.js"></script>-->
     <!--<script src="https://www.youtube.com/iframe_api"></script>-->
-    <!-- endbuild -->
 </body>
 
 </html>

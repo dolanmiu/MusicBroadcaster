@@ -31,12 +31,12 @@ gulp.task('bowercss', function () {
     gulp.src(plugins.mainBowerFiles())
         .pipe(plugins.order(['normalize.css', '*']))
         .pipe(plugins.filter('*.css'))
-        .pipe(plugins.concat('main.css'))
+        .pipe(plugins.concat('lib.css'))
         .pipe(gulp.dest(buildDir + 'css'))
         .on('error', plugins.util.log);
 });
 
-gulp.task('js', function () {
+gulp.task('appjs', function () {
     return gulp.src(srcDir + '/client/**/*.js')
         .pipe(plugins.concat('app.js'))
         .pipe(plugins.ngAnnotate())
@@ -49,16 +49,35 @@ gulp.task('js', function () {
         .on('error', plugins.util.log);
 });
 
-gulp.task('index', function () {
+gulp.task('css', function () {
+    return gulp.src(srcDir + '/assets/css/*.css')
+        .pipe(plugins.concat('main.css'))
+        .pipe(gulp.dest(buildDir + 'css'))
+        .pipe(plugins.filesize())
+        .on('error', plugins.util.log);
+});
+
+gulp.task('js', function () {
+    return gulp.src(srcDir + '/assets/js/*.js')
+        .pipe(plugins.concat('scripts.js'))
+        .pipe(gulp.dest(buildDir + 'js'))
+        .pipe(plugins.filesize())
+        .on('error', plugins.util.log);
+});
+
+gulp.task('indexjs', function () {
     return gulp.src(srcDir + '/index.html')
         .pipe(plugins.htmlReplace({
             app: ['app.min.js'],
-            lib: 'lib.js'
+            css: 'css/main.css',
+            lib: 'lib.js',
+            libcss: 'css/lib.css',
+            js: 'js/scripts.js'
         }))
         .pipe(gulp.dest(buildDir));
 });
 
-gulp.task('build', ['bowerjs', 'bowercss', 'js', 'index']);
+gulp.task('build', ['bowerjs', 'bowercss', 'appjs', 'css', 'js', 'index']);
 
 gulp.task('srcbowerjs', function () {
     /*var target = gulp.src(srcDir + 'index.html');
