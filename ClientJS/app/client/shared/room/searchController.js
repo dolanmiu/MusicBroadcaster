@@ -120,7 +120,10 @@ angular.module('app').controller('searchController', function (playerService, $s
                 if (greeting.playback === 'PLAY') {
                     console.log("Playback: play has been received");
                     //$scope.loadYTVideo(videoId);
-                    player.playVideo();
+                    setTimeout(function () {
+                        player.playVideo();
+                    }, 1000);
+
                 }
 
                 if (greeting.playlist === 'NEXT') {

@@ -41,7 +41,7 @@ angular.module('app')
             .state('root.room.music', {
                 url: '/room-music',
                 views: {
-                    'main@root': {
+                    '': {
                         templateUrl: 'client/shared/room/partial.room.music.html',
                         controller: 'searchController',
                         controllerAs: 'searchCtrl'
