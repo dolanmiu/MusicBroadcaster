@@ -32,21 +32,21 @@ angular.module('app')
                 url: '/room',
                 views: {
                     'main@root': {
-                        templateUrl: 'client/shared/room/partial.room.html'
+                        templateUrl: 'client/shared/room/partial.room.html',
+                        controller: 'searchController',
+                        controllerAs: 'searchCtrl'
                     }
-                },
-                controller: 'searchController',
-                controllerAs: 'searchCtrl'
+                }
             })
             .state('root.room.music', {
                 url: '/room-music',
                 views: {
                     'main@root': {
-                        templateUrl: 'client/shared/room/partial.room.music.html'
+                        templateUrl: 'client/shared/room/partial.room.music.html',
+                        controller: 'searchController',
+                        controllerAs: 'searchCtrl'
                     }
-                },
-                controller: 'searchController',
-                controllerAs: 'searchCtrl'
+                }
             });
         $urlRouterProvider.otherwise('home');
     });
