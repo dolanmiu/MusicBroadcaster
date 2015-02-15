@@ -19,5 +19,4 @@ public interface IRoom {
 	Queue<Media> getPlaylist();
 	
 	Media getCurrentMedia();
-
 }

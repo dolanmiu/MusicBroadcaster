@@ -3,6 +3,7 @@ package com.poo.musicbroadcaster.model;
 public class Media {
 	private String id;
 	private long length;
+	private long currentSeek;
 	
 	public Media(String id, long length) {
 		this.id = id;
@@ -15,6 +16,14 @@ public class Media {
 	
 	public String getId() {
 		return this.id;
+	}
+	
+	public void setCurrentSeek(long currentSeek) {
+		this.currentSeek = currentSeek;
+	}
+	
+	public long getCurrentTime() {
+		return this.currentSeek;
 	}
 	
 	@Override

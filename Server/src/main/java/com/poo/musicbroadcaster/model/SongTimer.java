@@ -79,4 +79,9 @@ public class SongTimer implements ISongTimer {
 		System.out.println("Seeked with this much remaining: " + this.remainingTime);
 		return true;
 	}
+
+	@Override
+	public long getSeek() {
+		return this.mediaLength - this.remainingTime;
+	}
 }

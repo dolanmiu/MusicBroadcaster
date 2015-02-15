@@ -146,6 +146,7 @@ public class Room implements IRoom {
 
 	@Override
 	public Media getCurrentMedia() {
+		this.currentMedia.setCurrentSeek(this.songTimer.getSeek());
 		return this.currentMedia;
 	}
 }
