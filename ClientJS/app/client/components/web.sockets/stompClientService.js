@@ -6,14 +6,16 @@ angular.module('app').service('stompClientService', function (playerService, $ht
     'use strict';
     var stompClient = null,
         player = null,
+        roomName,
         self = this;
-    this.connect = function (roomName) {
+    this.connect = function (roomNameParam) {
         var socket = new SockJS('http://localhost:8080/channels');
 
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
+        self.stompClient = Stomp.over(socket);
+        self.stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
-            self.stompClient.subscribe('/room/' + roomName, function (greeting) {
+            self.stompClient.subscribe('/room/' + roomNameParam, function (greeting) {
+                self.roomName = roomNameParam;
                 greeting = JSON.parse(greeting.body);
                 console.log('greeting.body is: ' + greeting);
 
@@ -26,7 +28,7 @@ angular.module('app').service('stompClientService', function (playerService, $ht
                 }
 
                 if (greeting.playlist === 'NEXT') {
-                    $http.get('http://localhost:8080/room/' + roomName + '/current')
+                    $http.get('http://localhost:8080/room/' + self.roomName + '/current')
                         .then(function (playlist) {
                             console.log(playlist);
                             player.cueVideoById(playlist.data.id);
@@ -36,7 +38,7 @@ angular.module('app').service('stompClientService', function (playerService, $ht
                 if (greeting.media === 'ADDED') {
 
                     console.log('Media has been added');
-                    $http.get('http://localhost:8080/room/' + $scope.roomName + '/current')
+                    $http.get('http://localhost:8080/room/' + self.roomName + '/current')
                         .then(function (queue) {
                             console.log('Queue data from GET is: ' + JSON.stringify(queue));
                             if (player === undefined) {
@@ -57,5 +59,12 @@ angular.module('app').service('stompClientService', function (playerService, $ht
                 console.log("received broadcasted data");
             });
         });
+    };
+
+    this.addToQueue = function (videoId, length) {
+        self.stompClient.send("/app/room/" + self.roomName + "/add", {}, JSON.stringify({
+            'id': videoId,
+            'length': length
+        }));
     };
 });
