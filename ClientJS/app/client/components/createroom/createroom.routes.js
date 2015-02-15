@@ -1,8 +1,3 @@
-angular.module('app').controller('createroomController', function (ngDialog) {
-    'use strict';
-
-});
-
 angular.module('app').config(function ($stateProvider, $urlRouterProvider) {
     'use strict';
     $stateProvider
@@ -10,8 +5,8 @@ angular.module('app').config(function ($stateProvider, $urlRouterProvider) {
             url: "^/add",
             onEnter: function ($stateParams, $rootScope, $state, ngDialog) {
                 ngDialog.open({
-                    //controller: moduleNamespace.clientAddController,
-                    //template: "app/client/templates/client-add.tpl.html"
+                    controller: 'createroomController',
+                    template: "client/components/createroom/partial.modal.html"
                 });
 
                 $rootScope.$on("ngDialog.closed", function (e, $dialog) {

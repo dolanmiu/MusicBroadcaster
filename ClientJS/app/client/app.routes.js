@@ -29,7 +29,7 @@ angular.module('app')
                 }
             })
             .state('root.room', {
-                url: '/room',
+                url: '/room/{roomName}',
                 views: {
                     'main@root': {
                         templateUrl: 'client/components/room/partial.room.html',
