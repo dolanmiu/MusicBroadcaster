@@ -30,8 +30,10 @@ public class RoomController {
 		if (!rooms.containsKey(name)) {
 			IRoom room = new Room(name,  new SongTimer(), simpMessagingTemplate);
 			RoomService.getRooms().put(name, room);
+			System.out.println("CREATED ROOM: " + name);
 			return new RoomMessage("Created room");
 		} else {
+			System.out.println("FAILED TO CREATE ROOM: " + name);
 			return new ErrorMessage("IRoom already exists");
 		}
 	}
