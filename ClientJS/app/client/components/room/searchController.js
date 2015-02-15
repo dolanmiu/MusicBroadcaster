@@ -188,7 +188,8 @@ angular.module('app').controller('searchController', function (playerService, $s
 //}
 
     $scope.play = function () {
-        $scope.stompClient.send("/app/room/" + $scope.roomName + "/play", {});
+        webSocketService.sendPlay(stompClient,$scope.roomName);
+        //$scope.stompClient.send("/app/room/" + $scope.roomName + "/play", {});
         player.playVideo();
     };
 

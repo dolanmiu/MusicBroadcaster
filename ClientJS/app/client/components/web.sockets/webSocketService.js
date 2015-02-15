@@ -10,7 +10,7 @@ angular.module('app').service('webSocketService', function () {
         }));
     };
 
-    this.sendPlay = function (stompClient, roomName, videoId, length) {
+    this.sendPlay = function (stompClient, roomName) {
         stompClient.send('/app/room/' + roomName + '/play', {});
     };
 });

@@ -32,7 +32,7 @@ angular.module('app')
                 url: '/room',
                 views: {
                     'main@root': {
-                        templateUrl: 'client/shared/room/partial.room.html',
+                        templateUrl: 'client/components/room/partial.room.html',
                         controller: 'searchController',
                         controllerAs: 'searchCtrl'
                     }
@@ -42,7 +42,7 @@ angular.module('app')
                 url: '/room-music',
                 views: {
                     '': {
-                        templateUrl: 'client/shared/room/partial.room.music.html',
+                        templateUrl: 'client/components/room/partial.room.music.html',
                         controller: 'searchController',
                         controllerAs: 'searchCtrl'
                     }
