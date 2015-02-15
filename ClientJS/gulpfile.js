@@ -10,6 +10,10 @@ var wiredep = require('wiredep').stream;
 var srcDir = 'app/';
 var buildDir = 'build/';
 
+var paths = {
+  angular: [srcDir + 'client/**/*.js']
+};
+
 gulp.task('clean', function () {
     return gulp.src('build', {
             read: false
@@ -98,6 +102,13 @@ gulp.task('srcbowercss', function () {
         .pipe(wiredep())
         .pipe(gulp.dest(srcDir))
         .on('error', plugins.util.log);
+});
+
+//gulp
+
+gulp.task('watch', function() {
+  gulp.watch(paths.angular, ['scripts']);
+  gulp.watch(paths.images, ['images']);
 });
 
 gulp.task('build', ['bowerjs', 'bowercss', 'appjs', 'css', 'js', 'index']);
