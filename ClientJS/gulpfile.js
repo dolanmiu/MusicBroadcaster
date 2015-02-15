@@ -11,7 +11,7 @@ var srcDir = 'app/';
 var buildDir = 'build/';
 
 var paths = {
-  angular: [srcDir + 'client/**/*.js']
+    angular: [srcDir + 'client/**/*.js']
 };
 
 gulp.task('clean', function () {
@@ -104,11 +104,18 @@ gulp.task('srcbowercss', function () {
         .on('error', plugins.util.log);
 });
 
-//gulp
+gulp.task('angular', function () {
+    var target = gulp.src(srcDir + 'index.html')
 
-gulp.task('watch', function() {
-  gulp.watch(paths.angular, ['scripts']);
-  gulp.watch(paths.images, ['images']);
+    var sources = gulp.src(paths.angular, {
+        read: false
+    });
+    return target.pipe(plugins.inject(sources))
+        .pipe(gulp.dest(srcDir));
+});
+
+gulp.task('watch', function () {
+    gulp.watch(paths.angular, ['angular']);
 });
 
 gulp.task('build', ['bowerjs', 'bowercss', 'appjs', 'css', 'js', 'index']);
