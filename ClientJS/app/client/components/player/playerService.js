@@ -1,7 +1,7 @@
 /**
  * Created by Kelv on 13/02/2015.
  */
-angular.module('app').service('playerService', function ($q, $window) {
+angular.module('app').service('playerService', function ($q, $window, webSocketService) {
     'use strict';
     this.loadPlayer = function () {
         var tag = document.createElement('script'),
@@ -32,7 +32,7 @@ angular.module('app').service('playerService', function ($q, $window) {
         return deferred.promise;
     };
 
-    function onPlayerStateChange(event) {
+    function onPlayerStateChange(stompClient) {
         console.log("State is changed.... State is now: " + event.data);
 
         if (event.data === YT.PlayerState.PLAYING && !done) {
@@ -42,6 +42,11 @@ angular.module('app').service('playerService', function ($q, $window) {
         //if (event.data === -1) {
         //    $scope.play();
         //}
+
+        if (event.data===2){
+            webSocketService.sendPause(stompClient);
+            console.log('State changed to 2, ws pause sent');
+        }
 
         if (event.data === YT.PlayerState.PLAYING) {
             console.log('State change to PLAYING');

@@ -13,4 +13,8 @@ angular.module('app').service('webSocketService', function () {
     this.sendPlay = function (stompClient, roomName) {
         stompClient.send('/app/room/' + roomName + '/play', {});
     };
+
+    this.sendPause = function (stompClient, roomName) {
+        stompClient.sent('/app/room/' + roomName + '/pause', {});
+    };
 });
