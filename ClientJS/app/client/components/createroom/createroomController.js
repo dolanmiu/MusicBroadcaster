@@ -17,10 +17,10 @@ angular.module('app').controller('createroomController', function ($scope, ngDia
     };
 
     $scope.goToRoom = function () {
-        ngDialog.closeAll(function () {
-            console.log("dfgdfg");
+        ngDialog.closeAll();
+        $state.go('root.room', {
+            "roomName": $scope.roomName
         });
-        $state.go('root.room', $scope.roomName);
     };
 
 
