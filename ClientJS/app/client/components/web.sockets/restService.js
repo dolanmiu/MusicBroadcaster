@@ -6,13 +6,14 @@ angular.module('app').service('restService', function ($http, $q) {
     'use strict';
 
     this.createRoom = function (roomName) {
-        var url = 'http://localhost:8080/room/create?name=' + roomName,
+        var getRequest = 'http://localhost:8080/room/create?name=' + roomName,
             deferred = $q.defer();
 
-        console.log('createRoom() is running' + url);
-        $http.get(url).then(function (response) {
+        console.log('createRoom() is running' + getRequest);
+        $http.get(getRequest).then(function (response) {
             console.log(response);
-            deferred.resolve(url);
+            var roomUrl = 'http://localhost:8080/room/' + roomName;
+            deferred.resolve(roomUrl);
         }, function (reason) {
             deferred.reject('Room failed to initialise because: ' + reason);
         });
