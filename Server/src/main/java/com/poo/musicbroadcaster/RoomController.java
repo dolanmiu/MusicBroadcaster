@@ -52,6 +52,8 @@ public class RoomController {
 	@RequestMapping("/room/{room}/current")
 	public Media getCurrentMedia(@PathVariable String room) {
 		IRoom roomInstance = RoomService.getRoom(room);
-		return roomInstance.getCurrentMedia();
+		Media currentMedia = roomInstance.getCurrentMedia();
+		System.out.println("GETTING CURRENT MEDIA. IT IS CURRENTLY AT SEEK: " + currentMedia.getCurrentSeek());
+		return currentMedia;
 	}
 }
