@@ -22,7 +22,7 @@ public class Media {
 		this.currentSeek = currentSeek;
 	}
 	
-	public long getCurrentTime() {
+	public long getCurrentSeek() {
 		return this.currentSeek;
 	}
 	
