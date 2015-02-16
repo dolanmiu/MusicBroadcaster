@@ -82,6 +82,9 @@ public class SongTimer implements ISongTimer {
 
 	@Override
 	public long getSeek() {
+		long seekRequestTime = System.currentTimeMillis();
+		long timeElapsed = seekRequestTime - this.lastPlayTime;
+		this.remainingTime = this.mediaLength - timeElapsed;
 		return this.mediaLength - this.remainingTime;
 	}
 }
