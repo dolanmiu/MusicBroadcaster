@@ -11,11 +11,15 @@ angular.module('app').service('restService', function ($http, $q) {
 
         console.log('createRoom() is running' + getRequest);
         $http.get(getRequest).then(function (response) {
-            console.log(response);
-            var roomUrl = 'http://localhost:8080/room/' + roomName;
-            deferred.resolve(roomUrl);
+            if (response.data.error !== undefined) {
+                deferred.reject(response);
+            } else {
+                console.log(response);
+                var roomUrl = 'http://localhost:8080/room/' + roomName;
+                deferred.resolve(roomUrl);
+            }
         }, function (reason) {
-            deferred.reject('Room failed to initialise because: ' + reason);
+            deferred.reject(reason);
         });
         return deferred.promise;
     };

@@ -3,16 +3,16 @@ angular.module('app').controller('createroomController', function ($scope, ngDia
     'use strict';
 
     $scope.createdRoom = false;
+    $scope.showError = false;
     $scope.url = '';
 
     $scope.createRoom = function () {
-        $scope.createdRoom = true;
 
         restService.createRoom($scope.roomName).then(function (roomURL) {
             $scope.createdRoom = true;
             $scope.url = roomURL;
         }, function (reason) {
-            console.log('Room failed to initialise because: ' + reason);
+            $scope.showError = true;
         });
     };
 
