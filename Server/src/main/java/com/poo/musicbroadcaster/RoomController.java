@@ -63,7 +63,7 @@ public class RoomController {
 	public Media getCurrentMedia(@PathVariable String room) {
 		IRoom roomInstance = RoomService.getRoom(room);
 		Media currentMedia = roomInstance.getCurrentMedia();
-		System.out.println("GETTING CURRENT MEDIA. IT IS CURRENTLY AT SEEK: " + currentMedia.getCurrentSeek());
+		System.out.println("GETTING CURRENT MEDIA. IT IS CURRENTLY AT SEEK: " + currentMedia);
 		return currentMedia;
 	}
 }
