@@ -8,7 +8,7 @@
         <ul>
             <li><a ng-click="createRoom()">Create room {{1+1}}</a> <input type="text" class="form-control" aria-label="..."
                                                                   ng-model="roomName"></li>
-            <li><a ui-sref="root.room.music" ng-click="connect()">Join room</a> <input type="text" class="form-control"
+            <li><a ui-sref="root.room.music" ng-click="connect(roomName)">Join room: {{searchCtrl.roomName}}</a> <input type="text" class="form-control"
                                                                                   aria-label="..." ng-model="roomName">
             </li>
         </ul>
