@@ -14,7 +14,7 @@ public class RoomTests {
 	
 	@Before
 	public void setup() {
-		room = new Room("testRoom", new SongTimer(), new SimpMessagingTemplateMock());
+		room = new Room("testRoom", new SongTimer(1000), new SimpMessagingTemplateMock());
 		room.addMedia(new Media("dfgd55y4", 3000));
 	}
 

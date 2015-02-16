@@ -9,7 +9,7 @@ public class SongTimerTests {
 	
 	@Test
 	public void testIfSongTimerWorks() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer();
+		SongTimer songTimer = new SongTimer(1000);
 		Media media = new Media("dfg5gd3fghgj", 1000);
 		songTimer.setMedia(media, () -> {
 			System.out.println("Executed!");
@@ -23,7 +23,7 @@ public class SongTimerTests {
 	
 	@Test
 	public void testIfSongTimerCanPause() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer();
+		SongTimer songTimer = new SongTimer(1000);
 		Media media = new Media("dfg5gd3fghgj", 5000);
 		songTimer.setMedia(media, () -> {
 			System.out.println("Finished Playing!");
@@ -46,7 +46,7 @@ public class SongTimerTests {
 	
 	@Test
 	public void testIfSongTimerCanSeek() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer();
+		SongTimer songTimer = new SongTimer(1000);
 		Media media = new Media("dfg5gd3fghgj", 5000);
 		songTimer.setMedia(media, () -> {
 			System.out.println("Finished Playing!");
@@ -61,6 +61,23 @@ public class SongTimerTests {
 		Thread.sleep(1000);
 		songTimer.seek(1000);
 		Thread.sleep(5000);
+	}
+	
+	@Test
+	public void testIfSongTimerCanSendTimeTask() throws InterruptedException, ExecutionException {
+		SongTimer songTimer = new SongTimer(1000);
+		Media media = new Media("timeinterval", 7000);
+		songTimer.setTickTask(() -> {
+			System.out.println("working");
+		});
+		
+		songTimer.setMedia(media, () -> {
+			System.out.println("Finished Playing!");
+			Assert.assertTrue(true);
+		});
+		
+		songTimer.play();
+		Thread.sleep(10000);
 	}
 
 }

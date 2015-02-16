@@ -31,7 +31,12 @@ public class SongTimer implements ISongTimer {
 		} else {
 			this.mediaLength = media.getLength();
 		}
-		this.task = task;
+		this.task = () -> {
+			task.run();
+			if (this.songTickScheduledFuture != null) {
+				this.songTickScheduledFuture.cancel(false);
+			}
+		};
 		this.remainingTime = this.mediaLength;
 	}
 
@@ -44,22 +49,28 @@ public class SongTimer implements ISongTimer {
 		if (this.songFinishScheduledFuture != null) {
 			this.songFinishScheduledFuture.cancel(false);
 		}
-		
+
 		this.lastPlayTime = System.currentTimeMillis();
 		System.out.println("Playing with this much remaining: " + this.remainingTime);
 		this.songFinishScheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
-		this.songTickScheduledFuture = this.scheduledExecutorService.schedule(this.tickTask, this.tickInterval, TimeUnit.MILLISECONDS);
+		if (this.tickTask != null) {
+			this.songTickScheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(this.tickTask, 0, this.tickInterval, TimeUnit.MILLISECONDS);
+		}
 		return true;
 	}
 
 	@Override
 	public boolean pause() {
-		if (this.songFinishScheduledFuture  == null || this.mediaLength == 0) {
+		if (this.songFinishScheduledFuture == null || this.mediaLength == 0) {
 			return false;
 		}
 		
+		if (this.songTickScheduledFuture != null) {
+			this.songTickScheduledFuture.cancel(false);
+		}
+
 		this.songFinishScheduledFuture.cancel(false);
-		this.songTickScheduledFuture.cancel(false);
+
 		long pauseTime = System.currentTimeMillis();
 		long timeElapsed = pauseTime - this.lastPlayTime;
 		this.remainingTime = this.mediaLength - timeElapsed;
@@ -71,12 +82,12 @@ public class SongTimer implements ISongTimer {
 		if (this.mediaLength == 0) {
 			return false;
 		}
-		
+
 		long tempTime = this.mediaLength - time;
 		if (tempTime < 0 || time < 0) {
 			return false;
 		}
-		
+
 		this.remainingTime = tempTime;
 		if (this.songFinishScheduledFuture != null) {
 			this.songFinishScheduledFuture.cancel(false);
