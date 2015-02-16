@@ -2,67 +2,26 @@
  * Created by Kelv on 15/02/2015.
  */
 /*globals console, Stomp, SockJS, angular, setTimeout */
-angular.module('app').service('stompClientService', function (playerService, $http) {
+angular.module('app').service('stompClientService', function ($q) {
     'use strict';
     var stompClient,
         player = null,
         roomName = null,
         self = this;
 
-    this.connect = function (roomNameParam) {
-        var socket = new SockJS('http://localhost:8080/channels');
+    this.connect = function (roomNameParam, connectionCallback) {
+        var socket = new SockJS('http://localhost:8080/channels'),
+            deferred = $q.defer();
 
         self.stompClient = Stomp.over(socket);
 
         self.stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
             self.roomName = roomNameParam;
-            self.stompClient.subscribe('/room/' + roomNameParam, function (greeting) {
-                greeting = JSON.parse(greeting.body);
-                console.log('greeting.body is: ' + greeting);
-
-                if (greeting.playback === 'PLAY') {
-                    console.log("Playback: play has been received");
-                    //$scope.loadYTVideo(videoId);
-                    setTimeout(function () {
-                        //player.playVideo();
-                        playerService.playVideo();
-                    }, 1000);
-                }
-
-                if (greeting.playlist === 'NEXT') {
-                    $http.get('http://localhost:8080/room/' + self.roomName + '/current')
-                        .then(function (playlist) {
-                            console.log(playlist);
-                            playerService.cueVideoById(playlist.data.id);
-                        });
-                }
-
-                if (greeting.media === 'ADDED') {
-
-                    console.log('Media has been added');
-                    $http.get('http://localhost:8080/room/' + self.roomName + '/current')
-                        .then(function (queue) {
-                            console.log('Queue data from GET is: ' + JSON.stringify(queue));
-
-                            if (playerService.isPlayerLoaded() !== false) {
-                                playerService.loadPlayer().then(function () {
-                                    // $scope.addMedia(queue.data[0].id);
-
-                                    playerService.cueVideoById(queue.data.id);
-                                });
-                                //queue.data[0].id
-                            }
-                        });
-                }
-
-                if (greeting.playback === 'PAUSE') {
-                    console.log('Media has been paused');
-                    playerService.pauseVideo();
-                }
-                console.log("received broadcasted data");
-            });
+            self.stompClient.subscribe('/room/' + roomNameParam, connectionCallback);
+            deferred.resolve();
         });
+        return deferred.promise;
     };
 
     this.addToQueue = function (videoId, length) {

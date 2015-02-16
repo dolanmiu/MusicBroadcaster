@@ -6,7 +6,9 @@
 angular.module('app').controller('searchController', function (stompClientService, playerService, $scope, googleApiService, $http, $q) {
     'use strict';
     var currentVideoLength,
-        player;
+        player,
+        roomName,
+        self = this;
 
     $scope.channel = {};
 
@@ -97,74 +99,70 @@ angular.module('app').controller('searchController', function (stompClientServic
         });
     };
 
-//function setConnected(connected) {
-//    document.getElementById('connect').disabled = connected;
-//    document.getElementById('disconnect').disabled = !connected;
-//    document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
-//    document.getElementById('response').innerHTML = '';
-//}
     $scope.connect = function (roomName) {
         console.log(roomName);
-        stompClientService.connect(roomName);
-    };
 
-    //$scope.connect = function () {
-    //    var socket = new SockJS('http://localhost:8080/channels');
-    //    $scope.stompClient = Stomp.over(socket);
-    //    $scope.stompClient.connect({}, function (frame) {
-    //        //setConnected(true);
-    //        //console.log($scope.roomName);
-    //        console.log('Connected: ' + frame);
-    //        $scope.stompClient.subscribe('/room/' + $scope.roomName, function (greeting) {
-    //            // showGreeting(JSON.parse(greeting.body).content);
-    //            //console.log('greeting.body is: ' + greeting.body);
-    //
-    //            greeting = JSON.parse(greeting.body);
-    //            console.log('greeting.body.media is: ' + greeting);
-    //            if (greeting.playback === 'PLAY') {
-    //                console.log("Playback: play has been received");
-    //                //$scope.loadYTVideo(videoId);
-    //                setTimeout(function () {
-    //                    player.playVideo();
-    //                }, 1000);
-    //
-    //            }
-    //
-    //            if (greeting.playlist === 'NEXT') {
-    //                $http.get('http://localhost:8080/room/' + $scope.roomName + '/current')
-    //                    .then(function (playlist) {
-    //                        console.log(playlist);
-    //                        player.cueVideoById(playlist.data.id);
-    //                    });
-    //
-    //            }
-    //
-    //            if (greeting.media === 'ADDED') {
-    //                var deferred = $q.defer();
-    //                console.log('Media has been added');
-    //                $http.get('http://localhost:8080/room/' + $scope.roomName + '/current')
-    //                    .then(function (queue) {
-    //                        console.log('Queue data from GET is: ' + JSON.stringify(queue));
-    //                        if (player === undefined) {
-    //                            playerService.loadPlayer().then(function (newPlayer) {
-    //                                // $scope.addMedia(queue.data[0].id);
-    //                                player = newPlayer;
-    //                                player.cueVideoById(queue.data.id);
-    //                            });
-    //                            //queue.data[0].id
-    //                        }
-    //                    });
-    //            }
-    //
-    //            if (greeting.playback === 'PAUSE') {
-    //                console.log('Media has been paused');
-    //                player.pauseVideo();
-    //            }
-    //
-    //            console.log("received broadcasted data");
-    //        });
-    //    });
-    //};
+        stompClientService.connect(roomName, function (greeting) {
+            greeting = JSON.parse(greeting.body);
+            console.log('greeting.body is: ' + greeting);
+
+            if (greeting.playback === 'PLAY') {
+                console.log("Playback: play has been received");
+                //$scope.loadYTVideo(videoId);
+                setTimeout(function () {
+                    //player.playVideo();
+                    playerService.playVideo();
+                }, 1000);
+            }
+
+            if (greeting.playlist === 'NEXT') {
+                $http.get('http://localhost:8080/room/' + roomName + '/current')
+                    .then(function (playlist) {
+                        console.log(playlist);
+                        playerService.cueVideoById(playlist.data.id);
+                    });
+            }
+
+            if (greeting.media === 'ADDED') {
+
+                console.log('Media has been added');
+                $http.get('http://localhost:8080/room/' + roomName + '/current')
+                    .then(function (queue) {
+                        console.log('Queue data from GET is: ' + JSON.stringify(queue));
+                        if (playerService.isPlayerLoaded() !== false) {
+                            playerService.loadPlayer().then(function () {
+                                playerService.cueVideoById(queue.data.id);
+                                // playerService.seekTo(queue.data.currentSeek);
+                                stompClientService.sendPlay();
+                            });
+                            //queue.data[0].id
+                        }
+                    });
+            }
+            if (greeting.playback === 'PAUSE') {
+                console.log('Media has been paused');
+                playerService.pauseVideo();
+            }
+            console.log("received broadcasted data");
+        }).then(function () {
+            if (playerService.isPlayerLoaded() !== false) {
+                $http.get('http://localhost:8080/room/' + roomName + '/current')
+                    .then(function (queue) {
+                        console.log('Queue data from GET is: ' + JSON.stringify(queue));
+
+                        playerService.loadPlayer().then(function () {
+                            playerService.cueVideoById(queue.data.id);
+                            playerService.seekTo(queue.data.currentSeek);
+                            stompClientService.sendPlay();
+                        });
+                        //queue.data[0].id
+
+                    }, function (fail) {
+                        console.log(fail);
+                    });
+            }
+        });
+    };
 
     $scope.checkStomp = function () {
         console.log($scope.stompClient);
@@ -182,14 +180,7 @@ angular.module('app').controller('searchController', function (stompClientServic
 //        'name': name
 //    }));
 //}
-//
-//function showGreeting(message) {
-//    var response = document.getElementById('response');
-//    var p = document.createElement('p');
-//    p.style.wordWrap = 'break-word';
-//    p.appendChild(document.createTextNode(message));
-//    response.appendChild(p);
-//}
+
 
     $scope.play = function () {
         stompClientService.sendPlay();
@@ -203,34 +194,16 @@ angular.module('app').controller('searchController', function (stompClientServic
     };
 
     function seek() {
-        var seek = document.getElementById('see kValue').value;
+        var seek = document.getElementById('seekValue').value;
         stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
             'milliseconds': seek
         }));
     }
 
-    //$scope.addToQueue(videoId){
-    //
-    //    $scope.videoRequest(videoId)
-    //        .then(function () {
-    //
-    //            length = $scope.durationToMilliseconds(currentVideoLength);
-    //            console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
-    //            //sendMediaToServer(id, length);
-    //            stompClientService.addToQueue(videoId,length);
-    //        }, function (reason) {
-    //            console.log(reason);
-    //        });
-    //};
-
     $scope.addMedia = function (videoId) {
-        //var id = videoId;
-        //console.log(videoId + " " + $scope.currentVideoLength);
         var length;
-
         $scope.videoRequest(videoId)
             .then(function () {
-
                 length = $scope.durationToMilliseconds(currentVideoLength);
                 console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
                 //sendMediaToServer(id, length);
@@ -267,7 +240,6 @@ angular.module('app').controller('searchController', function (stompClientServic
             }
             totalMilliSeconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
         }
-        //console.log(totalMilliSeconds);
         return totalMilliSeconds;
     };
 });
