@@ -36,6 +36,9 @@ angular.module('app')
                     },
                     'bug@root.home': {
                         templateUrl: 'client/components/home/partial.bug.html'
+                    },
+                    'createroom@root.home': {
+                        templateUrl: 'client/components/home/partial.createroom.html'
                     }
                 }
             })
