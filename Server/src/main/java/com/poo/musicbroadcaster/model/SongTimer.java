@@ -8,15 +8,19 @@ import java.util.concurrent.TimeUnit;
 
 public class SongTimer implements ISongTimer {
 	ScheduledExecutorService scheduledExecutorService;
-	ScheduledFuture<?> scheduledFuture;
+	ScheduledFuture<?> songFinishScheduledFuture;
+	ScheduledFuture<?> songTickScheduledFuture;
 
 	private long lastPlayTime;
 	private long mediaLength;
 	private long remainingTime;
 
 	private Runnable task;
+	private Runnable tickTask;
+	private long tickInterval;
 
-	public SongTimer() {
+	public SongTimer(long tickInterval) {
+		this.tickInterval = tickInterval;
 		this.scheduledExecutorService = Executors.newScheduledThreadPool(5);
 	}
 
@@ -37,23 +41,25 @@ public class SongTimer implements ISongTimer {
 			return false;
 		}
 
-		if (this.scheduledFuture != null) {
-			this.scheduledFuture.cancel(false);
+		if (this.songFinishScheduledFuture != null) {
+			this.songFinishScheduledFuture.cancel(false);
 		}
 		
 		this.lastPlayTime = System.currentTimeMillis();
 		System.out.println("Playing with this much remaining: " + this.remainingTime);
-		this.scheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
+		this.songFinishScheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
+		this.songTickScheduledFuture = this.scheduledExecutorService.schedule(this.tickTask, this.tickInterval, TimeUnit.MILLISECONDS);
 		return true;
 	}
 
 	@Override
 	public boolean pause() {
-		if (this.scheduledFuture  == null || this.mediaLength == 0) {
+		if (this.songFinishScheduledFuture  == null || this.mediaLength == 0) {
 			return false;
 		}
 		
-		this.scheduledFuture.cancel(false);
+		this.songFinishScheduledFuture.cancel(false);
+		this.songTickScheduledFuture.cancel(false);
 		long pauseTime = System.currentTimeMillis();
 		long timeElapsed = pauseTime - this.lastPlayTime;
 		this.remainingTime = this.mediaLength - timeElapsed;
@@ -72,10 +78,10 @@ public class SongTimer implements ISongTimer {
 		}
 		
 		this.remainingTime = tempTime;
-		if (this.scheduledFuture != null) {
-			this.scheduledFuture.cancel(false);
+		if (this.songFinishScheduledFuture != null) {
+			this.songFinishScheduledFuture.cancel(false);
 		}
-		this.scheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
+		this.songFinishScheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
 		System.out.println("Seeked with this much remaining: " + this.remainingTime);
 		return true;
 	}
@@ -86,5 +92,10 @@ public class SongTimer implements ISongTimer {
 		long timeElapsed = seekRequestTime - this.lastPlayTime;
 		this.remainingTime = this.mediaLength - timeElapsed;
 		return this.mediaLength - this.remainingTime;
+	}
+
+	@Override
+	public void setTickTask(Runnable task) {
+		this.tickTask = task;
 	}
 }

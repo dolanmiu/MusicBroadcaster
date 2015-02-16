@@ -28,13 +28,23 @@ public class RoomController {
 	public OutBoundMessage createRoom(@RequestParam(value="name", defaultValue="untitled") String name) {
 		Map<String, IRoom> rooms = RoomService.getRooms();
 		if (!rooms.containsKey(name)) {
-			IRoom room = new Room(name,  new SongTimer(), simpMessagingTemplate);
+			IRoom room = new Room(name,  new SongTimer(1000), simpMessagingTemplate);
 			RoomService.getRooms().put(name, room);
 			System.out.println("CREATED ROOM: " + name);
 			return new RoomMessage("Created room");
 		} else {
 			System.out.println("FAILED TO CREATE ROOM: " + name);
 			return new ErrorMessage("IRoom already exists");
+		}
+	}
+	
+	@RequestMapping("/room/check")
+	public boolean checkRoom(@RequestParam(value="name") String name) {
+		Map<String, IRoom> rooms = RoomService.getRooms();
+		if (!rooms.containsKey(name)) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 	

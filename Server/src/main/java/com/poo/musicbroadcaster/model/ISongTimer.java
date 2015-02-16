@@ -12,4 +12,6 @@ public interface ISongTimer {
 	boolean seek(long time);
 
 	long getSeek();
+	
+	void setTickTask(Runnable task);
 }

@@ -30,6 +30,10 @@ public class Room implements IRoom {
 		this.roomId = roomId;
 		this.simpMessagingTemplate = simpMessagingTemplate;
 		this.songTimer = songTimer;
+		
+		this.songTimer.setTickTask(() -> {
+			this.sendMessage(new SeekMessage(this.songTimer.getSeek()));
+		});
 
 		this.playbackStatus = PlaybackStatus.STOPPED;
 		this.songQueue = new LinkedList<Media>();

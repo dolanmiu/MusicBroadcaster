@@ -2,34 +2,22 @@ package com.poo.musicbroadcaster;
 
 import java.util.concurrent.ExecutionException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.poo.musicbroadcaster.model.IRoom;
 import com.poo.musicbroadcaster.model.Media;
-import com.poo.musicbroadcaster.model.client.inbound.HelloMessage;
 import com.poo.musicbroadcaster.model.client.inbound.MediaMessage;
 import com.poo.musicbroadcaster.model.client.inbound.SeekMessage;
-import com.poo.musicbroadcaster.model.client.outbound.RoomMessage;
 
 @Controller
 public class RoomSocketController {
-
-	@Autowired
-	private SimpMessagingTemplate simpMessagingTemplate;
 	
 	@MessageMapping("/room/{room}/state")
 	public void getState(@DestinationVariable String room) {
 		IRoom roomInstance = RoomService.getRoom(room);
 		//roomInstance.sendState();
-	}
-
-	@MessageMapping("/room/{room}/get")
-	public void get(@DestinationVariable String room, HelloMessage message) {
-		simpMessagingTemplate.convertAndSend("/room/" + room, new RoomMessage(" Hello (with simpMessagingTemplate), " + message.getName() + "!"));
 	}
 
 	@MessageMapping("/room/{room}/play")
