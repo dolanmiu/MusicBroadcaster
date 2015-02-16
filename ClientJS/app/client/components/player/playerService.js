@@ -2,11 +2,10 @@
  * Created by Kelv on 13/02/2015.
  */
 /*globals angular, YT, console, event, document */
-angular.module('app').service('playerService', function ($q, $window) {
+angular.module('app').service('playerService', function ($q, $window, stompClientService) {
     'use strict';
     var player,
         self = this;
-
 
     this.isPlayerLoaded = function () {
         return player;
@@ -56,22 +55,25 @@ angular.module('app').service('playerService', function ($q, $window) {
         self.player.pauseVideo();
     };
 
+    this.seekTo = function (milliseconds) {
+        self.player.seekTo(milliseconds);
+    };
 
-    function onPlayerStateChange() {
+    function onPlayerStateChange(event) {
         console.log("State is changed.... State is now: " + event.data);
 
         if (event.data === YT.PlayerState.PLAYING && !done) {
             setTimeout(stopVideo, 6000);
             done = true;
         }
-        //if (event.data === -1) {
-        //    $scope.play();
-        //}
+        if (event.data === 1) {
+            stompClientService.sendPlay();
+        }
 
-        //if (event.data === 2) {
-        //    webSocketService.sendPause();
-        //    console.log('State changed to 2, ws pause sent');
-        //}
+        if (event.data === 2) {
+            stompClientService.sendPause();
+            console.log('State changed to 2, ws pause sent');
+        }
 
         if (event.data === YT.PlayerState.PLAYING) {
             console.log('State change to PLAYING');
