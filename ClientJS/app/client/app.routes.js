@@ -27,6 +27,15 @@ angular.module('app')
                 views: {
                     'main@root': {
                         templateUrl: 'client/components/home/partial.home.html'
+                    },
+                    'top@root.home': {
+                        templateUrl: 'client/components/home/partial.top.html'
+                    },
+                    'about@root.home': {
+                        templateUrl: 'client/components/home/partial.about.html'
+                    },
+                    'bug@root.home': {
+                        templateUrl: 'client/components/home/partial.bug.html'
                     }
                 }
             })
