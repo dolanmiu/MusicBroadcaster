@@ -30,7 +30,7 @@ public class Room implements IRoom {
 		this.roomId = roomId;
 		this.simpMessagingTemplate = simpMessagingTemplate;
 		this.songTimer = songTimer;
-		
+
 		this.songTimer.setTickTask(() -> {
 			this.sendMessage(new SeekMessage(this.songTimer.getSeek()));
 		});
@@ -45,7 +45,7 @@ public class Room implements IRoom {
 
 	private void setNextSong() {
 		this.currentMedia = this.songQueue.poll();
-		
+
 		if (this.currentMedia == null) {
 			this.sendMessage(new PlaylistMessage(PlaylistMessageType.FINISHED));
 			System.out.println("PLAYLIST HAS FINISHED");
@@ -56,7 +56,7 @@ public class Room implements IRoom {
 			this.songTimer.setMedia(this.currentMedia, () -> {
 				this.setNextSong();
 			});
-			
+
 			try {
 				this.play();
 			} catch (Exception e) {
@@ -150,7 +150,11 @@ public class Room implements IRoom {
 
 	@Override
 	public Media getCurrentMedia() {
-		this.currentMedia.setCurrentSeek(this.songTimer.getSeek());
-		return this.currentMedia;
+		if (this.currentMedia == null) {
+			return null;
+		} else {
+			this.currentMedia.setCurrentSeek(this.songTimer.getSeek());
+			return this.currentMedia;
+		}
 	}
 }
