@@ -14,7 +14,7 @@ angular.module('app').service('stompClientService', function (playerService, $ht
 
         self.stompClient = Stomp.over(socket);
 
-        self.stompClient.connect({}, function (frame    ) {
+        self.stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
             self.roomName = roomNameParam;
             self.stompClient.subscribe('/room/' + roomNameParam, function (greeting) {
