@@ -56,16 +56,12 @@ angular.module('app').service('playerService', function ($q, $window, stompClien
     };
 
     this.seekTo = function (milliseconds) {
-        self.player.seekTo(milliseconds);
+        self.player.seekTo(milliseconds, false);
     };
 
     function onPlayerStateChange(event) {
         console.log("State is changed.... State is now: " + event.data);
 
-        if (event.data === YT.PlayerState.PLAYING && !done) {
-            setTimeout(stopVideo, 6000);
-            done = true;
-        }
         if (event.data === 1) {
             stompClientService.sendPlay();
         }
@@ -73,10 +69,6 @@ angular.module('app').service('playerService', function ($q, $window, stompClien
         if (event.data === 2) {
             stompClientService.sendPause();
             console.log('State changed to 2, ws pause sent');
-        }
-
-        if (event.data === YT.PlayerState.PLAYING) {
-            console.log('State change to PLAYING');
         }
     }
 });
