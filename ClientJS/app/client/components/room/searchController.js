@@ -145,22 +145,24 @@ angular.module('app').controller('searchController', function (stompClientServic
             }
             console.log("received broadcasted data");
         }).then(function () {
-            if (playerService.isPlayerLoaded() !== false) {
-                $http.get('http://localhost:8080/room/' + roomName + '/current')
-                    .then(function (queue) {
-                        console.log('Queue data from GET is: ' + JSON.stringify(queue));
 
+            $http.get('http://localhost:8080/room/' + roomName + '/current')
+                .then(function (queue) {
+                    var happy = JSON.stringify(queue);
+                    console.log('Queue data from GET is: ' + happy);
+                    if (playerService.isPlayerLoaded() !== false && happy.data !== undefined) {
+                        console.log(happy.data);
                         playerService.loadPlayer().then(function () {
                             playerService.cueVideoById(queue.data.id);
-                            playerService.seekTo(queue.data.currentSeek);
+                            playerService.seekTo(queue.data.currentSeek / 1000);
                             stompClientService.sendPlay();
                         });
                         //queue.data[0].id
+                    }
+                }, function (fail) {
+                    console.log(fail);
+                });
 
-                    }, function (fail) {
-                        console.log(fail);
-                    });
-            }
         });
     };
 
