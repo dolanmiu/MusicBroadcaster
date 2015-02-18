@@ -102,11 +102,16 @@ angular.module('app').controller('searchController', function (stompClientServic
     $scope.connect = function (roomName) {
         console.log(roomName);
 
-        stompClientService.connect(roomName, function (greeting) {
-            greeting = JSON.parse(greeting.body);
-            console.log('greeting.body is: ' + greeting);
+        stompClientService.connect(roomName, function (message) {
+            message = JSON.parse(message.body);
+            console.log('greeting.body is: ' + message);
 
-            if (greeting.playback === 'PLAY') {
+            if (Math.abs(message.seek - playerService.getCurrentTime) > 4) {
+                playerService.seekTo();
+            }
+
+
+            if (message.playback === 'PLAY') {
                 console.log("Playback: play has been received");
                 //$scope.loadYTVideo(videoId);
                 setTimeout(function () {
@@ -115,7 +120,7 @@ angular.module('app').controller('searchController', function (stompClientServic
                 }, 1000);
             }
 
-            if (greeting.playlist === 'NEXT') {
+            if (message.playlist === 'NEXT') {
                 $http.get('http://localhost:8080/room/' + roomName + '/current')
                     .then(function (playlist) {
                         console.log(playlist);
@@ -123,7 +128,7 @@ angular.module('app').controller('searchController', function (stompClientServic
                     });
             }
 
-            if (greeting.media === 'ADDED') {
+            if (message.media === 'ADDED') {
 
                 console.log('Media has been added');
                 $http.get('http://localhost:8080/room/' + roomName + '/current')
@@ -139,7 +144,7 @@ angular.module('app').controller('searchController', function (stompClientServic
                         }
                     });
             }
-            if (greeting.playback === 'PAUSE') {
+            if (message.playback === 'PAUSE') {
                 console.log('Media has been paused');
                 playerService.pauseVideo();
             }

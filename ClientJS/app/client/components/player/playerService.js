@@ -43,6 +43,11 @@ angular.module('app').service('playerService', function ($q, $window, stompClien
         return deferred.promise;
     };
 
+    this.getCurrentTime = function () {
+        return self.player.getCurrentTime() * 1000;
+    };
+
+
     this.cueVideoById = function (videoId) {
         self.player.cueVideoById(videoId);
     };
