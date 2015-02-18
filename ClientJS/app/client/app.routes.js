@@ -22,26 +22,6 @@ angular.module('app')
                     }
                 }
             })
-            .state('root.home', {
-                url: '/home',
-                views: {
-                    'main@root': {
-                        templateUrl: 'client/components/home/partial.home.html'
-                    },
-                    'top@root.home': {
-                        templateUrl: 'client/components/home/partial.top.html'
-                    },
-                    'about@root.home': {
-                        templateUrl: 'client/components/home/partial.about.html'
-                    },
-                    'bug@root.home': {
-                        templateUrl: 'client/components/home/partial.bug.html'
-                    },
-                    'createroom@root.home': {
-                        templateUrl: 'client/components/home/partial.createroom.html'
-                    }
-                }
-            })
             .state('root.room', {
                 url: '/room/{roomName}',
                 views: {

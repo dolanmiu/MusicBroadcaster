@@ -3,5 +3,5 @@
  */
 /*global angular */
 angular.module('youTubeApp', []);
-angular.module('app', ['ui.router', 'youTubeApp', 'ngDialog']);
+angular.module('app', ['ui.router', 'youTubeApp', 'ngDialog', 'duScroll']);
 
