@@ -35,6 +35,25 @@
     </div>
 
     <nav class="menu push-menu-left">
+        <form ng-submit="submitSearch()">
+            <div class="form-group">
+                <div class="inner-addon right-addon">
+                    <i class="glyphicon glyphicon-search"></i>
+                    <input type="text" class="form-control" placeholder="Search" ng-model="searchValue" />
+                </div>
+            </div>
+        </form>
+        <table class="table">
+            <tr ng-repeat="item in searchResults.items">
+                <td>
+                    <div style="width:90px;height:90px;overflow:hidden">
+                        <img ng-src="{{item.snippet.thumbnails.default.url}}">
+                    </div>
+                </td>
+                <td><a ng-click="addMedia(item.id.videoId)">{{item.snippet.title}}</a>
+                </td>
+            </tr>
+        </table>
         <ul>
             <li>
                 <button class="close-menu">&larr; Close</button>

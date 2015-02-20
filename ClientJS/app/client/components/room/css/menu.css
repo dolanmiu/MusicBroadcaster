@@ -125,3 +125,31 @@ body.pml-open nav.push-menu-left {
 body.pml-open #wrapper {
     left: 300px
 }
+
+/* enable absolute positioning */
+.inner-addon {
+  position: relative;
+}
+
+/* style glyph */
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+
+/* align glyph */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
+
+.thumb a {
+display: block;
+width: 90px;
+height: 90px;
+}
+
+.thumb a:hover { YOUR HOVER STYLES HERE }
