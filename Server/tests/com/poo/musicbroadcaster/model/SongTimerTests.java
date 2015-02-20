@@ -79,5 +79,25 @@ public class SongTimerTests {
 		songTimer.play();
 		Thread.sleep(10000);
 	}
+	
+	@Test
+	public void testIfSongTimerCanSendTimeTaskAndPause() throws InterruptedException, ExecutionException {
+		SongTimer songTimer = new SongTimer(1000);
+		Media media = new Media("timeinterval", 7000);
+		songTimer.setTickTask(() -> {
+			System.out.println("working");
+		});
+		
+		songTimer.setMedia(media, () -> {
+			System.out.println("Finished Playing!");
+			Assert.assertTrue(true);
+		});
+		
+		songTimer.play();
+		Thread.sleep(3000);
+		songTimer.pause();
+		System.out.println("paused");
+		Thread.sleep(6000);
+	}
 
 }
