@@ -3,7 +3,7 @@
  */
 /*globals angular, console, document, done, gapi */
 
-angular.module('app').controller('searchController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q) {
+angular.module('app').controller('searchController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams) {
     'use strict';
     var currentVideoLength,
         player,
@@ -172,7 +172,6 @@ angular.module('app').controller('searchController', function (durationService, 
             }
             console.log("received broadcasted data");
         }).then(function () {
-
             $http.get('http://localhost:8080/room/' + roomName + '/current')
                 .then(function (queue) {
                     var happy = JSON.stringify(queue);
@@ -271,4 +270,6 @@ angular.module('app').controller('searchController', function (durationService, 
         }
         return totalMilliSeconds;
     };
+    
+    $scope.connect($stateParams.roomName);
 });

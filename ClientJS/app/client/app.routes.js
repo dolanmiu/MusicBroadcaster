@@ -21,26 +21,6 @@ angular.module('app')
                         templateUrl: 'client/components/root/partial.footer.html'
                     }
                 }
-            })
-            .state('root.room', {
-                url: '/room/{roomName}',
-                views: {
-                    'main@root': {
-                        templateUrl: 'client/components/room/partial.room.html',
-                        controller: 'searchController',
-                        controllerAs: 'searchCtrl'
-                    }
-                }
-            })
-            .state('root.room.music', {
-                url: '/room-music',
-                views: {
-                    '': {
-                        templateUrl: 'client/components/room/partial.room.music.html',
-                        controller: 'searchController',
-                        controllerAs: 'searchCtrl'
-                    }
-                }
             });
         $urlRouterProvider.otherwise('home');
     });
