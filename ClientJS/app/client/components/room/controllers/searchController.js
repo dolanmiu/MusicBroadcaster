@@ -56,14 +56,31 @@ angular.module('app').controller('searchController', function (durationService, 
                 'q': $scope.searchValue,
                 'order': 'relevance',
                 'type': 'video',
-                'pageToken': $scope.searchResults.pageToken
+                'pageToken': $scope.searchResults.nextPageToken
             }
         })
             .then(function (response) {
                 $scope.searchResults = response.result;
-                $scope.apply;
+                $scope.$apply();
             });
 
+    };
+
+    $scope.previousPage = function () {
+        gapi.client.request({
+            'path': '/youtube/v3/search',
+            'params': {
+                'part': 'snippet',
+                'q': $scope.searchValue,
+                'order': 'relevance',
+                'type': 'video',
+                'pageToken': $scope.searchResults.prevPageToken
+            }
+        })
+            .then(function (response) {
+                $scope.searchResults = response.result;
+                $scope.$apply();
+            });
     };
 
     $scope.setVideoId = function (videoId) {
@@ -232,7 +249,8 @@ angular.module('app').controller('searchController', function (durationService, 
         var length;
         $scope.videoRequest(videoId)
             .then(function () {
-                length = $scope.durationToMilliseconds(currentVideoLength);
+                //length = $scope.durationToMilliseconds(currentVideoLength);
+                length = durationService(currentVideoLength);
                 console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
                 //sendMediaToServer(id, length);
                 stompClientService.addToQueue(videoId, length);
