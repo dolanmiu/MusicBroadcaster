@@ -2,7 +2,7 @@
  * Created by Kelv on 13/02/2015.
  */
 /*globals angular, YT, console, event, document */
-angular.module('app').service('playerService', function ($q, $window, stompClientService) {
+angular.module('app').service('playerService', function (durationService,$q, $window, stompClientService) {
     'use strict';
     var player,
         self = this;
@@ -44,7 +44,7 @@ angular.module('app').service('playerService', function ($q, $window, stompClien
     };
 
     this.getCurrentTime = function () {
-        return self.player.getCurrentTime() * 1000;
+        return durationService.convert(self.player.getCurrentTime());
     };
 
 

@@ -1,9 +1,9 @@
 /**
  * Created by Kelv on 09/02/2015.
  */
-/*globals angular, console, document, done */
+/*globals angular, console, document, done, gapi */
 
-angular.module('app').controller('searchController', function (stompClientService, playerService, $scope, googleApiService, $http, $q) {
+angular.module('app').controller('searchController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q) {
     'use strict';
     var currentVideoLength,
         player,
@@ -39,12 +39,30 @@ angular.module('app').controller('searchController', function (stompClientServic
             }
         }).then(function (response) {
             $scope.searchResults = response.result;
-            //console.log($scope.searchResults);
+            console.log($scope.searchResults);
             $scope.$apply();
         }, function (reason) {
             console.log('Error: ' + reason.result.error.message);
             $scope.$apply();
         });
+    };
+
+    $scope.nextPage = function () {
+
+        gapi.client.request({
+            'path': '/youtube/v3/search',
+            'params': {
+                'part': 'snippet',
+                'q': $scope.searchValue,
+                'order': 'relevance',
+                'type': 'video',
+                'pageToken': $scope.searchResults.pageToken
+            }
+        })
+            .then(function (response) {
+                $scope.searchResults = response.result;
+                $scope.apply;
+            });
 
     };
 
@@ -107,7 +125,11 @@ angular.module('app').controller('searchController', function (stompClientServic
             console.log('greeting.body is: ' + message);
 
             if (Math.abs(message.seek - playerService.getCurrentTime) > 4) {
-                playerService.seekTo();
+
+                playerService.seekTo(playerService.getCurrentTime());
+                stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
+                    'milliseconds': seek
+                }));
             }
 
 
@@ -200,7 +222,7 @@ angular.module('app').controller('searchController', function (stompClientServic
         //player.pauseVideo();
     };
 
-    function seek() {
+    function seektt() {
         var seek = document.getElementById('seekValue').value;
         stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
             'milliseconds': seek
