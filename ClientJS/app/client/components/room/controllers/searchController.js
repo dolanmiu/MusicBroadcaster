@@ -123,8 +123,7 @@ angular.module('app').controller('searchController', function (durationService, 
 // DOLAN'S CODE
 // ================================================================================================
 
-    var stompClient = null,
-        room = "fuckyou";
+    var stompClient = null;
 
     $scope.createRoom = function () {
         var name = 'http://localhost:8080/room/create?name=' + $scope.roomName;
@@ -135,14 +134,11 @@ angular.module('app').controller('searchController', function (durationService, 
     };
 
     $scope.connect = function (roomName) {
-        console.log(roomName);
-
         stompClientService.connect(roomName, function (message) {
             message = JSON.parse(message.body);
             console.log('greeting.body is: ' + message);
 
             if (Math.abs(message.seek - playerService.getCurrentTime) > 4) {
-
                 playerService.seekTo(playerService.getCurrentTime());
                 stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
                     'milliseconds': seek
@@ -288,6 +284,6 @@ angular.module('app').controller('searchController', function (durationService, 
         }
         return totalMilliSeconds;
     };
-    
+
     $scope.connect($stateParams.roomName);
 });
