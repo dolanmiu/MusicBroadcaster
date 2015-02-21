@@ -3,9 +3,11 @@
 |* Template
 |* ------------------------------------------------------------ *|
 \* ------------------------------------------------------------ */
+
 body {
     overflow-x: hidden
 }
+
 #wrapper {
     position: relative;
     z-index: 10;
@@ -17,25 +19,32 @@ body {
     -o-transition: all 0.3s;
     transition: all 0.3s;
 }
+
 section {
     margin-bottom: 30px
 }
+
 section h1 {
     font-family: "Oswald", sans-serif;
     margin-bottom: 10px;
 }
+
 section p {
     margin-bottom: 30px
 }
+
 section p:last-child {
     margin-bottom: 0
 }
+
 section:last-child {
     margin-bottom: 0
 }
+
 section.toggle {
     text-align: center
 }
+
 .mask {
     position: fixed;
     top: 0;
@@ -51,6 +60,7 @@ section.toggle {
 |* ------------------------------------------------------------ *|
 \* ------------------------------------------------------------ */
 /* general style for all menus */
+
 nav.menu {
     position: fixed;
     z-index: 999;
@@ -61,24 +71,28 @@ nav.menu {
     -ms-transition: all 0.3s;
     -o-transition: all 0.3s;
     transition: all 0.3s;
+    padding: 10px;
 }
+
 nav.menu ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
+
 nav.menu a {
     font-weight: 300;
     color: #fff;
 }
+
 button.close-menu {
     background-color: #3184a1;
     color: #fff;
 }
+
 button.close-menu:focus {
     outline: none
 }
-
 
 nav.push-menu-left {
     top: 0;
@@ -104,7 +118,7 @@ nav.push-menu-left li:last-child {
 nav.push-menu-left a {
     display: block;
     padding: 10px;
-    font-size: 18px;
+    font-size: 12px;
 }
 
 nav.push-menu-left button.close-menu {
@@ -118,6 +132,16 @@ nav.push-menu-left {
     left: -300px
 }
 
+nav.push-menu-left div.song-result {
+    background-color: #b0c4de;
+}
+
+nav.push-menu-left div.song-result-thumbnail {
+    width: 90px;
+    height: 90px;
+    overflow: hidden;
+}
+
 body.pml-open nav.push-menu-left {
     left: 0
 }
@@ -125,31 +149,45 @@ body.pml-open nav.push-menu-left {
 body.pml-open #wrapper {
     left: 300px
 }
-
+/* Search Icon */
 /* enable absolute positioning */
+
 .inner-addon {
-  position: relative;
+    position: relative;
 }
-
 /* style glyph */
+
 .inner-addon .glyphicon {
-  position: absolute;
-  padding: 10px;
-  pointer-events: none;
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+    color: #a8a8a8;
+}
+/* align glyph */
+
+.left-addon .glyphicon {
+    left: 0px;
 }
 
-/* align glyph */
-.left-addon .glyphicon  { left:  0px;}
-.right-addon .glyphicon { right: 0px;}
-
+.right-addon .glyphicon {
+    right: 0px;
+}
 /* add padding  */
-.left-addon input  { padding-left:  30px; }
-.right-addon input { padding-right: 30px; }
+
+.left-addon input {
+    padding-left: 30px;
+}
+
+.right-addon input {
+    padding-right: 30px;
+}
 
 .thumb a {
-display: block;
-width: 90px;
-height: 90px;
+    display: block;
+    width: 90px;
+    height: 90px;
 }
 
-.thumb a:hover { YOUR HOVER STYLES HERE }
+.thumb a:hover {
+    YOUR HOVER STYLES HERE
+}
