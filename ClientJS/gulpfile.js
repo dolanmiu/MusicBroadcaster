@@ -119,4 +119,4 @@ gulp.task('watch', function () {
 });
 
 gulp.task('build', ['bowerjs', 'bowercss', 'appjs', 'css', 'js', 'index']);
-gulp.task('src', ['srcbowerjs', 'srcbowercss']);
+gulp.task('bower', ['srcbowerjs', 'srcbowercss']);
