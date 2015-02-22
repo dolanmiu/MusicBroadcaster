@@ -10,21 +10,6 @@ angular.module('app').controller('searchController', function (durationService, 
         roomName,
         self = this;
 
-    $scope.channel = {};
-
-    $scope.onClientLoad = function () {
-        console.log("hello");
-        googleApiService.handleClientLoad().then(function (data) {
-            $scope.channel = data;
-        }, function (error) {
-            console.log('Failed: ' + error);
-        });
-    };
-
-    $scope.setApiKey = function () {
-        googleApiService.handleClientLoad();
-        console.log('API key set');
-    };
 
     $scope.submitSearch = function () {
         var search = $scope.searchValue;
@@ -39,6 +24,7 @@ angular.module('app').controller('searchController', function (durationService, 
             }
         }).then(function (response) {
             $scope.searchResults = response.result;
+            $scope.searchResultsArray = response.result.items;
             console.log($scope.searchResults);
             $scope.$apply();
         }, function (reason) {
@@ -66,6 +52,31 @@ angular.module('app').controller('searchController', function (durationService, 
 
     };
 
+    $scope.scrollDown = function () {
+        gapi.client.request({
+            'path': '/youtube/v3/search',
+            'params': {
+                'part': 'snippet',
+                'q': $scope.searchValue,
+                'order': 'relevance',
+                'type': 'video',
+                'pageToken': $scope.searchResults.nextPageToken
+            }
+        })
+            .then(function (response) {
+                var i;
+                $scope.searchResults = response.result;
+
+                for (i = 0; i < response.result.items.length; i++) {
+                    $scope.searchResultsArray.push(response.result.items[i]);
+                    console.log($scope.searchResultsArray);
+                }
+
+
+                $scope.$apply();
+            });
+    };
+
     $scope.previousPage = function () {
         gapi.client.request({
             'path': '/youtube/v3/search',
@@ -79,6 +90,7 @@ angular.module('app').controller('searchController', function (durationService, 
         })
             .then(function (response) {
                 $scope.searchResults = response.result;
+                $scope.searchResultsArray.push(response.result.items);
                 $scope.$apply();
             });
     };
@@ -234,6 +246,7 @@ angular.module('app').controller('searchController', function (durationService, 
         //player.pauseVideo();
     };
 
+
     function seektt() {
         var seek = document.getElementById('seekValue').value;
         stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
@@ -246,7 +259,7 @@ angular.module('app').controller('searchController', function (durationService, 
         $scope.videoRequest(videoId)
             .then(function () {
                 //length = $scope.durationToMilliseconds(currentVideoLength);
-                length = durationService(currentVideoLength);
+                length = durationService.convert(currentVideoLength);
                 console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
                 //sendMediaToServer(id, length);
                 stompClientService.addToQueue(videoId, length);
@@ -284,6 +297,25 @@ angular.module('app').controller('searchController', function (durationService, 
         }
         return totalMilliSeconds;
     };
+
+
+    $scope.channel = {};
+
+    $scope.onClientLoad = function () {
+        console.log("hello");
+        googleApiService.handleClientLoad().then(function (data) {
+            $scope.channel = data;
+        }, function (error) {
+            console.log('Failed: ' + error);
+        });
+    };
+
+    var setApiKey = function () {
+        googleApiService.handleClientLoad();
+        console.log('API key set');
+    };
+
+    setApiKey();
 
     $scope.connect($stateParams.roomName);
 });
