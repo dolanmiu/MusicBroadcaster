@@ -33,25 +33,6 @@ angular.module('app').controller('searchController', function (durationService, 
         });
     };
 
-    $scope.nextPage = function () {
-
-        gapi.client.request({
-            'path': '/youtube/v3/search',
-            'params': {
-                'part': 'snippet',
-                'q': $scope.searchValue,
-                'order': 'relevance',
-                'type': 'video',
-                'pageToken': $scope.searchResults.nextPageToken
-            }
-        })
-            .then(function (response) {
-                $scope.searchResults = response.result;
-                $scope.$apply();
-            });
-
-    };
-
     $scope.scrollDown = function () {
         gapi.client.request({
             'path': '/youtube/v3/search',
@@ -77,24 +58,6 @@ angular.module('app').controller('searchController', function (durationService, 
             });
     };
 
-    $scope.previousPage = function () {
-        gapi.client.request({
-            'path': '/youtube/v3/search',
-            'params': {
-                'part': 'snippet',
-                'q': $scope.searchValue,
-                'order': 'relevance',
-                'type': 'video',
-                'pageToken': $scope.searchResults.prevPageToken
-            }
-        })
-            .then(function (response) {
-                $scope.searchResults = response.result;
-                $scope.searchResultsArray.push(response.result.items);
-                $scope.$apply();
-            });
-    };
-
     $scope.setVideoId = function (videoId) {
         $scope.videoId = videoId;
     };
@@ -110,14 +73,9 @@ angular.module('app').controller('searchController', function (durationService, 
             }
         })
             .then(function (response) {
-                //console.log(response.result);
                 currentVideoLength = response.result.items[0].contentDetails.duration;
-                //console.log("video req shows video length to be" + $scope.currentVideoLength);
-                //$scope.addMedia(videoId);
                 $scope.apply;
                 deferred.resolve('Promise resolved');
-
-
             }, function (reason) {
                 console.log('Error: ' + reason.result.error.message);
                 $scope.$apply();
@@ -156,7 +114,6 @@ angular.module('app').controller('searchController', function (durationService, 
                     'milliseconds': seek
                 }));
             }
-
 
             if (message.playback === 'PLAY') {
                 console.log("Playback: play has been received");
@@ -299,8 +256,6 @@ angular.module('app').controller('searchController', function (durationService, 
     };
 
 
-    $scope.channel = {};
-
     $scope.onClientLoad = function () {
         console.log("hello");
         googleApiService.handleClientLoad().then(function (data) {
@@ -310,12 +265,19 @@ angular.module('app').controller('searchController', function (durationService, 
         });
     };
 
-    var setApiKey = function () {
+    angularLoad.loadScript('https://apis.google.com/js/client.js')
+        .then(function () {
+            setApiKey();
+        })
+        .catch(function () {
+            console.log('Error loading the script');
+        });
+
+    function setApiKey() {
         googleApiService.handleClientLoad();
         console.log('API key set');
-    };
+    }
 
-    setApiKey();
 
     $scope.connect($stateParams.roomName);
 });
