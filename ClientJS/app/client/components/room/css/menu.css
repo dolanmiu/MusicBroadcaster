@@ -64,20 +64,20 @@ section.toggle {
 nav.menu {
     position: fixed;
     z-index: 999;
-    background-color: #67b5d1;
+    background-color: #222326;
     overflow: hidden;
-    -webkit-transition: all 0.3s;
+    -webkit-transition: all 0.3s; 
     -moz-transition: all 0.3s;
     -ms-transition: all 0.3s;
     -o-transition: all 0.3s;
     transition: all 0.3s;
-    padding: 10px;
+    padding: 18px;
 }
 
 nav.menu ul {
     list-style-type: none;
-    margin: 0 0 0 0;
-    padding: 0 0 0 0;
+    margin: 0;
+    padding: 0;
 }
 
 nav.menu a {
@@ -96,27 +96,20 @@ button.close-menu:focus {
 
 nav.push-menu-left {
     top: 0;
-    width: 300px;
+    width: 260px;
     height: 100%;
 }
 
 nav.push-menu-left li {
     display: block;
-    height: 100px;
-}
-
-nav.push-menu-left li:first-child {
-    border-top: none
-}
-
-nav.push-menu-left li:last-child {
-    border-bottom: none
+    height: 52px;
 }
 
 nav.push-menu-left a {
     display: block;
-    padding: 10px;
     font-size: 12px;
+    //margin: 0 -13px 0 -13px;
+    padding: 10px 0 10px 0;
 }
 
 nav.push-menu-left button.close-menu {
@@ -127,19 +120,25 @@ nav.push-menu-left button.close-menu {
 }
 
 nav.push-menu-left {
-    left: -300px
+    left: -260px;
 }
 
 nav.push-menu-left div.song-result {
-    background-color: #b0c4de;
-    color: #b0c4de;
+    background-color: #2e2f33;
     float: left;
     position: relative;
+    height: 50px;
+    overflow: hidden;
+}
+
+nav.push-menu-left div.search-placeholder {
+    text-align: center;
+    padding-top: 150px;
 }
 
 nav.push-menu-left div.song-result-thumbnail {
-    width: 90px;
-    height: 90px;
+    width: 50px;
+    height: 50px;
     overflow: hidden;
     position: relative;
     background: lightGreen;
@@ -151,7 +150,7 @@ body.pml-open nav.push-menu-left {
 }
 
 body.pml-open #wrapper {
-    left: 300px
+    left: 260px;
 }
 
 .nopadding {

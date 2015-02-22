@@ -40,16 +40,16 @@
             </div>
         </form>
         {{ searchResults.items == undefined }}
-        <div ng-show="{{ searchResults.items == undefined }}">
+        <div class="search-placeholder" ng-show="{{ searchResults.items == undefined }}">
             <i class="fa fa-search fa-5x"></i>
             <br>
             <strong>Find your favorite music to add to this playlist</strong>
             <br> Search as you would on YouTube
         </div>
         <ul>
-            <li>
+            <!--<li>
                 <button class="close-menu">&larr; Close</button>
-            </li>
+            </li>-->
             <li ng-repeat="item in searchResults.items">
                 <div class="col-xs-12 song-result nopadding">
                     <div class="row">
@@ -63,14 +63,6 @@
                         </div>
                     </div>
                 </div>
-            </li>
-            <li><a href="#">Tomato</a>
-            </li>
-            <li><a href="#">Cucumber</a>
-            </li>
-            <li><a href="#">Kale</a>
-            </li>
-            <li><a href="#">Celery</a>
             </li>
         </ul>
     </nav>
