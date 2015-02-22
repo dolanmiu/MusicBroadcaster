@@ -76,8 +76,8 @@ nav.menu {
 
 nav.menu ul {
     list-style-type: none;
-    margin: 0;
-    padding: 0;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
 }
 
 nav.menu a {
@@ -102,9 +102,7 @@ nav.push-menu-left {
 
 nav.push-menu-left li {
     display: block;
-    text-align: center;
-    border-bottom: solid 1px #3184a1;
-    border-top: solid 1px #b5dbe9;
+    height: 100px;
 }
 
 nav.push-menu-left li:first-child {
@@ -134,12 +132,18 @@ nav.push-menu-left {
 
 nav.push-menu-left div.song-result {
     background-color: #b0c4de;
+    color: #b0c4de;
+    float: left;
+    position: relative;
 }
 
 nav.push-menu-left div.song-result-thumbnail {
     width: 90px;
     height: 90px;
     overflow: hidden;
+    position: relative;
+    background: lightGreen;
+    display: inline-block;
 }
 
 body.pml-open nav.push-menu-left {
@@ -148,6 +152,11 @@ body.pml-open nav.push-menu-left {
 
 body.pml-open #wrapper {
     left: 300px
+}
+
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
 }
 /* Search Icon */
 /* enable absolute positioning */

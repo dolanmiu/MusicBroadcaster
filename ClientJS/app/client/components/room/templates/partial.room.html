@@ -43,17 +43,28 @@
                 </div>
             </div>
         </form>
+        {{ searchResults.items == undefined }}
+        <div ng-show="{{ searchResults.items == undefined }}">
+            <i class="fa fa-search fa-5x"></i>
+            <br>
+            <strong>Find your favorite music to add to this playlist</strong>
+            <br> Search as you would on YouTube
+        </div>
         <ul>
             <li>
                 <button class="close-menu">&larr; Close</button>
             </li>
             <li ng-repeat="item in searchResults.items">
-                <div class="song-result">
-                    <div class="col-xs-3">
-                        <img ng-src="{{item.snippet.thumbnails.default.url}}">
-                    </div>
-                    <div class="col-xs-9">
-                        <a ng-click="addMedia(item.id.videoId)">{{item.snippet.title}}</a>
+                <div class="col-xs-12 song-result nopadding">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <div class="song-result-thumbnail">
+                                <img ng-src="{{item.snippet.thumbnails.default.url}}">
+                            </div>
+                        </div>
+                        <div class="col-xs-9">
+                            <a ng-click="addMedia(item.id.videoId)">{{item.snippet.title}}</a>
+                        </div>
                     </div>
                 </div>
             </li>
