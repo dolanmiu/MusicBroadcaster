@@ -7,54 +7,34 @@ angular.module('app').controller('searchController', function (durationService, 
     'use strict';
     var currentVideoLength,
         player,
-        roomName,
-        self = this;
-
+        search,
+        searchData,
+        roomName;
 
     $scope.submitSearch = function () {
-        var search = $scope.searchValue;
-
-        gapi.client.request({
-            'path': '/youtube/v3/search',
-            'params': {
-                'part': 'snippet',
-                'q': search,
-                'order': 'relevance',
-                'type': 'video'
-            }
-        }).then(function (response) {
-            $scope.searchResults = response.result;
-            $scope.searchResultsArray = response.result.items;
-            console.log($scope.searchResults);
-            $scope.$apply();
-        }, function (reason) {
-            console.log('Error: ' + reason.result.error.message);
-            $scope.$apply();
-        });
+        search = $scope.searchValue;
+        googleApiService.search(search)
+            .then(function (data) {
+                console.log(data);
+                $scope.searchResultsArray = data.items;
+                searchData = data;
+            }, function (reason) {
+                console.log('Reason is: ' + reason);
+            });
     };
 
     $scope.scrollDown = function () {
-        gapi.client.request({
-            'path': '/youtube/v3/search',
-            'params': {
-                'part': 'snippet',
-                'q': $scope.searchValue,
-                'order': 'relevance',
-                'type': 'video',
-                'pageToken': $scope.searchResults.nextPageToken
-            }
-        })
-            .then(function (response) {
-                var i;
-                $scope.searchResults = response.result;
-
-                for (i = 0; i < response.result.items.length; i++) {
-                    $scope.searchResultsArray.push(response.result.items[i]);
-                    console.log($scope.searchResultsArray);
+        var i;
+        googleApiService.nextPage(search, searchData)
+            .then(function (data) {
+                searchData = data.result;
+                //console.log(data.);
+                for (i = 0; i < data.result.items.length; i++) {
+                    $scope.searchResultsArray.push(data.result.items[i]);
+                    //console.log($scope.searchResultsArray);
                 }
-
-
-                $scope.$apply();
+            }, function (reason) {
+                console.log('Scroll down failed because: ' + reason);
             });
     };
 
@@ -89,11 +69,6 @@ angular.module('app').controller('searchController', function (durationService, 
         //$scope.addMedia(videoId);
         player.loadVideoById(videoId, 5, "large");
     };
-
-// DOLAN'S CODE
-// ================================================================================================
-
-    var stompClient = null;
 
     $scope.createRoom = function () {
         var name = 'http://localhost:8080/room/create?name=' + $scope.roomName;
