@@ -3,7 +3,7 @@
  */
 /*globals angular, console, document, done, gapi */
 
-angular.module('app').controller('searchController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams) {
+angular.module('app').controller('searchController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, angularLoad) {
     'use strict';
     var currentVideoLength,
         player,
