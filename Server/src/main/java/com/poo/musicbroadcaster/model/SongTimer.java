@@ -63,7 +63,7 @@ public class SongTimer implements ISongTimer {
 	public boolean pause() {
 		if (this.songTickScheduledFuture != null) {
 			System.out.println("Killing seek periodic send task");
-			this.songTickScheduledFuture.cancel(false);
+			this.songTickScheduledFuture.cancel(true);
 		}
 		
 		if (this.songFinishScheduledFuture == null || this.mediaLength == 0) {
