@@ -6,7 +6,7 @@ angular.module('app').controller("menuController", function ($scope, $rootScope)
     var body = document.body,
         mask = document.createElement("div"),
         togglePushLeft = document.querySelector(".toggle-push-left"),
-        pushMenuLeft = document.querySelector(".push-menu-left"),
+        resultContainer = document.querySelector(".song-result-parent-container"),
         activeNav;
     mask.className = "mask";
 
@@ -19,18 +19,20 @@ angular.module('app').controller("menuController", function ($scope, $rootScope)
 
     /* hide active menu if mask is clicked */
     mask.addEventListener("click", function () {
-        classie.remove(body, activeNav);
-        activeNav = "";
-        document.body.removeChild(mask);
+        closeMenu();
     });
 
     /* hide active menu if close menu button is clicked */
     [].slice.call(document.querySelectorAll(".close-menu")).forEach(function (el, i) {
         el.addEventListener("click", function () {
-            classie.remove(body, activeNav);
-            activeNav = "";
-            document.body.removeChild(mask);
+            closeMenu();
         });
     });
+
+    function closeMenu() {
+        classie.remove(body, activeNav);
+        activeNav = "";
+        document.body.removeChild(mask);
+    }
 
 });

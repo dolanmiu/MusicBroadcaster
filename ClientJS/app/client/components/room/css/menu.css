@@ -63,15 +63,14 @@ section.toggle {
 
 nav.menu {
     position: fixed;
-    z-index: 999;
+    z-index: 100;
     background-color: #222326;
-    overflow: hidden;
-    -webkit-transition: all 0.3s; 
+    -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     -ms-transition: all 0.3s;
     -o-transition: all 0.3s;
     transition: all 0.3s;
-    padding: 18px;
+    padding: 0px;
 }
 
 nav.menu ul {
@@ -131,9 +130,39 @@ nav.push-menu-left div.song-result {
     overflow: hidden;
 }
 
+nav.push-menu-left div.song-result-parent-container {
+    top: 70px;
+    bottom: 0px;
+    position: fixed;
+    width: 260px;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+nav.push-menu-left div.song-result-container {
+    padding: 18px;
+    overflow: auto;
+}
+
+nav.push-menu-left div.search-bar-form {
+    padding: 18px;
+}
+
 nav.push-menu-left div.search-placeholder {
     text-align: center;
     padding-top: 150px;
+    color: #88898c;
+}
+
+nav.push-menu-left div.search-placeholder b {
+    color: #babbbe;
+}
+
+nav.push-menu-left div.search-placeholder i {
+    color: #3e3e40;
 }
 
 nav.push-menu-left div.song-result-thumbnail {
@@ -154,8 +183,8 @@ body.pml-open #wrapper {
 }
 
 .nopadding {
-   padding: 0 !important;
-   margin: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 /* Search Icon */
 /* enable absolute positioning */

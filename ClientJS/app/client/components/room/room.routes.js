@@ -14,8 +14,7 @@ angular.module('app')
                     },
                     'main@root': {
                         templateUrl: 'client/components/room/templates/partial.room.html',
-                        controller: 'searchController',
-                        controllerAs: 'searchCtrl'
+                        controller: 'roomController'
                     }
                 }
             });
