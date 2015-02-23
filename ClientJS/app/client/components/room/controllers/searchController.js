@@ -14,7 +14,8 @@ angular.module('app').controller('searchController', function (durationService, 
                 'part': 'snippet',
                 'q': search,
                 'order': 'relevance',
-                'type': 'video'
+                'type': 'video',
+                'maxResults': '15'
             }
         }).then(function (data) {
             $scope.searchResultsArray = data.items;
@@ -39,7 +40,7 @@ angular.module('app').controller('searchController', function (durationService, 
             }
         }).then(function (data) {
             searchData = data.result;
-            for (i = 0; i < data.result.items.length; i++) {
+            for (i = 0; i < data.result.items.length; i += 1) {
                 $scope.searchResultsArray.push(data.result.items[i]);
             }
         }, function (reason) {
