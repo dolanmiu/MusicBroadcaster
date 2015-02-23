@@ -5,7 +5,6 @@
 angular.module('app').service('googleApiService', function ($http, $rootScope, $q) {
     'use strict';
     var apiKey = 'AIzaSyD1wYe4Yd6_UnTSsnGJLpYc02afaE9ebwU',
-        deferred = $q.defer(),
         self = this;
 
     this.handleClientLoad = function () {
