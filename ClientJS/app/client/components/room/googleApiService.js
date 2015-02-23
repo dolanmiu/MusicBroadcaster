@@ -35,6 +35,16 @@ angular.module('app').service('googleApiService', function ($http, $rootScope, $
         //return deferred.promise();
     };
 
+    this.sendRequest = function (jsonRequest) {
+        var deferred = $q.defer();
+        gapi.client.request(jsonRequest).then(function (response) {
+            deferred.resolve(response.result);
+        }, function (reason) {
+            deferred.$reject(reason);
+        });
+        return deferred.promise;
+    };
+
     this.search = function (search) {
         var deferred = $q.defer();
         gapi.client.request({
@@ -55,7 +65,7 @@ angular.module('app').service('googleApiService', function ($http, $rootScope, $
             // $scope.$apply();
         }, function (reason) {
             console.log('Error: ' + reason.result.error.message);
-            deferred.$$reject();
+            deferred.$reject();
             //$scope.$apply();
         });
         return deferred.promise;
@@ -64,21 +74,21 @@ angular.module('app').service('googleApiService', function ($http, $rootScope, $
     this.nextPage = function (search, searchData) {
         var deferred = $q.defer();
         gapi.client.request({
-            'path': '/youtube/v3/search',
-            'params': {
-                'part': 'snippet',
-                'q': search,
-                'order': 'relevance',
-                'type': 'video',
-                'pageToken': searchData.nextPageToken
-            }
-        })
+                'path': '/youtube/v3/search',
+                'params': {
+                    'part': 'snippet',
+                    'q': search,
+                    'order': 'relevance',
+                    'type': 'video',
+                    'pageToken': searchData.nextPageToken
+                }
+            })
             .then(function (data) {
                 deferred.resolve(data);
                 //$scope.searchResults = response.result;
                 //$scope.$apply();
             }, function (reason) {
-                deferred.reject(reason);
+                deferred.$reject(reason);
             });
         return deferred.promise;
     };
