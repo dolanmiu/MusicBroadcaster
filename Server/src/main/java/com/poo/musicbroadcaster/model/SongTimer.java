@@ -1,17 +1,19 @@
 package com.poo.musicbroadcaster.model;
 
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 public class SongTimer implements ISongTimer {
-	ScheduledExecutorService scheduledExecutorService;
+	// ScheduledExecutorService scheduledExecutorService;
 	ScheduledFuture<?> songFinishScheduledFuture;
 	ScheduledFuture<?> songTickScheduledFuture;
 
-	private long lastPlayTime;
+	TaskScheduler scheduledExecutorService = new ConcurrentTaskScheduler();
+
 	private long mediaLength;
 	private long remainingTime;
 
@@ -19,9 +21,24 @@ public class SongTimer implements ISongTimer {
 	private Runnable tickTask;
 	private long tickInterval;
 
-	public SongTimer(long tickInterval) {
-		this.tickInterval = tickInterval;
-		this.scheduledExecutorService = Executors.newScheduledThreadPool(5);
+	public SongTimer() {
+		// this.scheduledExecutorService = Executors.newScheduledThreadPool(5);
+		// this.scheduledExecutorService = new ThreadPoolTaskScheduler();
+	}
+
+	private void resetEndSongTask() {
+		if (this.songFinishScheduledFuture != null) {
+			this.songFinishScheduledFuture.cancel(false);
+		}
+		this.songFinishScheduledFuture = this.scheduledExecutorService.schedule(this.task, new Date(System.currentTimeMillis() + this.remainingTime));
+	}
+
+	private void resetPeriodicTask() {
+		System.out.println("Resetting periodic timer task");
+		if (this.songTickScheduledFuture != null) {
+			this.songTickScheduledFuture.cancel(true);
+		}
+		this.songTickScheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(this.tickTask, this.tickInterval);
 	}
 
 	@Override
@@ -31,12 +48,8 @@ public class SongTimer implements ISongTimer {
 		} else {
 			this.mediaLength = media.getLength();
 		}
-		this.task = () -> {
-			task.run();
-			if (this.songTickScheduledFuture != null) {
-				this.songTickScheduledFuture.cancel(false);
-			}
-		};
+		
+		this.task = task;
 		this.remainingTime = this.mediaLength;
 	}
 
@@ -50,31 +63,23 @@ public class SongTimer implements ISongTimer {
 			this.songFinishScheduledFuture.cancel(false);
 		}
 
-		this.lastPlayTime = System.currentTimeMillis();
 		System.out.println("Playing with this much remaining: " + this.remainingTime);
-		this.songFinishScheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
-		if (this.tickTask != null) {
-			this.songTickScheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(this.tickTask, 0, this.tickInterval, TimeUnit.MILLISECONDS);
-		}
+		this.resetEndSongTask();
+		System.out.println("Creating seek periodic send task");
+		this.resetPeriodicTask();
 		return true;
 	}
 
 	@Override
 	public boolean pause() {
-		if (this.songTickScheduledFuture != null) {
-			System.out.println("Killing seek periodic send task");
-			this.songTickScheduledFuture.cancel(true);
-		}
-		
 		if (this.songFinishScheduledFuture == null || this.mediaLength == 0) {
 			return false;
 		}
 
+		System.out.println("Killing seek periodic send task");
+		this.songTickScheduledFuture.cancel(true);
 		this.songFinishScheduledFuture.cancel(false);
 
-		long pauseTime = System.currentTimeMillis();
-		long timeElapsed = pauseTime - this.lastPlayTime;
-		this.remainingTime = this.mediaLength - timeElapsed;
 		return true;
 	}
 
@@ -90,24 +95,32 @@ public class SongTimer implements ISongTimer {
 		}
 
 		this.remainingTime = tempTime;
-		if (this.songFinishScheduledFuture != null) {
-			this.songFinishScheduledFuture.cancel(false);
-		}
-		this.songFinishScheduledFuture = this.scheduledExecutorService.schedule(this.task, this.remainingTime, TimeUnit.MILLISECONDS);
+		this.resetEndSongTask();
 		System.out.println("Seeked with this much remaining: " + this.remainingTime);
 		return true;
 	}
 
 	@Override
 	public long getSeek() {
-		long seekRequestTime = System.currentTimeMillis();
-		long timeElapsed = seekRequestTime - this.lastPlayTime;
-		this.remainingTime = this.mediaLength - timeElapsed;
 		return this.mediaLength - this.remainingTime;
 	}
 
 	@Override
-	public void setTickTask(Runnable task) {
-		this.tickTask = task;
+	public void setTickTask(long tickInterval, Runnable tickTask) {
+		this.tickInterval = tickInterval;
+		this.tickTask = () -> {
+			tickTask.run();
+			this.remainingTime -= tickInterval;
+		};
+	}
+
+	@Override
+	public boolean stop() {
+		if (this.songTickScheduledFuture != null) {
+			this.songTickScheduledFuture.cancel(true);
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

@@ -8,10 +8,12 @@ public interface ISongTimer {
 	boolean play() throws InterruptedException, ExecutionException;
 
 	boolean pause();
+	
+	boolean stop();
 
 	boolean seek(long time);
 
 	long getSeek();
 	
-	void setTickTask(Runnable task);
+	void setTickTask(long tickInterval, Runnable tickTask);
 }

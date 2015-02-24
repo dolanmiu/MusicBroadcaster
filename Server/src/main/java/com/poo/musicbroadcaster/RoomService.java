@@ -7,17 +7,16 @@ import com.poo.musicbroadcaster.model.IRoom;
 
 public class RoomService {
 	
-	private static Map<String, IRoom> rooms = new HashMap<String, IRoom>();
+	private Map<String, IRoom> rooms = new HashMap<String, IRoom>();
 	
-	public static Map<String, IRoom> getRooms() {
+	public Map<String, IRoom> getRooms() {
 		return rooms;
 	}
 	
-	public static IRoom getRoom(String room) {
-		Map<String, IRoom> rooms = RoomService.getRooms();
+	public IRoom getRoom(String room) {
 
-		if (rooms.containsKey(room)) {
-			IRoom roomInstance = rooms.get(room);
+		if (this.rooms.containsKey(room)) {
+			IRoom roomInstance = this.rooms.get(room);
 			return roomInstance;
 		} else {
 			return null;
