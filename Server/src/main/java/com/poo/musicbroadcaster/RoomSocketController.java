@@ -57,7 +57,7 @@ public class RoomSocketController {
 		IRoom roomInstance = roomService.getRoom(room);
 		if (roomInstance != null) {
 			System.out.println("Gotten room, now adding media");
-			roomInstance.addMedia(new Media(message.getId(), message.getLength()));
+			roomInstance.addMedia(new Media(message.getId(), message.getLength(), message.getThumbnailUrl(), message.getDisplayName()));
 		} else {
 			System.out.println("Could not get room: " + room);
 		}
