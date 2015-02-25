@@ -15,6 +15,9 @@ angular.module('app')
                     'main@root': {
                         templateUrl: 'client/components/room/templates/partial.room.html',
                         controller: 'roomController'
+                    },
+                    'search@root.room': {
+                        templateUrl: 'client/components/search/templates/partial.search.html'
                     }
                 }
             });

@@ -17,49 +17,5 @@
             </tr>
         </table>
     </div>
-    <div ng-controller="menuController">
-        <button class="nav-toggler toggle-push-left">Search</button>
-    </div>
-
-    <nav class="menu push-menu-left" ng-controller="searchController">
-        <form ng-submit="submitSearch()">
-            <div class="form-group search-bar-form">
-                <div class="inner-addon right-addon">
-                    <i class="glyphicon glyphicon-search"></i>
-                    <input type="text" class="form-control" placeholder="Search" ng-model="searchValue" />
-                </div>
-            </div>
-        </form>
-        <div class="search-placeholder" ng-show="showNewSearchMessage">
-            <i class="fa fa-search fa-5x"></i>
-            <br>
-            <b>Find your favorite music to add to this playlist</b>
-            <br> Search as you would on YouTube
-        </div>
-
-        <div class="song-result-parent-container" rebuild-on-resize ng-scrollbar is-bar-shown="barShown">
-            <div class="song-result-container">
-                <ul>
-                    <!--<li><button class="close-menu">&larr; Close</button></li>-->
-                    <li ng-repeat="item in searchResultsArray">
-                        <div class="col-xs-12 song-result nopadding close-menu">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <div class="song-result-thumbnail">
-                                        <img ng-src="{{item.snippet.thumbnails.default.url}}">
-                                    </div>
-                                </div>
-                                <div class="col-xs-9">
-                                    <a ng-click="addMedia(item.id.videoId)">{{item.snippet.title}}</a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <!-- /push menu left -->
-
+    <div ui-view="search"></div>
 </div>
