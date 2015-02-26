@@ -3,7 +3,7 @@
  */
 /*globals angular, console, document, done, gapi */
 
-angular.module('app').controller('roomController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, angularLoad) {
+angular.module('app').controller('roomController', function ($rootScope, durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, angularLoad) {
     'use strict';
     var currentVideoLength,
         player,
@@ -19,15 +19,15 @@ angular.module('app').controller('roomController', function (durationService, st
         var deferred = $q.defer();
 
         gapi.client.request({
-                'path': '/youtube/v3/videos',
-                'params': {
-                    'part': 'contentDetails',
-                    'id': videoId
-                }
-            })
+            'path': '/youtube/v3/videos',
+            'params': {
+                'part': 'contentDetails',
+                'id': videoId
+            }
+        })
             .then(function (response) {
                 currentVideoLength = response.result.items[0].contentDetails.duration;
-                $scope.apply;
+                $scope.$apply();
                 deferred.resolve('Promise resolved');
             }, function (reason) {
                 console.log('Error: ' + reason.result.error.message);
@@ -69,7 +69,7 @@ angular.module('app').controller('roomController', function (durationService, st
                 setTimeout(function () {
                     //player.playVideo();
                     playerService.playVideo();
-                }, 1000);
+                }, 4000);
             }
 
             if (message.playlist === 'NEXT') {
@@ -77,9 +77,10 @@ angular.module('app').controller('roomController', function (durationService, st
                     .then(function (playlist) {
                         console.log(playlist);
                         playerService.cueVideoById(playlist.data.id);
+                        //playerService.playVideo();
+                       // $rootScope.refreshQueue = true;
                     });
             }
-
             if (message.media === 'ADDED') {
 
                 console.log('Media has been added');
@@ -91,6 +92,7 @@ angular.module('app').controller('roomController', function (durationService, st
                                 playerService.cueVideoById(queue.data.id);
                                 // playerService.seekTo(queue.data.currentSeek);
                                 stompClientService.sendPlay();
+                                $scope.refreshQueue = true;
                             });
                             //queue.data[0].id
                         }

@@ -2,7 +2,7 @@
  * Created by Kelv on 13/02/2015.
  */
 /*globals angular, YT, console, event, document */
-angular.module('app').service('playerService', function (durationService,$q, $window, stompClientService) {
+angular.module('app').service('playerService', function (durationService, $q, $window, stompClientService) {
     'use strict';
     var player,
         self = this;
@@ -21,7 +21,7 @@ angular.module('app').service('playerService', function (durationService,$q, $wi
 
         $window.onYouTubeIframeAPIReady = function () {
 
-            self.player = new YT.Player('player', {
+            player = new YT.Player('player', {
                 height: '390',
                 width: '640',
                 playerVars: {
@@ -49,19 +49,25 @@ angular.module('app').service('playerService', function (durationService,$q, $wi
 
 
     this.cueVideoById = function (videoId) {
-        self.player.cueVideoById(videoId);
+        var deferred = $q.defer();
+        player.cueVideoById(videoId)
+            .then(function (success) {
+                deferred.resolve();
+            }, function (fail) {
+                deferred.reject();
+            });
     };
 
     this.playVideo = function () {
-        self.player.playVideo();
+        player.playVideo();
     };
 
     this.pauseVideo = function () {
-        self.player.pauseVideo();
+        player.pauseVideo();
     };
 
     this.seekTo = function (milliseconds) {
-        self.player.seekTo(milliseconds, false);
+        player.seekTo(milliseconds, false);
     };
 
     function onPlayerStateChange(event) {

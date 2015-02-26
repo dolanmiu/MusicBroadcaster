@@ -38,4 +38,8 @@ angular.module('app').service('stompClientService', function ($q) {
     this.sendPause = function () {
         self.stompClient.send('/app/room/' + self.roomName + '/pause', {});
     };
+
+    this.getRoomName = function () {
+        return self.roomName;
+    };
 });
