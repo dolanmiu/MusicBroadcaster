@@ -1,11 +1,13 @@
 package com.poo.musicbroadcaster;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 import com.poo.musicbroadcaster.factory.IRoomFactory;
 import com.poo.musicbroadcaster.factory.RoomFactory;
@@ -13,24 +15,21 @@ import com.poo.musicbroadcaster.factory.RoomFactory;
 @ComponentScan
 @EnableAutoConfiguration
 public class Application {
+	
+	@Autowired
+	SimpMessagingTemplate simpMessagingTemplate;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
 	@Bean
-	// or @Bean(name = "nameOfYourBean")
 	public IRoomFactory getRoomFactory() {
-		return new RoomFactory();
+		return new RoomFactory(simpMessagingTemplate, getTaskScheduler());
 	}
-	
-	@Bean
-	public RoomService getRoomService() {
-		return new RoomService();
-	}
-	
-	@Bean
+
+	@Bean(name = "taskScheduler")
 	public TaskScheduler getTaskScheduler() {
-		return new ThreadPoolTaskScheduler();
+		return new ConcurrentTaskScheduler();
 	}
 }

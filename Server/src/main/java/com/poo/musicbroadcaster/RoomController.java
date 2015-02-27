@@ -19,17 +19,22 @@ import com.poo.musicbroadcaster.model.client.outbound.RoomMessage;
 
 @RestController
 public class RoomController {
-	@Autowired
+
 	private SimpMessagingTemplate simpMessagingTemplate;
-	
-	@Autowired
+
 	private IRoomFactory roomFactory;
-	
-	@Autowired
+
 	private RoomService roomService;
-	
+
+	@Autowired
+	public RoomController(SimpMessagingTemplate simpMessagingTemplate, IRoomFactory roomFactory, RoomService roomService) {
+		this.simpMessagingTemplate = simpMessagingTemplate;
+		this.roomFactory = roomFactory;
+		this.roomService = roomService;
+	}
+
 	@RequestMapping("/room/create")
-	public OutBoundMessage createRoom(@RequestParam(value="name", defaultValue="untitled") String name) {
+	public OutBoundMessage createRoom(@RequestParam(value = "name", defaultValue = "untitled") String name) {
 		Map<String, IRoom> rooms = roomService.getRooms();
 		if (!rooms.containsKey(name)) {
 			IRoom room = roomFactory.newInstance(name);
@@ -41,9 +46,9 @@ public class RoomController {
 			return new ErrorMessage("IRoom already exists");
 		}
 	}
-	
+
 	@RequestMapping("/room/check")
-	public boolean checkRoom(@RequestParam(value="name") String name) {
+	public boolean checkRoom(@RequestParam(value = "name") String name) {
 		Map<String, IRoom> rooms = roomService.getRooms();
 		if (!rooms.containsKey(name)) {
 			return true;
@@ -51,18 +56,18 @@ public class RoomController {
 			return false;
 		}
 	}
-	
+
 	@RequestMapping("/room/get")
 	public Map<String, IRoom> getRooms() {
 		return roomService.getRooms();
 	}
-	
+
 	@RequestMapping("/room/{room}/playlist")
 	public Queue<Media> getPlaylist(@PathVariable String room) {
 		IRoom roomInstance = roomService.getRoom(room);
 		return roomInstance.getPlaylist();
 	}
-	
+
 	@RequestMapping("/room/{room}/current")
 	public Media getCurrentMedia(@PathVariable String room) {
 		IRoom roomInstance = roomService.getRoom(room);

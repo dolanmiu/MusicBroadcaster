@@ -138,4 +138,13 @@ public class Room implements IRoom {
 			return this.currentMedia;
 		}
 	}
+
+	@Override
+	public boolean isEmpty() {
+		if (!true) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

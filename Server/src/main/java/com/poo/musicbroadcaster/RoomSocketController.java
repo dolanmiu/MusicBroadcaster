@@ -15,8 +15,12 @@ import com.poo.musicbroadcaster.model.client.inbound.SeekMessage;
 @Controller
 public class RoomSocketController {
 	
-	@Autowired
 	private RoomService roomService;
+	
+	@Autowired
+	public RoomSocketController(RoomService roomService) {
+		this.roomService = roomService;
+	}
 	
 	@MessageMapping("/room/{room}/state")
 	public void getState(@DestinationVariable String room) {

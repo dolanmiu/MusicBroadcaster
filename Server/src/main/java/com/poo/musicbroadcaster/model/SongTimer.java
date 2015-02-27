@@ -5,14 +5,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 public class SongTimer implements ISongTimer {
-	// ScheduledExecutorService scheduledExecutorService;
-	ScheduledFuture<?> songFinishScheduledFuture;
-	ScheduledFuture<?> songTickScheduledFuture;
+	private ScheduledFuture<?> songFinishScheduledFuture;
+	private ScheduledFuture<?> songTickScheduledFuture;
 
-	TaskScheduler scheduledExecutorService = new ConcurrentTaskScheduler();
+	private TaskScheduler scheduledExecutorService;
 
 	private long mediaLength;
 	private long remainingTime;
@@ -21,7 +19,8 @@ public class SongTimer implements ISongTimer {
 	private Runnable tickTask;
 	private long tickInterval;
 
-	public SongTimer() {
+	public SongTimer(TaskScheduler taskScheduler) {
+		this.scheduledExecutorService = taskScheduler;
 		// this.scheduledExecutorService = Executors.newScheduledThreadPool(5);
 		// this.scheduledExecutorService = new ThreadPoolTaskScheduler();
 	}
