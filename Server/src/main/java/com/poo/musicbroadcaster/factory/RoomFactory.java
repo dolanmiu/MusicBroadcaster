@@ -4,10 +4,11 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.TaskScheduler;
 
 import com.poo.musicbroadcaster.model.IRoom;
-import com.poo.musicbroadcaster.model.ISongTimer;
 import com.poo.musicbroadcaster.model.Room;
-import com.poo.musicbroadcaster.model.SongTimer;
 import com.poo.musicbroadcaster.model.client.outbound.SeekMessage;
+import com.poo.musicbroadcaster.model.timer.ISongTimer;
+import com.poo.musicbroadcaster.model.timer.SongTimer;
+import com.poo.musicbroadcaster.model.timer.StopWatch;
 
 public class RoomFactory implements IRoomFactory {
 
@@ -21,7 +22,7 @@ public class RoomFactory implements IRoomFactory {
 
 	@Override
 	public IRoom newInstance(String name) {
-		ISongTimer songTimer = new SongTimer(taskScheduler);
+		ISongTimer songTimer = new SongTimer(taskScheduler, new StopWatch());
 		songTimer.setTickTask(1000, () -> {
 			this.simpMessagingTemplate.convertAndSend("/room/" + name, new SeekMessage(songTimer.getSeek()));
 		});

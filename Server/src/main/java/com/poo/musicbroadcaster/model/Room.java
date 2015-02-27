@@ -15,6 +15,7 @@ import com.poo.musicbroadcaster.model.client.outbound.PlaybackMessageType;
 import com.poo.musicbroadcaster.model.client.outbound.PlaylistMessage;
 import com.poo.musicbroadcaster.model.client.outbound.PlaylistMessageType;
 import com.poo.musicbroadcaster.model.client.outbound.SeekMessage;
+import com.poo.musicbroadcaster.model.timer.ISongTimer;
 
 public class Room implements IRoom {
 

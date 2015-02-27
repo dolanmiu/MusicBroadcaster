@@ -1,10 +1,12 @@
-package com.poo.musicbroadcaster.model;
+package com.poo.musicbroadcaster.model.timer;
 
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.scheduling.TaskScheduler;
+
+import com.poo.musicbroadcaster.model.Media;
 
 public class SongTimer implements ISongTimer {
 	private ScheduledFuture<?> songFinishScheduledFuture;
@@ -18,9 +20,12 @@ public class SongTimer implements ISongTimer {
 	private Runnable songFinishtask;
 	private Runnable tickTask;
 	private long tickInterval;
+	
+	private StopWatch stopWatch;
 
-	public SongTimer(TaskScheduler taskScheduler) {
+	public SongTimer(TaskScheduler taskScheduler, StopWatch stopWatch) {
 		this.scheduledExecutorService = taskScheduler;
+		this.stopWatch = stopWatch;
 	}
 
 	private void resetEndSongTask() {
@@ -31,7 +36,6 @@ public class SongTimer implements ISongTimer {
 	}
 
 	private void resetPeriodicTask() {
-		System.out.println("Resetting periodic timer task");
 		if (this.songTickScheduledFuture != null) {
 			this.songTickScheduledFuture.cancel(true);
 		}
@@ -47,7 +51,7 @@ public class SongTimer implements ISongTimer {
 		}
 		this.songFinishtask = task;
 		this.remainingTime = this.mediaLength;
-		this.resetEndSongTask();
+		this.stopWatch.reset();
 	}
 
 	@Override
@@ -59,11 +63,12 @@ public class SongTimer implements ISongTimer {
 		if (this.songFinishScheduledFuture != null) {
 			this.songFinishScheduledFuture.cancel(false);
 		}
-
-		System.out.println("Playing with this much remaining: " + this.remainingTime);
+		
+		this.stopWatch.start();
+		this.remainingTime = this.mediaLength - this.stopWatch.getTimeRun();
 		this.resetEndSongTask();
-		System.out.println("Creating seek periodic send task");
 		this.resetPeriodicTask();
+		System.out.println("Playing with this much remaining: " + this.remainingTime);
 		return true;
 	}
 
@@ -76,7 +81,7 @@ public class SongTimer implements ISongTimer {
 		System.out.println("Killing seek periodic send task");
 		this.songTickScheduledFuture.cancel(true);
 		this.songFinishScheduledFuture.cancel(false);
-
+		this.stopWatch.pause();
 		return true;
 	}
 
@@ -99,7 +104,7 @@ public class SongTimer implements ISongTimer {
 
 	@Override
 	public long getSeek() {
-		return this.mediaLength - this.remainingTime;
+		return this.stopWatch.getTimeRun();
 	}
 
 	@Override
@@ -107,7 +112,7 @@ public class SongTimer implements ISongTimer {
 		this.tickInterval = tickInterval;
 		this.tickTask = () -> {
 			tickTask.run();
-			this.remainingTime -= tickInterval;
+			//this.remainingTime -= tickInterval;
 		};
 	}
 

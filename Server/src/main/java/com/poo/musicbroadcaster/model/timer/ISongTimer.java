@@ -1,6 +1,8 @@
-package com.poo.musicbroadcaster.model;
+package com.poo.musicbroadcaster.model.timer;
 
 import java.util.concurrent.ExecutionException;
+
+import com.poo.musicbroadcaster.model.Media;
 
 public interface ISongTimer {
 	void setMedia(Media media, Runnable task);
