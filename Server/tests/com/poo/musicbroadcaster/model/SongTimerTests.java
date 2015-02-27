@@ -6,11 +6,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
+import com.poo.musicbroadcaster.model.timer.SongTimer;
+import com.poo.musicbroadcaster.model.timer.StopWatch;
+
 public class SongTimerTests {
 
 	@Test
 	public void testIfSongTimerWorks() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler());
+		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler(), new StopWatch());
 		songTimer.setTickTask(1000, () -> {
 		});
 		Media media = new Media("dfg5gd3fghgj", 1000, "", "");
@@ -26,7 +29,7 @@ public class SongTimerTests {
 
 	@Test
 	public void testIfSongTimerCanPause() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler());
+		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler(), new StopWatch());
 		songTimer.setTickTask(1000, () -> {
 		});
 		Media media = new Media("dfg5gd3fghgj", 5000, "", "");
@@ -51,7 +54,7 @@ public class SongTimerTests {
 
 	@Test
 	public void testIfSongTimerCanSeek() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler());
+		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler(), new StopWatch());
 		songTimer.setTickTask(1000, () -> {
 		});
 		Media media = new Media("dfg5gd3fghgj", 5000, "", "");
@@ -72,7 +75,7 @@ public class SongTimerTests {
 
 	@Test
 	public void testIfSongTimerCanSendTimeTask() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler());
+		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler(), new StopWatch());
 		songTimer.setTickTask(1000, () -> {
 			System.out.println("working: " + songTimer.getSeek());
 		});
@@ -89,7 +92,7 @@ public class SongTimerTests {
 
 	@Test
 	public void testIfSongTimerCanSendTimeTaskAndPause() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler());
+		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler(), new StopWatch());
 		songTimer.setTickTask(1000, () -> {
 			System.out.println("working: " + songTimer.getSeek());
 		});

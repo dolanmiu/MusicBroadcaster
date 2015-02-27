@@ -5,10 +5,11 @@ import org.junit.Test;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 import com.poo.musicbroadcaster.client.mocks.SimpMessagingTemplateMock;
-import com.poo.musicbroadcaster.model.ISongTimer;
 import com.poo.musicbroadcaster.model.Media;
 import com.poo.musicbroadcaster.model.Room;
-import com.poo.musicbroadcaster.model.SongTimer;
+import com.poo.musicbroadcaster.model.timer.ISongTimer;
+import com.poo.musicbroadcaster.model.timer.SongTimer;
+import com.poo.musicbroadcaster.model.timer.StopWatch;
 
 public class RoomTests {
 
@@ -16,7 +17,7 @@ public class RoomTests {
 	
 	@Before
 	public void setup() {
-		ISongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler());
+		ISongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler(), new StopWatch());
 		songTimer.setTickTask(1000, () -> {});
 		
 		room = new Room("testRoom", songTimer, new SimpMessagingTemplateMock());
