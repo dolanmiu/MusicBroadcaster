@@ -17,7 +17,7 @@ public class SongTimer implements ISongTimer {
 	private long mediaLength;
 	private long remainingTime;
 
-	private Runnable task;
+	private Runnable songFinishtask;
 	private Runnable tickTask;
 	private long tickInterval;
 
@@ -30,7 +30,7 @@ public class SongTimer implements ISongTimer {
 		if (this.songFinishScheduledFuture != null) {
 			this.songFinishScheduledFuture.cancel(false);
 		}
-		this.songFinishScheduledFuture = this.scheduledExecutorService.schedule(this.task, new Date(System.currentTimeMillis() + this.remainingTime));
+		this.songFinishScheduledFuture = this.scheduledExecutorService.schedule(this.songFinishtask, new Date(System.currentTimeMillis() + this.remainingTime));
 	}
 
 	private void resetPeriodicTask() {
@@ -48,9 +48,9 @@ public class SongTimer implements ISongTimer {
 		} else {
 			this.mediaLength = media.getLength();
 		}
-		
-		this.task = task;
+		this.songFinishtask = task;
 		this.remainingTime = this.mediaLength;
+		this.resetEndSongTask();
 	}
 
 	@Override

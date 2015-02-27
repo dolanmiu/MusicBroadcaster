@@ -40,6 +40,7 @@ public class Room implements IRoom {
 	}
 
 	private void setNextSong() {
+		System.out.println("SETTING NEXT SONG...");
 		this.currentMedia = this.songQueue.poll();
 
 		if (this.currentMedia == null) {
@@ -53,12 +54,6 @@ public class Room implements IRoom {
 			this.songTimer.setMedia(this.currentMedia, () -> {
 				this.setNextSong();
 			});
-
-			try {
-				this.play();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -79,9 +74,6 @@ public class Room implements IRoom {
 
 	@Override
 	public void play() throws InterruptedException, ExecutionException {
-		if (this.playbackStatus == PlaybackStatus.PLAYING) {
-			return;
-		}
 		if (this.currentMedia == null) {
 			this.sendMessage(new ErrorMessage("Song cannot be played, there isnt a song in queue"));
 			return;
@@ -98,9 +90,6 @@ public class Room implements IRoom {
 
 	@Override
 	public void pause() {
-		if (this.playbackStatus != PlaybackStatus.PLAYING) {
-			return;
-		}
 		if (this.currentMedia == null) {
 			this.sendMessage(new ErrorMessage("Song cannot be paused, there isnt a song in queue"));
 			return;
