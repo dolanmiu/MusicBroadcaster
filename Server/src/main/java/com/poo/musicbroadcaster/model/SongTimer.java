@@ -21,8 +21,6 @@ public class SongTimer implements ISongTimer {
 
 	public SongTimer(TaskScheduler taskScheduler) {
 		this.scheduledExecutorService = taskScheduler;
-		// this.scheduledExecutorService = Executors.newScheduledThreadPool(5);
-		// this.scheduledExecutorService = new ThreadPoolTaskScheduler();
 	}
 
 	private void resetEndSongTask() {

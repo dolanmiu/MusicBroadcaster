@@ -4,15 +4,16 @@ import java.util.concurrent.ExecutionException;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 public class SongTimerTests {
 
 	@Test
 	public void testIfSongTimerWorks() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer();
+		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler());
 		songTimer.setTickTask(1000, () -> {
 		});
-		Media media = new Media("dfg5gd3fghgj", 1000);
+		Media media = new Media("dfg5gd3fghgj", 1000, "", "");
 		songTimer.setMedia(media, () -> {
 			System.out.println("Executed!");
 			Assert.assertTrue(true);
@@ -25,10 +26,10 @@ public class SongTimerTests {
 
 	@Test
 	public void testIfSongTimerCanPause() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer();
+		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler());
 		songTimer.setTickTask(1000, () -> {
 		});
-		Media media = new Media("dfg5gd3fghgj", 5000);
+		Media media = new Media("dfg5gd3fghgj", 5000, "", "");
 		songTimer.setMedia(media, () -> {
 			System.out.println("Finished Playing!");
 			Assert.assertTrue(true);
@@ -50,10 +51,10 @@ public class SongTimerTests {
 
 	@Test
 	public void testIfSongTimerCanSeek() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer();
+		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler());
 		songTimer.setTickTask(1000, () -> {
 		});
-		Media media = new Media("dfg5gd3fghgj", 5000);
+		Media media = new Media("dfg5gd3fghgj", 5000, "", "");
 		songTimer.setMedia(media, () -> {
 			System.out.println("Finished Playing!");
 			Assert.assertTrue(true);
@@ -71,11 +72,11 @@ public class SongTimerTests {
 
 	@Test
 	public void testIfSongTimerCanSendTimeTask() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer();
+		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler());
 		songTimer.setTickTask(1000, () -> {
 			System.out.println("working: " + songTimer.getSeek());
 		});
-		Media media = new Media("timeinterval", 7000);
+		Media media = new Media("timeinterval", 7000, "", "");
 
 		songTimer.setMedia(media, () -> {
 			System.out.println("Finished Playing!");
@@ -88,11 +89,11 @@ public class SongTimerTests {
 
 	@Test
 	public void testIfSongTimerCanSendTimeTaskAndPause() throws InterruptedException, ExecutionException {
-		SongTimer songTimer = new SongTimer();
+		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler());
 		songTimer.setTickTask(1000, () -> {
 			System.out.println("working: " + songTimer.getSeek());
 		});
-		Media media = new Media("timeinterval", 7000);
+		Media media = new Media("timeinterval", 7000, "", "");
 
 		songTimer.setMedia(media, () -> {
 			System.out.println("Finished Playing!");
