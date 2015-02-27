@@ -92,7 +92,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
                                 playerService.cueVideoById(queue.data.id);
                                 // playerService.seekTo(queue.data.currentSeek);
                                 stompClientService.sendPlay();
-                                $scope.refreshQueue = true;
+                                //$scope.refreshQueue = true;
                             });
                             //queue.data[0].id
                         }
