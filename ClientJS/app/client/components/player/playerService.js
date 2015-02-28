@@ -11,6 +11,7 @@ angular.module('app').service('playerService', function (durationService, $q, $w
         return player;
     };
 
+
     this.loadPlayer = function () {
         var tag = document.createElement('script'),
             targetTag = document.getElementById('hello'),
