@@ -3,8 +3,7 @@
  * Code licensed under the Apache License v2.0.
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
-
-body {
+/*body {
     overflow-x: hidden;
 }
 
@@ -447,4 +446,102 @@ footer .footer-below {
 .portfolio-modal .modal-backdrop {
     display: none;
     opacity: 0;
+}*/
+
+section {
+    padding: 100px 0;
+}
+
+section h2 {
+    margin: 0;
+    font-size: 3em;
+}
+
+section.success {
+    color: #424242;
+    background: #f5f4f1;
+}
+
+section.dark {
+    color: #f5f4f1;
+    background: #171b1e;
+}
+
+section.dark input,
+section.dark textarea {
+    font-weight: 100;
+    background-color: #171b1e;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+    background: transparent;
+    font-size: 2rem;
+    padding: .6em 0;
+    border-bottom: 1px solid #444a4f;
+    color: white;
+}
+
+header .container {
+    padding-top: 100px;
+    padding-bottom: 50px;
+}
+
+header img {
+    display: block;
+    margin: 0 auto 20px;
+}
+
+header .intro-text .name {
+    display: block;
+    text-transform: uppercase;
+    font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 2em;
+    font-weight: 700;
+}
+
+header .intro-text .skills {
+    font-size: 1.25em;
+    font-weight: 300;
+}
+
+header {
+    background: url(../img/header_bg.jpg) no-repeat center top;
+    margin-top: -50px;
+    padding-top: 120px;
+    text-align: center;
+    background-attachment: relative;
+    background-position: center center;
+    min-height: 650px;
+    width: 100%;
+    -webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding-bottom: 100px;
+}
+
+header h1 {
+    color: #ffffff;
+    font-size: 50px;
+    font-weight: 400;
+    text-align: center;
+    letter-spacing: 3px;
+}
+
+header p {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 300;
+    text-align: center;
+    letter-spacing: 1px;
 }
