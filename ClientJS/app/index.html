@@ -78,32 +78,38 @@
     <!-- endbuild -->
 
     <!-- build:app -->
-    <script src="client/app.module.js"></script>
-    <script src="client/components/search/controllers/searchController.js"></script>
-    <script src="client/components/room/controllers/roomController.js"></script>
-    <script src="client/components/room/googleApiService.js"></script>
-    <script src="client/components/player/playerService.js"></script>
-    <script src="client/components/room/durationService.js"></script>
-    <script src="client/components/player/playerController.js"></script>
-    <script src="client/components/player/youTubeDirective.js"></script>
-    <script src="client/app.routes.js"></script>
-    <script src="client/components/web.sockets/webSocketService.js"></script>
     <script src="app.js"></script>
-    <script src="client/components/queue/controllers/queueController.js"></script>
-    <script src="client/components/version/version.js"></script>
-    <script src="client/components/version/version-directive.js"></script>
-    <script src="client/components/version/interpolate-filter.js"></script>
-    <script src="client/components/room/googleApiService.js"></script>
-    <script src="client/components/web.sockets/stompClientService.js"></script>
-    <script src="client/components/create.join/controllers/createroomController.js"></script>
-    <script src="client/components/web.sockets/restService.js"></script>
-    <script src="client/components/home/home.routes.js"></script>
-    <script src="client/shared/utilities/anchorSmoothScroll.js"></script>
-    <script src="client/components/search/controllers/menuController.js"></script>
-    <script src="client/components/search/directives/menuDirective.js"></script>
-    <script src="client/components/room/room.routes.js"></script>
-    <script src="client/components/create.join/controllers/roomJoinController.js"></script>
+    <!-- inject:js -->
+    <script src="client/app.module.js"></script>
+    <script src="client/app.routes.js"></script>
     <script src="client/components/create.join/create.join.routes.js"></script>
+    <script src="client/components/player/player.js"></script>
+    <script src="client/components/player/playerController.js"></script>
+    <script src="client/components/player/playerService.js"></script>
+    <script src="client/components/player/webSocketPollService.js"></script>
+    <script src="client/components/player/youTubeDirective.js"></script>
+    <script src="client/components/version/interpolate-filter.js"></script>
+    <script src="client/components/version/interpolate-filter_test.js"></script>
+    <script src="client/components/version/version-directive.js"></script>
+    <script src="client/components/version/version-directive_test.js"></script>
+    <script src="client/components/version/version.js"></script>
+    <script src="client/components/version/version_test.js"></script>
+    <script src="client/components/web.sockets/restService.js"></script>
+    <script src="client/components/web.sockets/stompClientService.js"></script>
+    <script src="client/components/web.sockets/webSocketService.js"></script>
+    <script src="client/shared/utilities/anchorSmoothScroll.js"></script>
+    <script src="client/components/home/home.routes.js"></script>
+    <script src="client/components/room/durationService.js"></script>
+    <script src="client/components/room/googleApiService.js"></script>
+    <script src="client/components/room/room.routes.js"></script>
+    <script src="client/components/create.join/controllers/createroomController.js"></script>
+    <script src="client/components/create.join/controllers/roomJoinController.js"></script>
+    <script src="client/components/queue/controllers/queueController.js"></script>
+    <script src="client/components/search/controllers/menuController.js"></script>
+    <script src="client/components/search/controllers/searchController.js"></script>
+    <script src="client/components/search/directives/menuDirective.js"></script>
+    <script src="client/components/room/controllers/roomController.js"></script>
+    <!-- endinject -->
     <!-- endbuild -->
 
     <!-- build:js -->

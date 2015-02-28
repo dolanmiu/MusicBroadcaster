@@ -110,7 +110,12 @@ gulp.task('angular', function () {
     var sources = gulp.src(paths.angular, {
         read: false
     });
-    return target.pipe(plugins.inject(sources))
+
+    return target.pipe(plugins.inject(sources, {
+            ignorePath: '/build/',
+            addRootSlash: false,
+            relative: true
+        }))
         .pipe(gulp.dest(srcDir));
 });
 

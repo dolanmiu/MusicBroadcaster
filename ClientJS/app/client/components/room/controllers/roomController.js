@@ -150,7 +150,6 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
 
     $scope.pause = function () {
         stompClientService.sendPause();
-        //player.pauseVideo();
     };
 
 
