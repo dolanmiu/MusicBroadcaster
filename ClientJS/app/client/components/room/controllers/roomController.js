@@ -28,11 +28,11 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
             .then(function (response) {
                 currentVideoLength = response.result.items[0].contentDetails.duration;
                 $scope.$apply();
-                deferred.resolve('Promise resolved');
+                deferred.resolve();
             }, function (reason) {
                 console.log('Error: ' + reason.result.error.message);
                 $scope.$apply();
-                deferred.reject('Promise rejected');
+                deferred.reject();
             });
         return deferred.promise;
     };
