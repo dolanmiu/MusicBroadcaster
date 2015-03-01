@@ -15,14 +15,6 @@ angular.module('app').config(function ($stateProvider, $urlRouterProvider) {
                 },
                 'bug@root.home': {
                     templateUrl: 'client/components/home/partial.bug.html'
-                },
-                'createroom@root.home': {
-                    templateUrl: 'client/components/create.join/templates/partial.create.html',
-                    controller: 'createroomController'
-                },
-                'joinroom@root.home': {
-                    templateUrl: 'client/components/create.join/templates/partial.join.html',
-                    controller: 'joinRoomController'
                 }
             }
         })
