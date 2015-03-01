@@ -8,6 +8,7 @@ angular.module('app').service('playerService', function (durationService, $q, $w
         self = this;
 
     this.isPlayerLoaded = function () {
+
         return player;
     };
 
@@ -35,7 +36,7 @@ angular.module('app').service('playerService', function (durationService, $q, $w
                 events: {
                     'onReady': function () {
                         console.log('player has been created');
-                        deferred.resolve('resolved');
+                        deferred.resolve();
                     },
                     'onStateChange': onPlayerStateChange
                 }

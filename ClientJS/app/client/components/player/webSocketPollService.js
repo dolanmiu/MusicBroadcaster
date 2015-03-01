@@ -22,19 +22,9 @@ angular.module('app').service('webSocketPollService', function () {
             case 'next':
                 commandQueue.push('NEXT');
                 break;
-
+            default:
+                return null;
 
         }
     };
-
-
-    this.addPause = function () {
-    };
-
-    this.addNext = function () {
-    };
-
-    this.getCommand = function () {
-    };
-
 });
