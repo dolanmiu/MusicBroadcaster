@@ -56,12 +56,6 @@ $(document).ready(function() {
 
 });
 
-$(document).ready(function() {
-	$("a.single_image").fancybox({
-		padding: 4,
-	});
-});
-
 /***************** Nav Transformicon ******************/
 
 /* When user clicks the Icon */

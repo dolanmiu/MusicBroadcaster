@@ -3,7 +3,7 @@
  */
 /*globals angular, console, done */
 
-angular.module('youTubeApp').directive('youtube', function ($window) {
+angular.module('app').directive('youtube', function ($window) {
     'use strict';
     return {
         restrict: 'E',
