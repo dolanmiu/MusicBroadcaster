@@ -10,6 +10,8 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         search,
         searchData,
         roomName;
+    
+    $scope.roomName = $stateParams.roomName;
 
     $scope.setVideoId = function (videoId) {
         $scope.videoId = videoId;

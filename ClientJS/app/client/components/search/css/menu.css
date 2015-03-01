@@ -131,9 +131,8 @@ nav.push-menu-left div.song-result {
 }
 
 nav.push-menu-left div.song-result-parent-container {
-    top: 70px;
-    bottom: 0px;
-    position: fixed;
+    height: 600px;
+    position: relative;
     width: 260px;
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
