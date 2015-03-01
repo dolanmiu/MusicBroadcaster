@@ -80,26 +80,26 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
                         console.log(playlist);
                         playerService.cueVideoById(playlist.data.id);
                         //playerService.playVideo();
-                       // $rootScope.refreshQueue = true;
+                        // $rootScope.refreshQueue = true;
                     });
             }
             if (message.media === 'ADDED') {
 
                 console.log('Media has been added');
-                $http.get('http://localhost:8080/room/' + roomName + '/current')
-                    .then(function (queue) {
-                        console.log('Queue data from GET is: ' + JSON.stringify(queue));
-                        if (playerService.isPlayerLoaded() !== false) {
-                            playerService.loadPlayer().then(function () {
-                                playerService.cueVideoById(queue.data.id);
-                                // playerService.seekTo(queue.data.currentSeek);
-
-                                stompClientService.sendPlay();
-                                //$scope.refreshQueue = true;
-                            });
-                            //queue.data[0].id
-                        }
-                    });
+                //$http.get('http://localhost:8080/room/' + roomName + '/current')
+                //    .then(function (queue) {
+                //        console.log('Queue data from GET is: ' + JSON.stringify(queue));
+                //        if (playerService.isPlayerLoaded() !== false) {
+                //            playerService.loadPlayer().then(function () {
+                //                playerService.cueVideoById(queue.data.id);
+                //                // playerService.seekTo(queue.data.currentSeek);
+                //
+                //                stompClientService.sendPlay();
+                //                //$scope.refreshQueue = true;
+                //            });
+                //            //queue.data[0].id
+                //        }
+                //    });
             }
             if (message.playback === 'PAUSE') {
                 console.log('Media has been paused');
@@ -107,23 +107,23 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
             }
             console.log("received broadcasted data");
         }).then(function () {
-            $http.get('http://localhost:8080/room/' + roomName + '/current')
-                .then(function (queue) {
-                    var happy = JSON.stringify(queue);
-                    console.log('Queue data from GET is: ' + happy);
-                    // && happy.data !== undefined
-                    if (playerService.isPlayerLoaded() === false) {
-                        console.log(happy.data);
-                        playerService.loadPlayer().then(function () {
-                            playerService.cueVideoById(queue.data.id);
-                            playerService.seekTo(queue.data.currentSeek / 1000);
-                            stompClientService.sendPlay();
-                        });
-                        //queue.data[0].id
-                    }
-                }, function (fail) {
-                    console.log(fail);
-                });
+            //$http.get('http://localhost:8080/room/' + roomName + '/current')
+            //    .then(function (queue) {
+            //        var happy = JSON.stringify(queue);
+            //        console.log('Queue data from GET is: ' + happy);
+            //        // && happy.data !== undefined
+            //        if (playerService.isPlayerLoaded() === false) {
+            //            console.log(happy.data);
+            //            playerService.loadPlayer().then(function () {
+            //                playerService.cueVideoById(queue.data.id);
+            //                playerService.seekTo(queue.data.currentSeek / 1000);
+            //                stompClientService.sendPlay();
+            //            });
+            //            //queue.data[0].id
+            //        }
+            //    }, function (fail) {
+            //        console.log(fail);
+            //    });
 
         });
     };
@@ -221,6 +221,10 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
     angularLoad.loadScript('https://apis.google.com/js/client.js')
         .then(function () {
             setApiKey();
+            playerService.loadPlayer()
+                .then(function () {
+                    console.log('player created');
+                });
         })
         .catch(function () {
             console.log('Error loading the script');
