@@ -64,7 +64,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
             }
 
             if (message.playback === 'PLAY') {
-                console.log("Playback: play has been received");
+                console.log("Playback: play has been receied");
                 //$scope.loadYTVideo(videoId);
                 setTimeout(function () {
                     //player.playVideo();
@@ -91,6 +91,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
                             playerService.loadPlayer().then(function () {
                                 playerService.cueVideoById(queue.data.id);
                                 // playerService.seekTo(queue.data.currentSeek);
+
                                 stompClientService.sendPlay();
                                 //$scope.refreshQueue = true;
                             });
@@ -108,7 +109,8 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
                 .then(function (queue) {
                     var happy = JSON.stringify(queue);
                     console.log('Queue data from GET is: ' + happy);
-                    if (playerService.isPlayerLoaded() !== false && happy.data !== undefined) {
+                    // && happy.data !== undefined
+                    if (playerService.isPlayerLoaded() === false) {
                         console.log(happy.data);
                         playerService.loadPlayer().then(function () {
                             playerService.cueVideoById(queue.data.id);
