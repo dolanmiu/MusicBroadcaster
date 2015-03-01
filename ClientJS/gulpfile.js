@@ -108,7 +108,7 @@ gulp.task('angular', function () {
     var target = gulp.src(srcDir + 'index.html')
 
     var sources = gulp.src(paths.angular, {
-        read: false
+        read: true
     });
 
     return target.pipe(plugins.inject(sources, {
