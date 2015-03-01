@@ -448,6 +448,12 @@ footer .footer-below {
     opacity: 0;
 }*/
 
+
+@font-face {
+    font-family: proxima nova;
+    src: url('../fonts/JosefinSlab-Thin.ttf');
+}
+
 section {
     padding: 100px 0;
 }
@@ -455,6 +461,11 @@ section {
 section h2 {
     margin: 0;
     font-size: 3em;
+}
+
+section h1 {
+    font-family: "proxima nova";
+    text-transform: uppercase;
 }
 
 section.success {
