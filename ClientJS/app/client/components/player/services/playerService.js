@@ -52,18 +52,25 @@ angular.module('app').service('playerService', function (durationService, $q, $w
         return deferred.promise;
     };
 
+    this.setPlayer = function (playerInstance) {
+        player = playerInstance;
+    };
+
     this.getCurrentTime = function () {
         return durationService.convert(self.player.getCurrentTime());
     };
 
     this.cueVideoById = function (videoId) {
-        var deferred = $q.defer();
-        player.cueVideoById(videoId)
-            .then(function (success) {
-                deferred.resolve();
-            }, function (fail) {
-                deferred.reject();
-            });
+        //var deferred = $q.defer();
+        //player.cueVideoById(videoId)
+        //    .then(function (success) {
+        //        deferred.resolve();
+        //    }, function (fail) {
+        //        deferred.reject();
+        //    });
+        //return deferred.promise;
+
+        player.cueVideoById(videoId);
     };
 
     this.playVideo = function () {

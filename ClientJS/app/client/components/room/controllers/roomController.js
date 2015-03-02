@@ -3,7 +3,7 @@
  */
 /*globals angular, console, document, done, gapi */
 
-angular.module('app').controller('roomController', function ($rootScope, durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, angularLoad, subscribeEventService) {
+angular.module('app').controller('roomController', function ($rootScope, durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, angularLoad) {
     'use strict';
     var currentVideoLength,
         player,
@@ -19,25 +19,29 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
 
     $scope.videoRequest = function (videoId) {
         var deferred = $q.defer();
-        googleApiService.sendRequest({
-            'path': '/youtube/v3/videos',
-            'params': {
-                'part': 'contentDetails',
-                'id': videoId
-            }
-        }).then(function (response) {
-            currentVideoLength = response.items[0].contentDetails.duration;
-            $scope.$apply();
-            deferred.resolve();
-        }, function (reason) {
-            console.log('Error: ' + reason.error.message);
-            $scope.$apply();
-            deferred.reject();
-        });
+
+        gapi.client.request({
+                'path': '/youtube/v3/videos',
+                'params': {
+                    'part': 'contentDetails',
+                    'id': videoId
+                }
+            })
+            .then(function (response) {
+                currentVideoLength = response.result.items[0].contentDetails.duration;
+                $scope.$apply();
+                deferred.resolve();
+            }, function (reason) {
+                console.log('Error: ' + reason.result.error.message);
+                $scope.$apply();
+                deferred.reject();
+            });
         return deferred.promise;
     };
 
     $scope.loadNewVideo = function (videoId) {
+        //$scope.videoRequest(videoId);
+        //$scope.addMedia(videoId);
         player.loadVideoById(videoId, 5, "large");
     };
 
@@ -49,9 +53,84 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         });
     };
 
-    function connect(roomName) {
-        subscribeEventService.connect(roomName);
-    }
+    $scope.connect = function (roomName) {
+        stompClientService.connect(roomName, function (message) {
+            message = JSON.parse(message.body);
+            console.log('greeting.body is: ' + message);
+
+            if (Math.abs(message.seek - playerService.getCurrentTime) > 4) {
+                playerService.seekTo(playerService.getCurrentTime());
+                stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
+                    'milliseconds': seek
+                }));
+            }
+
+            if (message.playback === 'PLAY') {
+                console.log("Playback: play has been receied");
+                //$scope.loadYTVideo(videoId);
+                setTimeout(function () {
+                    //player.playVideo();
+                    $rootScope.$broadcast('play');
+
+                    playerService.playVideo();
+                }, 4000);
+            }
+
+            if (message.playlist === 'NEXT') {
+                $http.get('http://localhost:8080/room/' + roomName + '/current')
+                    .then(function (playlist) {
+                        console.log(playlist);
+                        playerService.cueVideoById(playlist.data.id);
+                        //playerService.playVideo();
+                        // $rootScope.refreshQueue = true;
+                    });
+            }
+            if (message.media === 'ADDED') {
+
+                console.log('Media has been added');
+                //$http.get('http://localhost:8080/room/' + roomName + '/current')
+                //    .then(function (queue) {
+                //        console.log('Queue data from GET is: ' + JSON.stringify(queue));
+                //        if (playerService.isPlayerLoaded() !== false) {
+                //            playerService.loadPlayer().then(function () {
+                //                playerService.cueVideoById(queue.data.id);
+                //                // playerService.seekTo(queue.data.currentSeek);
+                //
+                //                stompClientService.sendPlay();
+                //                //$scope.refreshQueue = true;
+                //            });
+                //            //queue.data[0].id
+                //        }
+                //    });
+
+                //$rootScope.$broadcast()
+            }
+            if (message.playback === 'PAUSE') {
+                console.log('Media has been paused');
+                playerService.pauseVideo();
+            }
+            console.log("received broadcasted data");
+        }).then(function () {
+            //$http.get('http://localhost:8080/room/' + roomName + '/current')
+            //    .then(function (queue) {
+            //        var happy = JSON.stringify(queue);
+            //        console.log('Queue data from GET is: ' + happy);
+            //        // && happy.data !== undefined
+            //        if (playerService.isPlayerLoaded() === false) {
+            //            console.log(happy.data);
+            //            playerService.loadPlayer().then(function () {
+            //                playerService.cueVideoById(queue.data.id);
+            //                playerService.seekTo(queue.data.currentSeek / 1000);
+            //                stompClientService.sendPlay();
+            //            });
+            //            //queue.data[0].id
+            //        }
+            //    }, function (fail) {
+            //        console.log(fail);
+            //    });
+
+        });
+    };
 
     $scope.checkStomp = function () {
         console.log($scope.stompClient);
@@ -84,7 +163,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
 
     function seektt() {
         var seek = document.getElementById('seekValue').value;
-        stompClientService.send("/app/room/" + roomName + "/seek", {}, JSON.stringify({
+        stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
             'milliseconds': seek
         }));
     }
@@ -110,6 +189,30 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         }));
     }
 
+    $scope.durationToMilliseconds = function (duration) {
+        var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/,
+            hours = 0,
+            minutes = 0,
+            seconds = 0,
+            totalMilliSeconds;
+
+        if (reptms.test(duration)) {
+            var matches = reptms.exec(duration);
+            if (matches[1]) {
+                hours = Number(matches[1]);
+            }
+            if (matches[2]) {
+                minutes = Number(matches[2]);
+            }
+            if (matches[3]) {
+                seconds = Number(matches[3]);
+            }
+            totalMilliSeconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
+        }
+        return totalMilliSeconds;
+    };
+
+
     $scope.onClientLoad = function () {
         console.log("hello");
         googleApiService.handleClientLoad().then(function (data) {
@@ -133,5 +236,6 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         console.log('API key set');
     }*/
 
-    connect($stateParams.roomName);
+
+    $scope.connect($stateParams.roomName);
 });

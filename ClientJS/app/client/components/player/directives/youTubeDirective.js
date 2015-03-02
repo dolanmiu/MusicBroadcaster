@@ -2,7 +2,7 @@
  * Created by Kelv on 09/02/2015.
  */
 /*globals angular, console, YT, document */
-angular.module('app').directive('youtube', function ($window, angularLoad, googleApiService, restService) {
+angular.module('app').directive('youtube', function (stompClientService, playerService, $window, angularLoad, googleApiService, restService) {
     'use strict';
     return {
         restrict: 'E',
@@ -12,7 +12,7 @@ angular.module('app').directive('youtube', function ($window, angularLoad, googl
             videoId: '='
         },
         template: '',
-        controller: function ($rootScope, $scope, durationService, $q, stompClientService) {
+        controller: function ($rootScope, $scope, durationService, $q, stompClientService, playerService) {
             var player;
 
             $scope.onPlayerStateChange = function (event) {
@@ -25,6 +25,12 @@ angular.module('app').directive('youtube', function ($window, angularLoad, googl
                 if (event.data === 2) {
                     stompClientService.sendPause();
                     console.log('State changed to 2, ws pause sent');
+                }
+
+                if (event.data === 5) {
+                    stompClientService.sendPlay();
+
+                    console.log('State is cued, will send play');
                 }
             };
 
@@ -44,7 +50,7 @@ angular.module('app').directive('youtube', function ($window, angularLoad, googl
             };
 
             $scope.playVideo = function () {
-                player.playVideo();
+                playerService.playVideo();
             };
 
 
@@ -92,7 +98,8 @@ angular.module('app').directive('youtube', function ($window, angularLoad, googl
                     events: {
                         'onReady': function () {
                             console.log('player has been created');
-                            scope.loadCurrentSong();
+                            playerService.setPlayer(scope.player);
+
                         },
                         'onStateChange': scope.onPlayerStateChange
                     }
