@@ -70,6 +70,8 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
                 //$scope.loadYTVideo(videoId);
                 setTimeout(function () {
                     //player.playVideo();
+                    $rootScope.$broadcast('play');
+
                     playerService.playVideo();
                 }, 4000);
             }
@@ -100,6 +102,8 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
                 //            //queue.data[0].id
                 //        }
                 //    });
+
+                //$rootScope.$broadcast()
             }
             if (message.playback === 'PAUSE') {
                 console.log('Media has been paused');

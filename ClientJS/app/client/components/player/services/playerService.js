@@ -6,7 +6,7 @@ angular.module('app').service('playerService', function (durationService, $q, $w
     'use strict';
     var player,
         self = this;
-    
+
     function onPlayerStateChange(event) {
         console.log("State is changed.... State is now: " + event.data);
 
@@ -24,7 +24,7 @@ angular.module('app').service('playerService', function (durationService, $q, $w
         var tag = document.createElement('script'),
             targetTag = document.getElementById('hello'),
             deferred = $q.defer();
-        
+
         console.log('targetTag is ' + targetTag);
         tag.src = "https://www.youtube.com/iframe_api";
         targetTag.parentNode.insertBefore(tag, targetTag);

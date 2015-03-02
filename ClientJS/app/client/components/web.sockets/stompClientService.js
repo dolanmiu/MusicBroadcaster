@@ -2,7 +2,7 @@
  * Created by Kelv on 15/02/2015.
  */
 /*globals console, Stomp, SockJS, angular, setTimeout */
-angular.module('app').service('stompClientService', function ($q) {
+angular.module('app').service('stompClientService', function ($q,$rootScope) {
     'use strict';
     var stompClient,
         player = null,
@@ -19,6 +19,7 @@ angular.module('app').service('stompClientService', function ($q) {
             console.log('Connected: ' + frame);
             self.roomName = roomNameParam;
             self.stompClient.subscribe('/room/' + roomNameParam, connectionCallback);
+            $rootScope.$broadcast('setRoom');
             deferred.resolve();
         });
         return deferred.promise;
@@ -37,6 +38,10 @@ angular.module('app').service('stompClientService', function ($q) {
 
     this.sendPause = function () {
         self.stompClient.send('/app/room/' + self.roomName + '/pause', {});
+    };
+
+    this.playCurrentSong=function(){
+        //self.stompClient.sen
     };
 
     this.getRoomName = function () {

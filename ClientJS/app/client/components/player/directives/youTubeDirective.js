@@ -1,8 +1,8 @@
 /**
  * Created by Kelv on 09/02/2015.
  */
-/*globals angular, console, YT */
-angular.module('app').directive('youtube', function ($window, angularLoad, googleApiService) {
+/*globals angular, console, YT, document */
+angular.module('app').directive('youtube', function ($window, angularLoad, googleApiService, restService) {
     'use strict';
     return {
         restrict: 'E',
@@ -12,9 +12,8 @@ angular.module('app').directive('youtube', function ($window, angularLoad, googl
             videoId: '='
         },
         template: '',
-        controller: function ($scope, durationService, $q, stompClientService) {
-            var player,
-                self = this;
+        controller: function ($rootScope, $scope, durationService, $q, stompClientService) {
+            var player;
 
             $scope.onPlayerStateChange = function (event) {
                 console.log("State is changed.... State is now: " + event.data);
@@ -48,6 +47,14 @@ angular.module('app').directive('youtube', function ($window, angularLoad, googl
                 player.playVideo();
             };
 
+
+            $scope.loadCurrentSong = function () {
+                var currentSong = restService.getCurrentSong(roomName);
+
+                $scope.cueVideoById(videoId);
+
+            };
+
             $scope.pauseVideo = function () {
                 player.pauseVideo();
             };
@@ -55,6 +62,12 @@ angular.module('app').directive('youtube', function ($window, angularLoad, googl
             $scope.seekTo = function (milliseconds) {
                 player.seekTo(milliseconds, false);
             };
+
+            $scope.$on('setRoom', function () {
+                $scope.roomName = stompClientService.getRoomName();
+                console.log($scope.roomName);
+            });
+
         },
         link: function (scope, element, attrs, controller) {
             angularLoad.loadScript('https://apis.google.com/js/client.js').then(function () {
@@ -79,6 +92,7 @@ angular.module('app').directive('youtube', function ($window, angularLoad, googl
                     events: {
                         'onReady': function () {
                             console.log('player has been created');
+                            scope.loadCurrentSong();
                         },
                         'onStateChange': scope.onPlayerStateChange
                     }
