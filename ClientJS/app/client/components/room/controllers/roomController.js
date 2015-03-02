@@ -6,9 +6,6 @@
 angular.module('app').controller('roomController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, subscribeEventService) {
     'use strict';
     var currentVideoLength,
-        player,
-        search,
-        searchData,
         roomName;
 
     $scope.roomName = $stateParams.roomName;
@@ -37,10 +34,6 @@ angular.module('app').controller('roomController', function (durationService, st
         return deferred.promise;
     };
 
-    $scope.loadNewVideo = function (videoId) {
-        player.loadVideoById(videoId, 5, "large");
-    };
-
     function connect(roomName) {
         stompClientService.connect(roomName, function (message) {
             message = JSON.parse(message.body);
@@ -48,8 +41,8 @@ angular.module('app').controller('roomController', function (durationService, st
 
             if (Math.abs(message.seek - playerService.getCurrentTime) > 4) {
                 playerService.seekTo(playerService.getCurrentTime());
-                stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
-                    'milliseconds': seek
+                stompClientService.send("/app/room/" + roomName + "/seek", {}, JSON.stringify({
+                    'milliseconds': message.seek
                 }));
             }
 
