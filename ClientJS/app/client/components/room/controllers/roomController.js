@@ -49,9 +49,9 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         });
     };
 
-    $scope.connect = function (roomName) {
+    function connect(roomName) {
         subscribeEventService.connect(roomName);
-    };
+    }
 
     $scope.checkStomp = function () {
         console.log($scope.stompClient);
@@ -84,7 +84,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
 
     function seektt() {
         var seek = document.getElementById('seekValue').value;
-        stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
+        stompClientService.send("/app/room/" + roomName + "/seek", {}, JSON.stringify({
             'milliseconds': seek
         }));
     }
@@ -110,30 +110,6 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         }));
     }
 
-    $scope.durationToMilliseconds = function (duration) {
-        var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/,
-            hours = 0,
-            minutes = 0,
-            seconds = 0,
-            totalMilliSeconds;
-
-        if (reptms.test(duration)) {
-            var matches = reptms.exec(duration);
-            if (matches[1]) {
-                hours = Number(matches[1]);
-            }
-            if (matches[2]) {
-                minutes = Number(matches[2]);
-            }
-            if (matches[3]) {
-                seconds = Number(matches[3]);
-            }
-            totalMilliSeconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
-        }
-        return totalMilliSeconds;
-    };
-
-
     $scope.onClientLoad = function () {
         console.log("hello");
         googleApiService.handleClientLoad().then(function (data) {
@@ -157,6 +133,5 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         console.log('API key set');
     }*/
 
-
-    $scope.connect($stateParams.roomName);
+    connect($stateParams.roomName);
 });
