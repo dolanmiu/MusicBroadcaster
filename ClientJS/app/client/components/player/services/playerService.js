@@ -7,16 +7,11 @@ angular.module('app').service('playerService', function (durationService, $q, $w
     var player,
         self = this;
 
-    this.isPlayerLoaded = function () {
-
-        return player;
-    };
-
-
     this.loadPlayer = function () {
         var tag = document.createElement('script'),
             targetTag = document.getElementById('hello'),
             deferred = $q.defer();
+        
         console.log('targetTag is ' + targetTag);
         tag.src = "https://www.youtube.com/iframe_api";
         targetTag.parentNode.insertBefore(tag, targetTag);

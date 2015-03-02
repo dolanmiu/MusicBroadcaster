@@ -10,7 +10,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         search,
         searchData,
         roomName;
-    
+
     $scope.roomName = $stateParams.roomName;
 
     $scope.setVideoId = function (videoId) {
@@ -21,12 +21,12 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         var deferred = $q.defer();
 
         gapi.client.request({
-            'path': '/youtube/v3/videos',
-            'params': {
-                'part': 'contentDetails',
-                'id': videoId
-            }
-        })
+                'path': '/youtube/v3/videos',
+                'params': {
+                    'part': 'contentDetails',
+                    'id': videoId
+                }
+            })
             .then(function (response) {
                 currentVideoLength = response.result.items[0].contentDetails.duration;
                 $scope.$apply();
@@ -218,17 +218,14 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         });
     };
 
-    angularLoad.loadScript('https://apis.google.com/js/client.js')
-        .then(function () {
-            setApiKey();
-            playerService.loadPlayer()
-                .then(function () {
-                    console.log('player created');
-                });
-        })
-        .catch(function () {
-            console.log('Error loading the script');
+    angularLoad.loadScript('https://apis.google.com/js/client.js').then(function () {
+        setApiKey();
+        playerService.loadPlayer().then(function () {
+            console.log('player created');
         });
+    }).catch(function () {
+        console.log('Error loading the script');
+    });
 
     function setApiKey() {
         googleApiService.handleClientLoad();

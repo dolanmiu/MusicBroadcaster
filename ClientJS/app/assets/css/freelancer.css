@@ -450,8 +450,13 @@ footer .footer-below {
 
 
 @font-face {
-    font-family: proxima nova;
+    font-family: "finslab thin";
     src: url('../fonts/JosefinSlab-Thin.ttf');
+}
+
+@font-face {
+    font-family: "proxima nova";
+    src: url('../fonts/proxima-nova.otf');
 }
 
 section {
@@ -464,7 +469,7 @@ section h2 {
 }
 
 section h1 {
-    font-family: "proxima nova";
+    font-family: "finslab thin";
     text-transform: uppercase;
 }
 
@@ -476,6 +481,7 @@ section.success {
 section.dark {
     color: #f5f4f1;
     background: #171b1e;
+    font-family: "proxima nova";
 }
 
 section.dark input,

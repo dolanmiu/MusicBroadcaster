@@ -2,7 +2,7 @@
  * Created by Kelv on 09/02/2015.
  */
 // 2. This code loads the IFrame Player API code asynchronously.
-var tag = document.createElement('script');
+/*var tag = document.createElement('script');
 
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -40,4 +40,4 @@ function onPlayerStateChange(event) {
 }
 function stopVideo() {
     player.stopVideo();
-}
+}*/

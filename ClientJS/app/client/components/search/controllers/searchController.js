@@ -1,5 +1,5 @@
 /*globals angular */
-angular.module('app').controller('searchController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, angularLoad, $window) {
+angular.module('app').controller('searchController', function (stompClientService, $scope, googleApiService, $http, $q, $stateParams, angularLoad, $window) {
     'use strict';
 
     var search, searchData;
