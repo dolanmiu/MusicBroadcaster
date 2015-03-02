@@ -6,6 +6,19 @@ angular.module('app').service('playerService', function (durationService, $q, $w
     'use strict';
     var player,
         self = this;
+    
+    function onPlayerStateChange(event) {
+        console.log("State is changed.... State is now: " + event.data);
+
+        if (event.data === 1) {
+            stompClientService.sendPlay();
+        }
+
+        if (event.data === 2) {
+            stompClientService.sendPause();
+            console.log('State changed to 2, ws pause sent');
+        }
+    }
 
     this.loadPlayer = function () {
         var tag = document.createElement('script'),
@@ -17,7 +30,6 @@ angular.module('app').service('playerService', function (durationService, $q, $w
         targetTag.parentNode.insertBefore(tag, targetTag);
 
         $window.onYouTubeIframeAPIReady = function () {
-
             player = new YT.Player('player', {
                 height: '390',
                 width: '640',
@@ -44,7 +56,6 @@ angular.module('app').service('playerService', function (durationService, $q, $w
         return durationService.convert(self.player.getCurrentTime());
     };
 
-
     this.cueVideoById = function (videoId) {
         var deferred = $q.defer();
         player.cueVideoById(videoId)
@@ -66,17 +77,4 @@ angular.module('app').service('playerService', function (durationService, $q, $w
     this.seekTo = function (milliseconds) {
         player.seekTo(milliseconds, false);
     };
-
-    function onPlayerStateChange(event) {
-        console.log("State is changed.... State is now: " + event.data);
-
-        if (event.data === 1) {
-            stompClientService.sendPlay();
-        }
-
-        if (event.data === 2) {
-            stompClientService.sendPause();
-            console.log('State changed to 2, ws pause sent');
-        }
-    }
 });

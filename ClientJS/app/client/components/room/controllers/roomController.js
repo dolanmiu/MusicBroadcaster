@@ -218,7 +218,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         });
     };
 
-    angularLoad.loadScript('https://apis.google.com/js/client.js').then(function () {
+    /*angularLoad.loadScript('https://apis.google.com/js/client.js').then(function () {
         setApiKey();
         playerService.loadPlayer().then(function () {
             console.log('player created');
@@ -230,7 +230,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
     function setApiKey() {
         googleApiService.handleClientLoad();
         console.log('API key set');
-    }
+    }*/
 
 
     $scope.connect($stateParams.roomName);
