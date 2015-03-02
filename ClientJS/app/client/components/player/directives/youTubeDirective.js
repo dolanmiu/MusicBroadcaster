@@ -98,6 +98,7 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
                     events: {
                         'onReady': function () {
                             console.log('player has been created');
+                            console.log('player: ' + scope.player);
                             playerService.setPlayer(scope.player);
 
                         },

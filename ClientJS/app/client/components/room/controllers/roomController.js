@@ -19,23 +19,21 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
 
     $scope.videoRequest = function (videoId) {
         var deferred = $q.defer();
-
-        gapi.client.request({
+        googleApiService.sendRequest({
             'path': '/youtube/v3/videos',
             'params': {
                 'part': 'contentDetails',
                 'id': videoId
             }
-        })
-            .then(function (response) {
-                currentVideoLength = response.result.items[0].contentDetails.duration;
-                $scope.$apply();
-                deferred.resolve();
-            }, function (reason) {
-                console.log('Error: ' + reason.result.error.message);
-                $scope.$apply();
-                deferred.reject();
-            });
+        }).then(function (response) {
+            currentVideoLength = response.items[0].contentDetails.duration;
+            $scope.$apply();
+            deferred.resolve();
+        }, function (reason) {
+            console.log('Error: ' + reason.error.message);
+            $scope.$apply();
+            deferred.reject();
+        });
         return deferred.promise;
     };
 
@@ -53,7 +51,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         });
     };
 
-    $scope.connect = function (roomName) {
+    function connect(roomName) {
         stompClientService.connect(roomName, function (message) {
             message = JSON.parse(message.body);
             console.log('greeting.body is: ' + message);
@@ -130,24 +128,9 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         console.log($scope.stompClient);
     };
 
-    //function disconnect() {
-    //    stompClient.disconnect();
-    //    setConnected(false);
-    //    console.log("Disconnected");
-    //}
-    //
-    //function sendName() {
-    //    var name = document.getElementById('name').value;
-    //    stompClient.send("/app/room/" + room + "/get", {}, JSON.stringify({
-    //        'name': name
-    //    }));
-    //}
-
 
     $scope.play = function () {
         stompClientService.sendPlay();
-        //$scope.stompClient.send("/app/room/" + $scope.roomName + "/play", {});
-        //player.playVideo();
     };
 
     $scope.pause = function () {
@@ -166,7 +149,6 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         var length;
         $scope.videoRequest(videoId)
             .then(function () {
-                //length = $scope.durationToMilliseconds(currentVideoLength);
                 length = durationService.convert(currentVideoLength);
                 console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
                 //sendMediaToServer(id, length);
@@ -183,30 +165,6 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         }));
     }
 
-    $scope.durationToMilliseconds = function (duration) {
-        var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/,
-            hours = 0,
-            minutes = 0,
-            seconds = 0,
-            totalMilliSeconds;
-
-        if (reptms.test(duration)) {
-            var matches = reptms.exec(duration);
-            if (matches[1]) {
-                hours = Number(matches[1]);
-            }
-            if (matches[2]) {
-                minutes = Number(matches[2]);
-            }
-            if (matches[3]) {
-                seconds = Number(matches[3]);
-            }
-            totalMilliSeconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
-        }
-        return totalMilliSeconds;
-    };
-
-
     $scope.onClientLoad = function () {
         console.log("hello");
         googleApiService.handleClientLoad().then(function (data) {
@@ -216,20 +174,5 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         });
     };
 
-    /*angularLoad.loadScript('https://apis.google.com/js/client.js').then(function () {
-     setApiKey();
-     playerService.loadPlayer().then(function () {
-     console.log('player created');
-     });
-     }).catch(function () {
-     console.log('Error loading the script');
-     });
-
-     function setApiKey() {
-     googleApiService.handleClientLoad();
-     console.log('API key set');
-     }*/
-
-
-    $scope.connect($stateParams.roomName);
+    connect($stateParams.roomName);
 });
