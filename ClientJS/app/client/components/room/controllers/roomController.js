@@ -26,11 +26,11 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
                 'id': videoId
             }
         }).then(function (response) {
-            currentVideoLength = response.result.items[0].contentDetails.duration;
+            currentVideoLength = response.items[0].contentDetails.duration;
             $scope.$apply();
             deferred.resolve();
         }, function (reason) {
-            console.log('Error: ' + reason.result.error.message);
+            console.log('Error: ' + reason.error.message);
             $scope.$apply();
             deferred.reject();
         });
