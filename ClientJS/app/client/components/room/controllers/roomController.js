@@ -19,29 +19,25 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
 
     $scope.videoRequest = function (videoId) {
         var deferred = $q.defer();
-
-        gapi.client.request({
-                'path': '/youtube/v3/videos',
-                'params': {
-                    'part': 'contentDetails',
-                    'id': videoId
-                }
-            })
-            .then(function (response) {
-                currentVideoLength = response.result.items[0].contentDetails.duration;
-                $scope.$apply();
-                deferred.resolve();
-            }, function (reason) {
-                console.log('Error: ' + reason.result.error.message);
-                $scope.$apply();
-                deferred.reject();
-            });
+        googleApiService.sendRequest({
+            'path': '/youtube/v3/videos',
+            'params': {
+                'part': 'contentDetails',
+                'id': videoId
+            }
+        }).then(function (response) {
+            currentVideoLength = response.result.items[0].contentDetails.duration;
+            $scope.$apply();
+            deferred.resolve();
+        }, function (reason) {
+            console.log('Error: ' + reason.result.error.message);
+            $scope.$apply();
+            deferred.reject();
+        });
         return deferred.promise;
     };
 
     $scope.loadNewVideo = function (videoId) {
-        //$scope.videoRequest(videoId);
-        //$scope.addMedia(videoId);
         player.loadVideoById(videoId, 5, "large");
     };
 

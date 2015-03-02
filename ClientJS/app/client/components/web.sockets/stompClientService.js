@@ -2,7 +2,7 @@
  * Created by Kelv on 15/02/2015.
  */
 /*globals console, Stomp, SockJS, angular, setTimeout */
-angular.module('app').service('stompClientService', function ($q,$rootScope) {
+angular.module('app').service('stompClientService', function ($q, $rootScope) {
     'use strict';
     var stompClient,
         player = null,
@@ -40,7 +40,7 @@ angular.module('app').service('stompClientService', function ($q,$rootScope) {
         self.stompClient.send('/app/room/' + self.roomName + '/pause', {});
     };
 
-    this.playCurrentSong=function(){
+    this.playCurrentSong = function () {
         //self.stompClient.sen
     };
 

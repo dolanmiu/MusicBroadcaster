@@ -31,7 +31,6 @@ angular.module('app').service('googleApiService', function ($http, $rootScope, $
 
 
         });
-        //return deferred.promise();
     };
 
     this.sendRequest = function (jsonRequest) {
