@@ -3,7 +3,7 @@
  */
 /*globals angular, console, document, done, gapi */
 
-angular.module('app').controller('roomController', function ($rootScope, durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, angularLoad) {
+angular.module('app').controller('roomController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, subscribeEventService) {
     'use strict';
     var currentVideoLength,
         player,
@@ -38,17 +38,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
     };
 
     $scope.loadNewVideo = function (videoId) {
-        //$scope.videoRequest(videoId);
-        //$scope.addMedia(videoId);
         player.loadVideoById(videoId, 5, "large");
-    };
-
-    $scope.createRoom = function () {
-        var name = 'http://localhost:8080/room/create?name=' + $scope.roomName;
-        console.log('createRoom() is running' + name);
-        $http.get(name).then(function (response) {
-            console.log(response.data);
-        });
     };
 
     function connect(roomName) {
@@ -122,12 +112,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
             //    });
 
         });
-    };
-
-    $scope.checkStomp = function () {
-        console.log($scope.stompClient);
-    };
-
+    }
 
     $scope.play = function () {
         stompClientService.sendPlay();
@@ -137,40 +122,14 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
         stompClientService.sendPause();
     };
 
-
-    function seektt() {
-        var seek = document.getElementById('seekValue').value;
-        stompClient.send("/app/room/" + room + "/seek", {}, JSON.stringify({
-            'milliseconds': seek
-        }));
-    }
-
     $scope.addMedia = function (videoId) {
         var length;
-        $scope.videoRequest(videoId)
-            .then(function () {
-                length = durationService.convert(currentVideoLength);
-                console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
-                //sendMediaToServer(id, length);
-                stompClientService.addToQueue(videoId, length);
-            }, function (reason) {
-                console.log(reason);
-            });
-    };
-
-    function sendMediaToServer(id, length) {
-        $scope.stompClient.send("/app/room/" + $scope.roomName + "/add", {}, JSON.stringify({
-            'id': id,
-            'length': length
-        }));
-    }
-
-    $scope.onClientLoad = function () {
-        console.log("hello");
-        googleApiService.handleClientLoad().then(function (data) {
-            $scope.channel = data;
-        }, function (error) {
-            console.log('Failed: ' + error);
+        $scope.videoRequest(videoId).then(function () {
+            length = durationService.convert(currentVideoLength);
+            console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
+            stompClientService.addToQueue(videoId, length);
+        }, function (reason) {
+            console.log(reason);
         });
     };
 
