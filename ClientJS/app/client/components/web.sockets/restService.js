@@ -23,4 +23,12 @@ angular.module('app').service('restService', function ($http, $q) {
         });
         return deferred.promise;
     };
+
+    this.getCurrentSong = function (roomName) {
+        var request = 'http://localhost:8080/' + roomName + '/current';
+        $http.get(request).then(function (success) {
+
+        }, function (fail) {
+        });
+    };
 });
