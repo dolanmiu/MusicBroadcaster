@@ -125,4 +125,9 @@ public class SongTimer implements ISongTimer {
 			return false;
 		}
 	}
+
+	@Override
+	public long getTimeRemaining() {
+		return this.remainingTime;
+	}
 }

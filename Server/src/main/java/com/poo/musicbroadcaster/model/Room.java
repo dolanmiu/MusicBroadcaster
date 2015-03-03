@@ -95,6 +95,10 @@ public class Room implements IRoom {
 			this.sendMessage(new ErrorMessage("Song cannot be paused, there isnt a song in queue"));
 			return;
 		}
+		System.out.println("Reaminig time: " + this.songTimer.getTimeRemaining());
+		if (this.songTimer.getTimeRemaining() < 2000) {
+			return;
+		}
 		boolean result = this.songTimer.pause();
 		if (result) {
 			this.playbackStatus = PlaybackStatus.PAUSED;
