@@ -2,7 +2,7 @@
  * Created by Kelv on 09/02/2015.
  */
 /*globals angular, console */
-angular.module('app').controller('roomController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, subscribeEventService) {
+angular.module('app').controller('roomController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams) {
     'use strict';
 
     $scope.roomName = $stateParams.roomName;

@@ -2,11 +2,7 @@
     <h1>{{roomName}}</h1>
     <div id="player"></div>
     <youtube width="640" height="390" video-id="searchCtrl.videoId"></youtube>
-
-    <form id="hello" ng-submit="submitSearch()">
-        <button class="btn" ng-click="play()">Play</button>
-        <button class="btn" ng-click="pause()">Pause</button>
-    </form>
+    
     <div infinite-scroll="scrollDown()" infinite-scroll-distance="0">
         <table class="table">
             <tr ng-repeat="item in searchResultsArray">
