@@ -1,8 +1,7 @@
 /**
  * Created by Kelv on 09/02/2015.
  */
-/*globals angular, console, document, done, gapi */
-
+/*globals angular, console */
 angular.module('app').controller('roomController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, subscribeEventService) {
     'use strict';
 
