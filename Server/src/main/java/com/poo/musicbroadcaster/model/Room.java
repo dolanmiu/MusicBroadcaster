@@ -76,7 +76,7 @@ public class Room implements IRoom {
 	@Override
 	public void play() throws InterruptedException, ExecutionException {
 		if (this.currentMedia == null) {
-			this.sendMessage(new ErrorMessage("Song cannot be played, there isnt a song in queue"));
+			this.sendMessage(new PlaylistMessage(PlaylistMessageType.FINISHED));
 			return;
 		}
 		boolean result = this.songTimer.play();
@@ -92,7 +92,7 @@ public class Room implements IRoom {
 	@Override
 	public void pause() {
 		if (this.currentMedia == null) {
-			this.sendMessage(new ErrorMessage("Song cannot be paused, there isnt a song in queue"));
+			this.sendMessage(new PlaylistMessage(PlaylistMessageType.FINISHED));
 			return;
 		}
 		System.out.println("Reaminig time: " + this.songTimer.getTimeRemaining());
