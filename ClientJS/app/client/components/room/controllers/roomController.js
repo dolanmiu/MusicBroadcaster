@@ -5,13 +5,8 @@
 
 angular.module('app').controller('roomController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, subscribeEventService) {
     'use strict';
-    var roomName;
 
     $scope.roomName = $stateParams.roomName;
-
-    $scope.setVideoId = function (videoId) {
-        $scope.videoId = videoId;
-    };
 
     function connect(roomName) {
         stompClientService.connect(roomName, function (message) {
@@ -60,10 +55,11 @@ angular.module('app').controller('roomController', function (durationService, st
                 //$rootScope.$broadcast()
             }
             if (message.playback === 'PAUSE') {
-                console.log('Media has been paused');
                 playerService.pauseVideo();
             }
-            console.log("received broadcasted data");
+            if (message.playlist === 'FINISHED') {
+                playerService.stopVideo();
+            }
         }).then(function () {
             //$http.get('http://localhost:8080/room/' + roomName + '/current')
             //    .then(function (queue) {

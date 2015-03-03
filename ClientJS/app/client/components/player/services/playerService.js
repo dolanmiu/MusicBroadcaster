@@ -80,6 +80,10 @@ angular.module('app').service('playerService', function (durationService, $q, $w
     this.pauseVideo = function () {
         player.pauseVideo();
     };
+    
+    this.stopVideo = function () {
+        player.stopVideo();
+    }
 
     this.seekTo = function (milliseconds) {
         player.seekTo(milliseconds, false);
