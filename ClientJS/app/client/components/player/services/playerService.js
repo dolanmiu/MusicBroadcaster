@@ -20,38 +20,6 @@ angular.module('app').service('playerService', function (durationService, $q, $w
         }
     }
 
-    this.loadPlayer = function () {
-        var tag = document.createElement('script'),
-            targetTag = document.getElementById('hello'),
-            deferred = $q.defer();
-
-        console.log('targetTag is ' + targetTag);
-        tag.src = "https://www.youtube.com/iframe_api";
-        targetTag.parentNode.insertBefore(tag, targetTag);
-
-        $window.onYouTubeIframeAPIReady = function () {
-            player = new YT.Player('player', {
-                height: '390',
-                width: '640',
-                playerVars: {
-                    controls: '1',
-                    rel: '0',
-                    modestbranding: '1',
-                    autoplay: '1'
-                },
-                // videoId: videoId,
-                events: {
-                    'onReady': function () {
-                        console.log('player has been created');
-                        deferred.resolve();
-                    },
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        };
-        return deferred.promise;
-    };
-
     this.setPlayer = function (playerInstance) {
         player = playerInstance;
     };
