@@ -29,7 +29,7 @@ angular.module('app').controller('roomController', function (durationService, st
                 $http.get('http://localhost:8080/room/' + roomName + '/current')
                     .then(function (playlist) {
                         console.log(playlist);
-                        playerService.cueVideoById(playlist.data.id);
+                        playerService.cueVideoById(playlist.data.id, playlist.data.currentSeek, 'hd1080');
 
                     });
             }
