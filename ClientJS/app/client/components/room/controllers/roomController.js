@@ -81,5 +81,12 @@ angular.module('app').controller('roomController', function (durationService, st
         });
     }
 
+    setTimeout(function () {
+        $http.get('http://localhost:8080/room/' + stompClientService.getRoomName() + '/current')
+            .then(function (queue) {
+                playerService.cueVideoById(queue.data.id, queue.data.currentSeek / 1000, 'hd1080');
+            });
+    }, 2000);
+
     connect($stateParams.roomName);
 });

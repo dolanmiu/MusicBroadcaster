@@ -28,17 +28,10 @@ angular.module('app').service('playerService', function (durationService, $q, $w
         return durationService.convert(self.player.getCurrentTime());
     };
 
-    this.cueVideoById = function (videoId) {
-        //var deferred = $q.defer();
-        //player.cueVideoById(videoId)
-        //    .then(function (success) {
-        //        deferred.resolve();
-        //    }, function (fail) {
-        //        deferred.reject();
-        //    });
-        //return deferred.promise;
+    this.cueVideoById = function (videoId, startTime, res) {
+        //player.cueVideoById(videoId);
 
-        player.cueVideoById(videoId);
+        player.cueVideoById(videoId, startTime, res);
     };
 
     this.playVideo = function () {
@@ -48,7 +41,7 @@ angular.module('app').service('playerService', function (durationService, $q, $w
     this.pauseVideo = function () {
         player.pauseVideo();
     };
-    
+
     this.stopVideo = function () {
         player.stopVideo();
     }
