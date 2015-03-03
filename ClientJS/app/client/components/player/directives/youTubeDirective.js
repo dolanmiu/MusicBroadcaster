@@ -18,16 +18,19 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
             $scope.onPlayerStateChange = function (event) {
                 console.log("State is changed.... State is now: " + event.data);
 
-                if (event.data === 1) {
+                if (event.data === YT.PlayerState.PLAYING) {
                     stompClientService.sendPlay();
                 }
-
-                if (event.data === 2) {
+                if (event.data === YT.PlayerState.ENDED) {
+                    console.log('song ended');
+                }
+                
+                if (event.data === YT.PlayerState.PAUSED) {
                     stompClientService.sendPause();
-                    console.log('State changed to 2, ws pause sent');
+                    console.log('State changed paused, ws pause sent');
                 }
 
-                if (event.data === 5) {
+                if (event.data === YT.PlayerState.CUED) {
                     stompClientService.sendPlay();
 
                     console.log('State is cued, will send play');

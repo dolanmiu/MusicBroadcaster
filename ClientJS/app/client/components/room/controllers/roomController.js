@@ -5,33 +5,12 @@
 
 angular.module('app').controller('roomController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, subscribeEventService) {
     'use strict';
-    var currentVideoLength,
-        roomName;
+    var roomName;
 
     $scope.roomName = $stateParams.roomName;
 
     $scope.setVideoId = function (videoId) {
         $scope.videoId = videoId;
-    };
-
-    $scope.videoRequest = function (videoId) {
-        var deferred = $q.defer();
-        googleApiService.sendRequest({
-            'path': '/youtube/v3/videos',
-            'params': {
-                'part': 'contentDetails',
-                'id': videoId
-            }
-        }).then(function (response) {
-            currentVideoLength = response.items[0].contentDetails.duration;
-            $scope.$apply();
-            deferred.resolve();
-        }, function (reason) {
-            console.log('Error: ' + reason.error.message);
-            $scope.$apply();
-            deferred.reject();
-        });
-        return deferred.promise;
     };
 
     function connect(roomName) {
@@ -106,25 +85,6 @@ angular.module('app').controller('roomController', function (durationService, st
 
         });
     }
-
-    $scope.play = function () {
-        stompClientService.sendPlay();
-    };
-
-    $scope.pause = function () {
-        stompClientService.sendPause();
-    };
-
-    $scope.addMedia = function (videoId) {
-        var length;
-        $scope.videoRequest(videoId).then(function () {
-            length = durationService.convert(currentVideoLength);
-            console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
-            stompClientService.addToQueue(videoId, length);
-        }, function (reason) {
-            console.log(reason);
-        });
-    };
 
     connect($stateParams.roomName);
 });

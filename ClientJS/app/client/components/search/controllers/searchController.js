@@ -1,10 +1,29 @@
 /*globals angular */
-angular.module('app').controller('searchController', function (stompClientService, $scope, googleApiService, $http, $q, $stateParams, angularLoad, $window) {
+angular.module('app').controller('searchController', function (stompClientService, $scope, googleApiService, $http, $q, $stateParams, angularLoad, $window, durationService) {
     'use strict';
 
     var search, searchData;
     $scope.showNewSearchMessage = true;
     $scope.searchResultHeight = $window.innerHeight - 36;
+
+    function videoRequest(videoId) {
+        var deferred = $q.defer();
+        googleApiService.sendRequest({
+            'path': '/youtube/v3/videos',
+            'params': {
+                'part': 'contentDetails',
+                'id': videoId
+            }
+        }).then(function (response) {
+            var currentVideoLength = response.items[0].contentDetails.duration;
+            $scope.$apply();
+            deferred.resolve(currentVideoLength);
+        }, function (reason) {
+            $scope.$apply();
+            deferred.reject();
+        });
+        return deferred.promise;
+    }
 
     $scope.submitSearch = function () {
         search = $scope.searchValue;
@@ -20,10 +39,9 @@ angular.module('app').controller('searchController', function (stompClientServic
         }).then(function (data) {
             $scope.searchResultsArray = data.items;
             $scope.showNewSearchMessage = false;
-            console.log($scope.searchResultsArray);
             searchData = data;
         }, function (reason) {
-            console.log('Reason is: ' + reason);
+            console.log(reason);
         });
     };
 
@@ -45,6 +63,17 @@ angular.module('app').controller('searchController', function (stompClientServic
             }
         }, function (reason) {
             console.log('Scroll down failed because: ' + reason);
+        });
+    };
+
+    $scope.addMedia = function (videoId) {
+        var length;
+        videoRequest(videoId).then(function (currentVideoLength) {
+            length = durationService.convert(currentVideoLength);
+            console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
+            stompClientService.addToQueue(videoId, length);
+        }, function (reason) {
+            console.log(reason);
         });
     };
 
