@@ -5,7 +5,7 @@ angular.module('app').directive('queue', function ($http, stompClientService) {
         restrict: 'E',
         transclude: true,
         templateUrl: 'client/components/queue/templates/partial.queue.html',
-        scope: {control: '='},
+        scope: {control: '=info'},
         link: function (scope, element, attr) {
             scope.internalControl = scope.control || {};
             scope.internalControl.updateQueue = function () {

@@ -2,7 +2,7 @@
  * Created by Kelv on 09/02/2015.
  */
 /*globals angular, console */
-angular.module('app').controller('roomController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, $interval) {
+angular.module('app').controller('roomController', function ($rootScope, durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, $interval) {
     'use strict';
 
     $scope.roomName = $stateParams.roomName;
@@ -34,6 +34,8 @@ angular.module('app').controller('roomController', function (durationService, st
             if (message.media === 'ADDED') {
 
                 console.log('Media has been added');
+                $rootScope.$broadcast('refreshQueue');
+
                 //$http.get('http://localhost:8080/room/' + roomName + '/current')
                 //    .then(function (queue) {
                 //        console.log('Queue data from GET is: ' + JSON.stringify(queue));
