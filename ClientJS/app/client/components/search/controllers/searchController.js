@@ -70,12 +70,11 @@ angular.module('app').controller('searchController', function (stompClientServic
         });
     };
 
-    $scope.addMedia = function (videoId, displayName, thumbnailUrl) {
-        var length;
-        videoRequest(videoId).then(function (currentVideoLength) {
-            length = durationService.convert(currentVideoLength);
-            console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
-            stompClientService.addToQueue(videoId, length, displayName, thumbnailUrl);
+    $scope.addMedia = function (searchResult) {
+        console.log(searchResult);
+        videoRequest(searchResult.id.videoId).then(function (currentVideoLength) {
+            var length = durationService.convert(currentVideoLength);
+            stompClientService.addToQueue(searchResult.id.videoId, length, searchResult.snippet.title, searchResult.snippet.thumbnails.medium.url);
         }, function (reason) {
             console.log(reason);
         });
