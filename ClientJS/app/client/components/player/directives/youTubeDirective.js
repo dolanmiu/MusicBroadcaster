@@ -11,7 +11,8 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
             width: '=',
             videoId: '='
         },
-        template: '',
+        transclude: true,
+        template: '<div id="youtube-wrapper"></div>',
         controller: function ($rootScope, $scope, durationService, $q, stompClientService, playerService) {
             var player;
 
@@ -24,7 +25,7 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
                 if (event.data === YT.PlayerState.ENDED) {
                     console.log('song ended');
                 }
-                
+
                 if (event.data === YT.PlayerState.PAUSED) {
                     stompClientService.sendPause();
                     console.log('State changed paused, ws pause sent');
@@ -83,10 +84,10 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
                 googleApiService.handleClientLoad();
                 console.log('API key set');
             });
-
+            
             var tag = document.createElement('script');
             tag.src = "https://www.youtube.com/iframe_api";
-            element.append(tag);
+            element.children().append(tag);
 
             $window.onYouTubeIframeAPIReady = function () {
                 scope.player = new YT.Player('player', {
@@ -100,15 +101,21 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
                     },
                     events: {
                         'onReady': function () {
-                            console.log('player has been created');
-                            console.log('player: ' + scope.player);
                             playerService.setPlayer(scope.player);
-
+                            document.getElementById("player").contentDocument.addEventListener("click", function () {
+                                alert("clicked");
+                            });
                         },
                         'onStateChange': scope.onPlayerStateChange
                     }
                 });
             };
+            $('#frame').on('click', 'iframe', function (el) {
+                alert("Handler for .click() called.");
+            })
+            $(".ytp-progress-bar-container").click(function () {
+                alert("Handler for .click() called.");
+            });
         }
 
     };

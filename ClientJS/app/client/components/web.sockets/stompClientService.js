@@ -14,9 +14,9 @@ angular.module('app').service('stompClientService', function ($q, $rootScope) {
             deferred = $q.defer();
 
         self.stompClient = Stomp.over(socket);
-
+        self.stompClient.heartbeat.outgoing = 5000; // if 5000 means client will send heart beat every 5000ms
+        self.stompClient.heartbeat.incoming = 5000; // if 0 means client does not want to receive heartbeats from server
         self.stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
             self.roomName = roomNameParam;
             self.stompClient.subscribe('/room/' + roomNameParam, connectionCallback);
             $rootScope.$broadcast('setRoom');
@@ -46,5 +46,13 @@ angular.module('app').service('stompClientService', function ($q, $rootScope) {
 
     this.getRoomName = function () {
         return self.roomName;
+    };
+
+    this.sendSeekHeartBeat = function (milliseconds) {
+        self.stompClient.send('/app/room/' + roomName + "/heart-beat", {
+            "heart-beat": true
+        }, JSON.stringify({
+            'milliseconds': milliseconds
+        }));
     };
 });

@@ -2,7 +2,7 @@
  * Created by Kelv on 09/02/2015.
  */
 /*globals angular, console */
-angular.module('app').controller('roomController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams) {
+angular.module('app').controller('roomController', function (durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, $interval) {
     'use strict';
 
     $scope.roomName = $stateParams.roomName;
@@ -20,8 +20,6 @@ angular.module('app').controller('roomController', function (durationService, st
             }
 
             if (message.playback === 'PLAY') {
-                console.log("Playback: play has been receied");
-                //$scope.loadYTVideo(videoId);
                 playerService.playVideo();
             }
 
@@ -60,6 +58,9 @@ angular.module('app').controller('roomController', function (durationService, st
                 playerService.stopVideo();
             }
         }).then(function () {
+            $interval(function () {
+                stompClientService.sendSeekHeartBeat(playerService.getCurrentTime());
+            }, 1000);
             //$http.get('http://localhost:8080/room/' + roomName + '/current')
             //    .then(function (queue) {
             //        var happy = JSON.stringify(queue);

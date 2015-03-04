@@ -25,7 +25,7 @@ angular.module('app').service('playerService', function (durationService, $q, $w
     };
 
     this.getCurrentTime = function () {
-        return durationService.convert(self.player.getCurrentTime());
+        return Math.round(player.getCurrentTime() * 1000);
     };
 
     this.cueVideoById = function (videoId, startTime, res) {
@@ -44,7 +44,7 @@ angular.module('app').service('playerService', function (durationService, $q, $w
 
     this.stopVideo = function () {
         player.stopVideo();
-    }
+    };
 
     this.seekTo = function (milliseconds) {
         player.seekTo(milliseconds, false);
