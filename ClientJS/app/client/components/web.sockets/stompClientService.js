@@ -25,10 +25,12 @@ angular.module('app').service('stompClientService', function ($q, $rootScope) {
         return deferred.promise;
     };
 
-    this.addToQueue = function (videoId, length) {
+    this.addToQueue = function (videoId, length, displayName, thumbnailUrl) {
         self.stompClient.send("/app/room/" + self.roomName + "/add", {}, JSON.stringify({
             'id': videoId,
-            'length': length
+            'length': length,
+            'displayName': displayName,
+            'thumbnailUrl': thumbnailUrl
         }));
     };
 

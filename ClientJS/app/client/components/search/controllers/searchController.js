@@ -16,10 +16,12 @@ angular.module('app').controller('searchController', function (stompClientServic
             }
         }).then(function (response) {
             var currentVideoLength = response.items[0].contentDetails.duration;
-            $scope.$apply();
+
+            console.log('videoRequest response is: ' + JSON.stringify(response.items[0]));
+            //$scope.$apply();
             deferred.resolve(currentVideoLength);
         }, function (reason) {
-            $scope.$apply();
+            //$scope.$apply();
             deferred.reject();
         });
         return deferred.promise;
@@ -40,6 +42,7 @@ angular.module('app').controller('searchController', function (stompClientServic
             $scope.searchResultsArray = data.items;
             $scope.showNewSearchMessage = false;
             searchData = data;
+            console.log($scope.searchResultsArray);
         }, function (reason) {
             console.log(reason);
         });
@@ -61,24 +64,25 @@ angular.module('app').controller('searchController', function (stompClientServic
             for (i = 0; i < data.result.items.length; i += 1) {
                 $scope.searchResultsArray.push(data.result.items[i]);
             }
+
         }, function (reason) {
             console.log('Scroll down failed because: ' + reason);
         });
     };
 
-    $scope.addMedia = function (videoId) {
+    $scope.addMedia = function (videoId, displayName, thumbnailUrl) {
         var length;
         videoRequest(videoId).then(function (currentVideoLength) {
             length = durationService.convert(currentVideoLength);
             console.log('Length inside addMedia() is ' + length + ' and currentVideoLength is ' + currentVideoLength);
-            stompClientService.addToQueue(videoId, length);
+            stompClientService.addToQueue(videoId, length, displayName, thumbnailUrl);
         }, function (reason) {
             console.log(reason);
         });
     };
 
     /*$scope.$watch($scope.getWindowDimensions, function (newValue, oldValue) {
-        $scope.searchResultHeight = newValue.h;
-    }, true);*/
+     $scope.searchResultHeight = newValue.h;
+     }, true);*/
 
 });

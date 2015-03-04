@@ -65,6 +65,9 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
 
             };
 
+
+
+
             $scope.pauseVideo = function () {
                 player.pauseVideo();
             };
@@ -84,7 +87,7 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
                 googleApiService.handleClientLoad();
                 console.log('API key set');
             });
-            
+
             var tag = document.createElement('script');
             tag.src = "https://www.youtube.com/iframe_api";
             element.children().append(tag);

@@ -23,5 +23,11 @@
     <button ng-click="getQueue()">getQueue</button>
 </div>
 
+<table>
+    <tr ng-repeat="song in control">
+        <td>{{song.id}}</td>
+    </tr>
+</table>
+
 
 <button ng-click="queueControl.updateQueue()">Update Queue {{internalControl}}</button>

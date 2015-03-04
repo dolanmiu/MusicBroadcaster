@@ -10,12 +10,16 @@ angular.module('app').controller('queueController', function ($rootScope, $scope
     $scope.title = {};
 
     $scope.length = {};
-
-    $scope.getQueue = function () {
+    $scope.$on('refreshQueue', function () {
+        //    Code to refresh the queue needed here.
         $http.get('http://localhost:8080/room/' + stompClientService.getRoomName() + '/playlist')
             .then(function (queue) {
-                console.log(queue);
+                console.log(queue.data);
+                $scope.queueArray = queue.data;
                 //console.log($rootScope.refreshQueue);
             });
+    });
+    $scope.getQueue = function () {
+
     };
 });
