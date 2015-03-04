@@ -59,7 +59,7 @@ angular.module('app').controller('roomController', function (durationService, st
             }
         }).then(function () {
             $interval(function () {
-                stompClientService.sendSeekHeartBeat(playerService.getCurrentTime());
+                stompClientService.sendHeartBeat(playerService.getCurrentTime());
             }, 1000);
             //$http.get('http://localhost:8080/room/' + roomName + '/current')
             //    .then(function (queue) {
