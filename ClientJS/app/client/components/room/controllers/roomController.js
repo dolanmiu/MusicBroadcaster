@@ -59,10 +59,13 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
             if (message.playlist === 'FINISHED') {
                 playerService.stopVideo();
             }
-        }).then(function () {
-            $interval(function () {
+            if (message.req === 'seek') {
                 stompClientService.sendHeartBeat(playerService.getCurrentTime());
-            }, 1000);
+            }
+        }).then(function () {
+            /*$interval(function () {
+                stompClientService.sendHeartBeat(playerService.getCurrentTime());
+            }, 1000);*/
             //$http.get('http://localhost:8080/room/' + roomName + '/current')
             //    .then(function (queue) {
             //        var happy = JSON.stringify(queue);

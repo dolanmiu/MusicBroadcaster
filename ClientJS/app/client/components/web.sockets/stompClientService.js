@@ -51,7 +51,7 @@ angular.module('app').service('stompClientService', function ($q, $rootScope) {
     };
 
     this.sendHeartBeat = function (milliseconds) {
-        self.stompClient.send('/app/room/' + roomName + "/heart-beat", {
+        self.stompClient.send('/app/room/' + self.roomName + "/heart-beat", {
             "heart-beat": true
         }, JSON.stringify({
             'seek': {
