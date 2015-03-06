@@ -7,6 +7,7 @@ import java.util.concurrent.ScheduledFuture;
 import org.springframework.scheduling.TaskScheduler;
 
 import com.poo.musicbroadcaster.model.Media;
+import com.google.common.base.Stopwatch;
 
 public class SongTimer implements ISongTimer {
 	private ScheduledFuture<?> songFinishScheduledFuture;
@@ -21,9 +22,9 @@ public class SongTimer implements ISongTimer {
 	private Runnable tickTask;
 	private long tickInterval;
 	
-	private StopWatch stopWatch;
+	private Stopwatch stopWatch;
 
-	public SongTimer(TaskScheduler taskScheduler, StopWatch stopWatch) {
+	public SongTimer(TaskScheduler taskScheduler, Stopwatch stopWatch) {
 		this.scheduledExecutorService = taskScheduler;
 		this.stopWatch = stopWatch;
 	}
@@ -98,7 +99,8 @@ public class SongTimer implements ISongTimer {
 
 		this.remainingTime = tempTime;
 		this.resetEndSongTask();
-		System.out.println("Seeked with this much remaining: " + this.remainingTime);
+		//this.stopWatch.seekTo(time);
+		System.out.println("Seeked to: " + this.getSeek());
 		return true;
 	}
 
