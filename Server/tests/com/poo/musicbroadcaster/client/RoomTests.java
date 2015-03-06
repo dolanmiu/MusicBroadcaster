@@ -9,7 +9,7 @@ import com.poo.musicbroadcaster.model.Media;
 import com.poo.musicbroadcaster.model.Room;
 import com.poo.musicbroadcaster.model.timer.ISongTimer;
 import com.poo.musicbroadcaster.model.timer.SongTimer;
-import com.poo.musicbroadcaster.model.timer.StopWatch;
+import com.poo.musicbroadcaster.model.timer.SimpleStopWatch;
 
 public class RoomTests {
 
@@ -17,7 +17,7 @@ public class RoomTests {
 	
 	@Before
 	public void setup() {
-		ISongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler(), new StopWatch());
+		ISongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler(), new SimpleStopWatch());
 		songTimer.setTickTask(1000, () -> {});
 		
 		room = new Room("testRoom", songTimer, new SimpMessagingTemplateMock());
