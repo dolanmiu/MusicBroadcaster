@@ -3,8 +3,10 @@ package com.poo.musicbroadcaster.model;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.scheduling.TaskScheduler;
 
 import com.poo.musicbroadcaster.model.client.outbound.ErrorMessage;
 import com.poo.musicbroadcaster.model.client.outbound.MediaMessage;
@@ -14,8 +16,12 @@ import com.poo.musicbroadcaster.model.client.outbound.PlaybackMessage;
 import com.poo.musicbroadcaster.model.client.outbound.PlaybackMessageType;
 import com.poo.musicbroadcaster.model.client.outbound.PlaylistMessage;
 import com.poo.musicbroadcaster.model.client.outbound.PlaylistMessageType;
+import com.poo.musicbroadcaster.model.client.outbound.RequestMessage;
 import com.poo.musicbroadcaster.model.client.outbound.SeekMessage;
+import com.poo.musicbroadcaster.model.client.outbound.UsersMessage;
 import com.poo.musicbroadcaster.model.timer.ISongTimer;
+import com.poo.musicbroadcaster.model.user.IUserManager;
+
 
 public class Room implements IRoom {
 
@@ -23,17 +29,35 @@ public class Room implements IRoom {
 	private Media currentMedia;
 	private PlaybackStatus playbackStatus;
 	private ISongTimer songTimer;
+	private TaskScheduler taskScheduler;
+	private ScheduledFuture<?> heartBeatScheduledFuture; 
+	private ScheduledFuture<?> requestScheduledFuture; 
 	private String roomId;
+	private IUserManager userManager;
 
 	private SimpMessageSendingOperations simpMessagingTemplate;
 
-	public Room(String roomId, ISongTimer songTimer, SimpMessageSendingOperations simpMessagingTemplate) {
+	public Room(String roomId, ISongTimer songTimer, SimpMessageSendingOperations simpMessagingTemplate, TaskScheduler taskScheduler, IUserManager userManager) {
 		this.roomId = roomId;
 		this.simpMessagingTemplate = simpMessagingTemplate;
 		this.songTimer = songTimer;
+		this.taskScheduler = taskScheduler;
+		this.userManager = userManager;
+		
+		/*this.userManager.getSeekSyncer().setSeekDifferenceTask((seek) -> {
+			this.songTimer.seek(seek);
+		});*/
 
 		this.playbackStatus = PlaybackStatus.STOPPED;
 		this.songQueue = new LinkedList<Media>();
+				
+		this.heartBeatScheduledFuture = this.taskScheduler.scheduleAtFixedRate(() -> {
+			this.simpMessagingTemplate.convertAndSend("/room/" + roomId, new UsersMessage(this.userManager.getUsers()));
+		}, 10000);
+		
+		this.requestScheduledFuture = this.taskScheduler.scheduleAtFixedRate(() -> {
+			this.simpMessagingTemplate.convertAndSend("/room/" + roomId, new RequestMessage());
+		}, 1000);
 	}
 
 	private void sendMessage(OutBoundMessage message) {
@@ -41,7 +65,6 @@ public class Room implements IRoom {
 	}
 
 	private void setNextSong() {
-		System.out.println("SETTING NEXT SONG...");
 		this.currentMedia = this.songQueue.poll();
 
 		if (this.currentMedia == null) {
@@ -151,5 +174,15 @@ public class Room implements IRoom {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public IUserManager getUserManager() {
+		return this.userManager;
+	}
+
+	@Override
+	public long getSeek() {
+		return this.songTimer.getSeek();
 	}
 }

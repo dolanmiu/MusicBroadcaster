@@ -108,7 +108,7 @@ public class SongTimer implements ISongTimer {
 	}
 
 	@Override
-	public void setTickTask(long tickInterval, Runnable tickTask) {
+	public void setTickTask(Runnable tickTask, long tickInterval) {
 		this.tickInterval = tickInterval;
 		this.tickTask = () -> {
 			tickTask.run();

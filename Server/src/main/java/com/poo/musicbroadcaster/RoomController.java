@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,15 +19,12 @@ import com.poo.musicbroadcaster.model.client.outbound.RoomMessage;
 @RestController
 public class RoomController {
 
-	private SimpMessagingTemplate simpMessagingTemplate;
-
 	private IRoomFactory roomFactory;
 
 	private RoomService roomService;
 
 	@Autowired
-	public RoomController(SimpMessagingTemplate simpMessagingTemplate, IRoomFactory roomFactory, RoomService roomService) {
-		this.simpMessagingTemplate = simpMessagingTemplate;
+	public RoomController(IRoomFactory roomFactory, RoomService roomService) {
 		this.roomFactory = roomFactory;
 		this.roomService = roomService;
 	}

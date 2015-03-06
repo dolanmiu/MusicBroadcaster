@@ -5,10 +5,12 @@ import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 import com.poo.musicbroadcaster.model.IRoom;
 import com.poo.musicbroadcaster.model.Media;
+import com.poo.musicbroadcaster.model.client.inbound.HeartbeatMessage;
 import com.poo.musicbroadcaster.model.client.inbound.MediaMessage;
 import com.poo.musicbroadcaster.model.client.inbound.SeekMessage;
 
@@ -16,10 +18,17 @@ import com.poo.musicbroadcaster.model.client.inbound.SeekMessage;
 public class RoomSocketController {
 	
 	private RoomService roomService;
+	private SeekService seekService;
+	
+	@SubscribeMapping
+	public void onSubscribe() {
+		System.out.println("subscribed");
+	}
 	
 	@Autowired
-	public RoomSocketController(RoomService roomService) {
+	public RoomSocketController(RoomService roomService, SeekService seekService) {
 		this.roomService = roomService;
+		this.seekService = seekService;
 	}
 	
 	@MessageMapping("/room/{room}/state")
@@ -73,6 +82,18 @@ public class RoomSocketController {
 		IRoom roomInstance = roomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.removeMedia(message.getId());
+		}
+	}
+	
+	@MessageMapping("/room/{room}/heart-beat")
+	public void heartBeat(@DestinationVariable String room, HeartbeatMessage message) {
+		IRoom roomInstance = roomService.getRoom(room);
+		if (roomInstance != null) {
+			roomInstance.getUserManager().addUser(message.getUser().getId());
+			boolean needToSeek = this.seekService.needToSeek(roomInstance.getSeek(), message.getSeek().getMilliseconds());
+			if (needToSeek) {
+				roomInstance.setSeek(message.getSeek().getMilliseconds());
+			}
 		}
 	}
 
