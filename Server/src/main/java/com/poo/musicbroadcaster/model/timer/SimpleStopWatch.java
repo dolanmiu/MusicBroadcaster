@@ -1,6 +1,10 @@
 package com.poo.musicbroadcaster.model.timer;
 
-public class StopWatch {
+enum PlayState {
+	STARTED, PAUSED;
+}
+
+public class SimpleStopWatch {
 
 	private long startTime;
 	private long lastPauseTime;
@@ -9,8 +13,12 @@ public class StopWatch {
 	private long totalPauseTime;
 	
 	private boolean started;
+	
+	private PlayState playState;
+	
+	private long timeSnapshot;
 
-	public StopWatch() {
+	public SimpleStopWatch() {
 		this.lastPauseTime = 0;
 		this.lastPlayTime = 0;
 		this.totalPauseTime = 0;
@@ -27,10 +35,13 @@ public class StopWatch {
 	}
 
 	public void pause() {
+		this.playState = PlayState.PAUSED;
 		this.lastPauseTime = System.currentTimeMillis();
+		this.timeSnapshot = this.getTimeRun();
 	}
 
 	public void start() {
+		this.playState = PlayState.STARTED;
 		if (!this.started) {
 			this.startTime = System.currentTimeMillis();
 			this.started = true;
@@ -51,7 +62,11 @@ public class StopWatch {
 	}
 
 	public long getTimeRun() {
-		System.out.println("Total pause time: " + this.totalPauseTime);
+		//System.out.println("Total pause time: " + this.totalPauseTime);
+		if (this.playState == PlayState.PAUSED) {
+			return this.timeSnapshot;
+		}
+		
 		if (this.startTime == 0) {
 			return 0;
 		}
