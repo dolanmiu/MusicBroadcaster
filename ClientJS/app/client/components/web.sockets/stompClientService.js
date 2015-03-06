@@ -2,7 +2,7 @@
  * Created by Kelv on 15/02/2015.
  */
 /*globals console, Stomp, SockJS, angular, setTimeout */
-angular.module('app').service('stompClientService', function ($q, $rootScope) {
+angular.module('app').service('stompClientService', function ($q, $rootScope, userService) {
     'use strict';
     var stompClient,
         player = null,
@@ -58,7 +58,7 @@ angular.module('app').service('stompClientService', function ($q, $rootScope) {
                 'milliseconds': milliseconds
             },
             'user': {
-                'id': 'blah'
+                'id': userService.id
             }
         }));
     };

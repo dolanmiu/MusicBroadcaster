@@ -59,6 +59,9 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
             if (message.playlist === 'FINISHED') {
                 playerService.stopVideo();
             }
+            if (angular.isDefined(message.seek)) {
+                playerService.seekTo(message.seek);
+            }
             if (message.req === 'seek') {
                 stompClientService.sendHeartBeat(playerService.getCurrentTime());
             }
