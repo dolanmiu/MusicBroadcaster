@@ -26,6 +26,7 @@ repositories {
 }
 
 dependencies {
+  	compile group: 'com.google.guava', name: 'guava', version: '18.0'
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-websocket")
     compile("org.springframework:spring-messaging")
