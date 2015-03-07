@@ -17,7 +17,5 @@ public interface ISongTimer {
 
 	long getSeek();
 	
-	long getTimeRemaining();
-	
 	void setTickTask(Runnable tickTask, long tickInterval);
 }

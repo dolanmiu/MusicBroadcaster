@@ -118,7 +118,7 @@ public class Room implements IRoom {
 			this.sendMessage(new PlaylistMessage(PlaylistMessageType.FINISHED));
 			return;
 		}
-		System.out.println("Reaminig time: " + this.songTimer.getTimeRemaining());
+		System.out.println("Seek is at time: " + this.songTimer.getSeek());
 		if (this.songTimer.getTimeRemaining() < 2000) {
 			return;
 		}
