@@ -116,7 +116,6 @@ public class SongTimer implements ISongTimer {
 		this.tickInterval = tickInterval;
 		this.tickTask = () -> {
 			tickTask.run();
-			//this.remainingTime -= tickInterval;
 		};
 	}
 

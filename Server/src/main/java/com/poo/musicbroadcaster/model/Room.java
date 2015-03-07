@@ -119,7 +119,7 @@ public class Room implements IRoom {
 			return;
 		}
 		System.out.println("Seek is at time: " + this.songTimer.getSeek());
-		if (this.songTimer.getTimeRemaining() < 2000) {
+		if (this.currentMedia.getLength() - this.songTimer.getSeek() < 2000) {
 			return;
 		}
 		boolean result = this.songTimer.pause();
