@@ -42,10 +42,6 @@ angular.module('app').service('stompClientService', function ($q, $rootScope, us
         self.stompClient.send('/app/room/' + self.roomName + '/pause', {});
     };
 
-    this.playCurrentSong = function () {
-        //self.stompClient.sen
-    };
-
     this.getRoomName = function () {
         return self.roomName;
     };

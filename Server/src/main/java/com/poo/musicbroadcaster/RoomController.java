@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.poo.musicbroadcaster.factory.IRoomFactory;
 import com.poo.musicbroadcaster.model.IRoom;
 import com.poo.musicbroadcaster.model.Media;
+import com.poo.musicbroadcaster.model.client.enums.PlaybackStatusType;
+import com.poo.musicbroadcaster.model.client.outbound.CurrentStatus;
 import com.poo.musicbroadcaster.model.client.outbound.ErrorMessage;
 import com.poo.musicbroadcaster.model.client.outbound.OutBoundMessage;
 import com.poo.musicbroadcaster.model.client.outbound.RoomMessage;
@@ -66,9 +68,10 @@ public class RoomController {
 	}
 
 	@RequestMapping("/room/{room}/current")
-	public Media getCurrentMedia(@PathVariable String room) {
+	public CurrentStatus getCurrentMedia(@PathVariable String room) {
 		IRoom roomInstance = roomService.getRoom(room);
 		Media currentMedia = roomInstance.getCurrentMedia();
-		return currentMedia;
+		PlaybackStatusType playbackStatus = roomInstance.getPlaybackStatus();
+		return new CurrentStatus(currentMedia, playbackStatus);
 	}
 }

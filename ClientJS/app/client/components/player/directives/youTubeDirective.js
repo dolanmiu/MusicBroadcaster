@@ -2,7 +2,7 @@
  * Created by Kelv on 09/02/2015.
  */
 /*globals angular, console, YT, document */
-angular.module('app').directive('youtube', function (stompClientService, playerService, $window, angularLoad, googleApiService, restService) {
+angular.module('app').directive('youtube', function (stompClientService, playerService, $window, angularLoad, googleApiService, restService, $http) {
     'use strict';
     return {
         restrict: 'E',
@@ -32,9 +32,8 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
                 }
 
                 if (event.data === YT.PlayerState.CUED) {
-                    stompClientService.sendPlay();
-
-                    console.log('State is cued, will send play');
+                    //stompClientService.sendPlay();
+                    console.log('State is cued');
                 }
             };
 
@@ -42,38 +41,13 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
                 return durationService.convert(player.getCurrentTime());
             };
 
-
             $scope.cueVideoById = function (videoId) {
                 var deferred = $q.defer();
-                player.cueVideoById(videoId)
-                    .then(function (success) {
-                        deferred.resolve();
-                    }, function (fail) {
-                        deferred.reject();
-                    });
-            };
-
-            $scope.playVideo = function () {
-                playerService.playVideo();
-            };
-
-
-            $scope.loadCurrentSong = function () {
-                var currentSong = restService.getCurrentSong(roomName);
-
-                $scope.cueVideoById(videoId);
-
-            };
-
-
-
-
-            $scope.pauseVideo = function () {
-                player.pauseVideo();
-            };
-
-            $scope.seekTo = function (milliseconds) {
-                player.seekTo(milliseconds, false);
+                player.cueVideoById(videoId).then(function (success) {
+                    deferred.resolve();
+                }, function (fail) {
+                    deferred.reject();
+                });
             };
 
             $scope.$on('setRoom', function () {
@@ -105,20 +79,17 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
                     events: {
                         'onReady': function () {
                             playerService.setPlayer(scope.player);
-                            document.getElementById("player").contentDocument.addEventListener("click", function () {
-                                alert("clicked");
+                            $http.get('http://localhost:8080/room/' + stompClientService.getRoomName() + '/current').then(function (current) {
+                                playerService.cueVideoById(current.data.media.id, current.data.media.currentSeek / 1000, 'hd1080');
+                                if (current.data.playStatus === 'PLAY') {
+                                    scope.player.playVideo();
+                                }
                             });
                         },
                         'onStateChange': scope.onPlayerStateChange
                     }
                 });
             };
-            $('#frame').on('click', 'iframe', function (el) {
-                alert("Handler for .click() called.");
-            })
-            $(".ytp-progress-bar-container").click(function () {
-                alert("Handler for .click() called.");
-            });
         }
 
     };

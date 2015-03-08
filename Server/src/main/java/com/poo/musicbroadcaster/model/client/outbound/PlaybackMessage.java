@@ -1,9 +1,11 @@
 package com.poo.musicbroadcaster.model.client.outbound;
 
+import com.poo.musicbroadcaster.model.client.enums.PlaybackStatusType;
+
 public class PlaybackMessage extends OutBoundMessage {
 	private String playback;
 	
-	public PlaybackMessage(PlaybackMessageType playbackType) {
+	public PlaybackMessage(PlaybackStatusType playbackType) {
 		this.playback = playbackType.toString();
 	}
 	

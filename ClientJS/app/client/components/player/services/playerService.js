@@ -7,19 +7,6 @@ angular.module('app').service('playerService', function (durationService, $q, $w
     var player,
         self = this;
 
-    function onPlayerStateChange(event) {
-        console.log("State is changed.... State is now: " + event.data);
-
-        if (event.data === 1) {
-            stompClientService.sendPlay();
-        }
-
-        if (event.data === 2) {
-            stompClientService.sendPause();
-            console.log('State changed to 2, ws pause sent');
-        }
-    }
-
     this.setPlayer = function (playerInstance) {
         player = playerInstance;
     };
@@ -29,8 +16,6 @@ angular.module('app').service('playerService', function (durationService, $q, $w
     };
 
     this.cueVideoById = function (videoId, startTime, res) {
-        //player.cueVideoById(videoId);
-
         player.cueVideoById(videoId, startTime, res);
     };
 
@@ -50,4 +35,6 @@ angular.module('app').service('playerService', function (durationService, $q, $w
         var seconds = milliseconds / 1000;
         player.seekTo(seconds, true);
     };
+    
+    //this.getCurrent
 });

@@ -8,14 +8,14 @@ import java.util.concurrent.ScheduledFuture;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.TaskScheduler;
 
+import com.poo.musicbroadcaster.model.client.enums.MediaMessageType;
+import com.poo.musicbroadcaster.model.client.enums.PlaybackStatusType;
+import com.poo.musicbroadcaster.model.client.enums.PlaylistMessageType;
 import com.poo.musicbroadcaster.model.client.outbound.ErrorMessage;
 import com.poo.musicbroadcaster.model.client.outbound.MediaMessage;
-import com.poo.musicbroadcaster.model.client.outbound.MediaMessageType;
 import com.poo.musicbroadcaster.model.client.outbound.OutBoundMessage;
 import com.poo.musicbroadcaster.model.client.outbound.PlaybackMessage;
-import com.poo.musicbroadcaster.model.client.outbound.PlaybackMessageType;
 import com.poo.musicbroadcaster.model.client.outbound.PlaylistMessage;
-import com.poo.musicbroadcaster.model.client.outbound.PlaylistMessageType;
 import com.poo.musicbroadcaster.model.client.outbound.RequestMessage;
 import com.poo.musicbroadcaster.model.client.outbound.SeekMessage;
 import com.poo.musicbroadcaster.model.client.outbound.UsersMessage;
@@ -27,7 +27,7 @@ public class Room implements IRoom {
 
 	private Queue<Media> songQueue;
 	private Media currentMedia;
-	private PlaybackStatus playbackStatus;
+	private PlaybackStatusType playbackStatus;
 	private ISongTimer songTimer;
 	private TaskScheduler taskScheduler;
 	private ScheduledFuture<?> heartBeatScheduledFuture; 
@@ -44,7 +44,7 @@ public class Room implements IRoom {
 		this.taskScheduler = taskScheduler;
 		this.userManager = userManager;
 
-		this.playbackStatus = PlaybackStatus.STOPPED;
+		this.playbackStatus = PlaybackStatusType.STOP;
 		this.songQueue = new LinkedList<Media>();
 				
 		this.heartBeatScheduledFuture = this.taskScheduler.scheduleAtFixedRate(() -> {
@@ -84,7 +84,7 @@ public class Room implements IRoom {
 	}
 
 	@Override
-	public PlaybackStatus getPlaybackStatus() {
+	public PlaybackStatusType getPlaybackStatus() {
 		return this.playbackStatus;
 	}
 
@@ -106,9 +106,9 @@ public class Room implements IRoom {
 		}
 		boolean result = this.songTimer.play();
 		if (result) {
-			this.playbackStatus = PlaybackStatus.PLAYING;
+			this.playbackStatus = PlaybackStatusType.PLAY;
 			System.out.println("CURRENTLY PLAYING TRACK: " + this.currentMedia);
-			this.sendMessage(new PlaybackMessage(PlaybackMessageType.PLAY));
+			this.sendMessage(new PlaybackMessage(PlaybackStatusType.PLAY));
 		} else {
 			this.sendMessage(new ErrorMessage("Song cannot be played, there isnt a song in queue"));
 		}
@@ -128,8 +128,8 @@ public class Room implements IRoom {
 		}
 		boolean result = this.songTimer.pause();
 		if (result) {
-			this.playbackStatus = PlaybackStatus.PAUSED;
-			this.sendMessage(new PlaybackMessage(PlaybackMessageType.PAUSE));
+			this.playbackStatus = PlaybackStatusType.PAUSE;
+			this.sendMessage(new PlaybackMessage(PlaybackStatusType.PAUSE));
 		}
 		
 		this.requestScheduledFuture.cancel(true);
