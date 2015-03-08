@@ -8,7 +8,7 @@ import com.poo.musicbroadcaster.model.user.IUserManager;
 public interface IRoom {
 	PlaybackStatus getPlaybackStatus();
 
-	void setSeek(long time);
+	void setSeek(long time, String user);
 	
 	long getSeek();
 

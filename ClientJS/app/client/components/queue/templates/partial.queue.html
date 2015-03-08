@@ -4,30 +4,16 @@
 <!--<p>100% convertable to HTML/CSS layout.</p>-->
 <!--<a class="btn btn-primary btn-large btn-block" href>Remove</a>-->
 <!--</div>-->
-
-<div class="header">Hello this is meant to be a queue</div>
-
-<div>
-    <table class="table">
-        <tr ng-repeat="item in queueArray">
-            <td><img ng-src="{{item.snippet.thumbnails.medium.url}}">
-            </td>
-
-            <td><a href ng-click="addMedia(item.id.videoId)">{{item.snippet.title}}</a>
-            </td>
-        </tr>
-    </table>
+<div class="song-result-container">
+    <div ng-repeat="item in control">
+        <div class="row">
+            <div class="col-xs-11">
+                {{item.displayName}}
+            </div>
+            <div class="col-xs-1">
+                <button class="btn btn-danger btn-block">delete</button>
+            </div>
+            <hr>
+        </div>
+    </div>
 </div>
-
-<div ng-controller="queueController">
-    <button ng-click="getQueue()">getQueue</button>
-</div>
-
-<table>
-    <tr ng-repeat="song in control">
-        <td>{{song.id}}</td>
-    </tr>
-</table>
-
-
-<button ng-click="queueControl.updateQueue()">Update Queue {{internalControl}}</button>

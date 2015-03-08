@@ -43,10 +43,6 @@ public class Room implements IRoom {
 		this.songTimer = songTimer;
 		this.taskScheduler = taskScheduler;
 		this.userManager = userManager;
-		
-		/*this.userManager.getSeekSyncer().setSeekDifferenceTask((seek) -> {
-			this.songTimer.seek(seek);
-		});*/
 
 		this.playbackStatus = PlaybackStatus.STOPPED;
 		this.songQueue = new LinkedList<Media>();
@@ -93,10 +89,10 @@ public class Room implements IRoom {
 	}
 
 	@Override
-	public void setSeek(long time) {
+	public void setSeek(long time, String user) {
 		boolean result = this.songTimer.seek(time);
 		if (result) {
-			this.sendMessage(new SeekMessage(time));
+			this.sendMessage(new SeekMessage(time, user));
 		} else {
 			this.sendMessage(new ErrorMessage("Time is invalid"));
 		}

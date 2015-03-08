@@ -66,6 +66,7 @@ public class SongTimer implements ISongTimer {
 			this.songTickScheduledFuture.cancel(true);
 			this.stopWatch.stop();
 		};
+		System.out.println("Resetting stopwatch");
 		this.stopWatch.reset();
 	}
 

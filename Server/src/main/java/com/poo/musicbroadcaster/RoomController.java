@@ -61,6 +61,7 @@ public class RoomController {
 	@RequestMapping("/room/{room}/playlist")
 	public Queue<Media> getPlaylist(@PathVariable String room) {
 		IRoom roomInstance = roomService.getRoom(room);
+		if (roomInstance == null) return null;
 		return roomInstance.getPlaylist();
 	}
 
@@ -68,7 +69,6 @@ public class RoomController {
 	public Media getCurrentMedia(@PathVariable String room) {
 		IRoom roomInstance = roomService.getRoom(room);
 		Media currentMedia = roomInstance.getCurrentMedia();
-		System.out.println("GETTING CURRENT MEDIA: " + currentMedia);
 		return currentMedia;
 	}
 }

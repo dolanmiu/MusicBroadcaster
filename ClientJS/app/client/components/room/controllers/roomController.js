@@ -2,7 +2,7 @@
  * Created by Kelv on 09/02/2015.
  */
 /*globals angular, console */
-angular.module('app').controller('roomController', function ($rootScope, durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, $interval) {
+angular.module('app').controller('roomController', function ($rootScope, durationService, stompClientService, playerService, $scope, googleApiService, $http, $q, $stateParams, $interval, userService) {
     'use strict';
 
     $scope.roomName = $stateParams.roomName;
@@ -27,12 +27,11 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
                 $http.get('http://localhost:8080/room/' + roomName + '/current')
                     .then(function (playlist) {
                         console.log(playlist);
-                        playerService.cueVideoById(playlist.data.id, playlist.data.currentSeek, 'hd1080');
-
+                        playerService.cueVideoById(playlist.data.id, playlist.data.currentSeek / 1000, 'hd1080');
+                        $rootScope.$broadcast('refreshQueue');
                     });
             }
             if (message.media === 'ADDED') {
-
                 console.log('Media has been added');
                 $rootScope.$broadcast('refreshQueue');
 
@@ -60,12 +59,17 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
                 playerService.stopVideo();
             }
             if (angular.isDefined(message.seek)) {
+                if (message.excludeId === userService.id) {
+                    return;
+                }
                 playerService.seekTo(message.seek);
             }
             if (message.req === 'seek') {
                 stompClientService.sendHeartBeat(playerService.getCurrentTime());
             }
         }).then(function () {
+            $rootScope.$broadcast('refreshQueue');
+
             /*$interval(function () {
                 stompClientService.sendHeartBeat(playerService.getCurrentTime());
             }, 1000);*/

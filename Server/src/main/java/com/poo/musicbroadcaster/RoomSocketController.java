@@ -55,14 +55,14 @@ public class RoomSocketController {
 		}
 	}
 
-	@MessageMapping("/room/{room}/seek")
+	/*@MessageMapping("/room/{room}/seek")
 	public void seek(@DestinationVariable String room, SeekMessage message) {
 		System.out.println("RECEIVED SEEK WEBSOCKET COMMAND");
 		IRoom roomInstance = roomService.getRoom(room);
 		if (roomInstance != null) {
 			roomInstance.setSeek(message.getMilliseconds());
 		}
-	}
+	}*/
 
 	@MessageMapping("/room/{room}/add")
 	public void addMedia(@DestinationVariable String room, MediaMessage message) {
@@ -93,7 +93,7 @@ public class RoomSocketController {
 			boolean needToSeek = this.seekService.needToSeek(roomInstance.getSeek(), message.getSeek().getMilliseconds());
 			if (needToSeek) {
 				System.out.println("It needs to seek to: " + message.getSeek().getMilliseconds() + " because actual seek is: " + roomInstance.getSeek());
-				roomInstance.setSeek(message.getSeek().getMilliseconds());
+				roomInstance.setSeek(message.getSeek().getMilliseconds(), message.getUser().getId());
 			}
 		}
 	}
