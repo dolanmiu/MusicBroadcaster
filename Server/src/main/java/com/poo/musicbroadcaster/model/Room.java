@@ -75,6 +75,7 @@ public class Room implements IRoom {
 		if (this.currentMedia == null) {
 			this.sendMessage(new PlaylistMessage(PlaylistMessageType.FINISHED));
 			System.out.println("PLAYLIST HAS FINISHED");
+			this.requestScheduledFuture.cancel(true);
 			this.songTimer.stop();
 		} else {
 			this.sendMessage(new PlaylistMessage(PlaylistMessageType.NEXT));
