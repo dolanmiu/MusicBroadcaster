@@ -54,7 +54,12 @@ public class Room implements IRoom {
 		this.heartBeatScheduledFuture = this.taskScheduler.scheduleAtFixedRate(() -> {
 			this.simpMessagingTemplate.convertAndSend("/room/" + roomId, new UsersMessage(this.userManager.getUsers()));
 		}, 10000);
-		
+	}
+	
+	private void setRepeatingSeekRequest() {
+		if (requestScheduledFuture != null) {
+			this.requestScheduledFuture.cancel(true);
+		}
 		this.requestScheduledFuture = this.taskScheduler.scheduleAtFixedRate(() -> {
 			this.simpMessagingTemplate.convertAndSend("/room/" + roomId, new RequestMessage());
 		}, 1000);
@@ -110,6 +115,8 @@ public class Room implements IRoom {
 		} else {
 			this.sendMessage(new ErrorMessage("Song cannot be played, there isnt a song in queue"));
 		}
+		
+		this.setRepeatingSeekRequest();
 	}
 
 	@Override
@@ -127,6 +134,8 @@ public class Room implements IRoom {
 			this.playbackStatus = PlaybackStatus.PAUSED;
 			this.sendMessage(new PlaybackMessage(PlaybackMessageType.PAUSE));
 		}
+		
+		this.requestScheduledFuture.cancel(true);
 	}
 
 	@Override

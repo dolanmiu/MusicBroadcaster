@@ -10,6 +10,11 @@ import org.springframework.scheduling.TaskScheduler;
 import com.poo.musicbroadcaster.model.Media;
 import com.google.common.base.Stopwatch;
 
+
+enum PlayState {
+	STARTED, PAUSED;
+}
+
 public class SongTimer implements ISongTimer {
 	private ScheduledFuture<?> songFinishScheduledFuture;
 	private ScheduledFuture<?> songTickScheduledFuture;
@@ -25,11 +30,14 @@ public class SongTimer implements ISongTimer {
 	private Stopwatch stopWatch;
 	
 	private long lastSeek;
+	
+	private PlayState playState;
 
 	public SongTimer(TaskScheduler taskScheduler, Stopwatch stopWatch) {
 		this.scheduledExecutorService = taskScheduler;
 		this.stopWatch = stopWatch;
 		this.lastSeek = 0;
+		this.playState = PlayState.PAUSED;
 	}
 
 	private void resetEndSongTask(long remainingTime) {
@@ -53,12 +61,21 @@ public class SongTimer implements ISongTimer {
 		} else {
 			this.mediaLength = media.getLength();
 		}
-		this.songFinishtask = task;
+		this.songFinishtask = () -> {
+			task.run();
+			this.songTickScheduledFuture.cancel(true);
+			this.stopWatch.stop();
+		};
 		this.stopWatch.reset();
 	}
 
 	@Override
 	public boolean play() throws InterruptedException, ExecutionException {
+		if (this.playState == PlayState.STARTED) {
+			return false;
+		}
+		this.playState = PlayState.STARTED;
+		
 		if (this.mediaLength == 0) {
 			return false;
 		}
@@ -77,6 +94,11 @@ public class SongTimer implements ISongTimer {
 
 	@Override
 	public boolean pause() {
+		if (this.playState == PlayState.PAUSED) {
+			return false;
+		}
+		this.playState = PlayState.PAUSED;
+		
 		if (this.songFinishScheduledFuture == null || this.mediaLength == 0) {
 			return false;
 		}
@@ -101,7 +123,13 @@ public class SongTimer implements ISongTimer {
 
 		this.resetEndSongTask(remainingTime);
 		this.lastSeek = time;
+		
 		this.stopWatch.reset();
+
+		if (this.playState == PlayState.STARTED) {
+			this.stopWatch.start();
+		}
+		
 		System.out.println("Seeked to: " + this.getSeek());
 		return true;
 	}

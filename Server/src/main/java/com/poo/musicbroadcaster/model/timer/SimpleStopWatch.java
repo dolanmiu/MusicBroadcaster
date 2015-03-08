@@ -1,9 +1,5 @@
 package com.poo.musicbroadcaster.model.timer;
 
-enum PlayState {
-	STARTED, PAUSED;
-}
-
 public class SimpleStopWatch {
 
 	private long startTime;

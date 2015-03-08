@@ -57,8 +57,9 @@ public class SongTimerTests {
 	public void testIfSongTimerCanSeek() throws InterruptedException, ExecutionException {
 		SongTimer songTimer = new SongTimer(new ConcurrentTaskScheduler(), Stopwatch.createUnstarted());
 		songTimer.setTickTask(() -> {
+			System.out.println("Seek: " + songTimer.getSeek());
 		}, 1000);
-		Media media = new Media("dfg5gd3fghgj", 5000, "", "");
+		Media media = new Media("test", 5000, "", "");
 		songTimer.setMedia(media, () -> {
 			System.out.println("Finished Playing!");
 			Assert.assertTrue(true);
@@ -69,9 +70,9 @@ public class SongTimerTests {
 		Thread.sleep(1000);
 		System.out.println("Seeking...");
 		songTimer.seek(3000);
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		songTimer.seek(1000);
-		Thread.sleep(5000);
+		Thread.sleep(7000);
 	}
 
 	@Test
