@@ -47,6 +47,7 @@ angular.module('app').service('playerService', function (durationService, $q, $w
     };
 
     this.seekTo = function (milliseconds) {
-        player.seekTo(milliseconds, false);
+        var seconds = milliseconds / 1000;
+        player.seekTo(seconds, true);
     };
 });
