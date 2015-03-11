@@ -53,6 +53,18 @@ public class SongTimer implements ISongTimer {
 		}
 		this.songTickScheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(this.tickTask, this.tickInterval);
 	}
+	
+	private void stopStopWatch() {
+		if (this.stopWatch.isRunning()) {
+			this.stopWatch.stop();
+		}
+	}
+	
+	private void startStopWatch() {
+		if (!this.stopWatch.isRunning()) {
+			this.stopWatch.start();
+		}
+	}
 
 	@Override
 	public void setMedia(Media media, Runnable task) {
@@ -64,10 +76,10 @@ public class SongTimer implements ISongTimer {
 		this.songFinishtask = () -> {
 			task.run();
 			this.songTickScheduledFuture.cancel(true);
-			this.stopWatch.stop();
+			this.stopStopWatch();
 		};
 		System.out.println("Resetting stopwatch");
-		this.stopWatch.reset();
+		this.seek(0);
 	}
 
 	@Override
@@ -85,7 +97,7 @@ public class SongTimer implements ISongTimer {
 			this.songFinishScheduledFuture.cancel(false);
 		}
 		
-		this.stopWatch.start();
+		this.startStopWatch();
 
 		this.resetEndSongTask(this.mediaLength - this.getSeek());
 		this.resetPeriodicTask();
@@ -107,7 +119,7 @@ public class SongTimer implements ISongTimer {
 		System.out.println("Killing seek periodic send task");
 		this.songTickScheduledFuture.cancel(true);
 		this.songFinishScheduledFuture.cancel(false);
-		this.stopWatch.stop();
+		this.stopStopWatch();
 		return true;
 	}
 
@@ -128,7 +140,7 @@ public class SongTimer implements ISongTimer {
 		this.stopWatch.reset();
 
 		if (this.playState == PlayState.STARTED) {
-			this.stopWatch.start();
+			this.startStopWatch();
 		}
 		
 		System.out.println("Seeked to: " + this.getSeek());
@@ -152,6 +164,7 @@ public class SongTimer implements ISongTimer {
 	public boolean stop() {
 		if (this.songTickScheduledFuture != null) {
 			this.songTickScheduledFuture.cancel(true);
+			this.stopWatch.reset();
 			return true;
 		} else {
 			return false;

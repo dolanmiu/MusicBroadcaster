@@ -26,6 +26,7 @@ angular.module('app').controller('roomController', function ($rootScope, duratio
             if (message.playlist === 'NEXT') {
                 $http.get('http://localhost:8080/room/' + roomName + '/current').then(function (current) {
                     playerService.cueVideoById(current.data.media.id, current.data.media.currentSeek / 1000, 'hd1080');
+                    playerService.playVideo();
                     $rootScope.$broadcast('refreshQueue');
                 });
             }
