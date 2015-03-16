@@ -69,7 +69,7 @@ angular.module('app').directive('youtube', function (stompClientService, playerS
             $window.onYouTubeIframeAPIReady = function () {
                 scope.player = new YT.Player('player', {
                     height: scope.height,
-                    width: scope.width,
+                    width: '100%',
                     playerVars: {
                         controls: '1',
                         rel: '0',
